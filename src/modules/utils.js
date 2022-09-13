@@ -36,7 +36,7 @@ const notifErr = (resp) => {
     }
   } else {
     Notify.create({
-      message: 'Ada Kesalahan Harap ulangi',
+      message: resp.data.message,
       icon: 'icon-eva-message-circle-outline',
       position: 'top-right',
       color: 'negative',

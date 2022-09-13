@@ -36,10 +36,20 @@ import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import TextAlign from '@tiptap/extension-text-align'
 import CustomImage from '../~editor/extensions/custom-image'
+import { watch } from 'vue'
 // import { computed } from 'vue'
 
+const props = defineProps({
+  modelValue: {
+    type: String,
+    default: null
+  }
+})
+
+const emits = defineEmits(['update:modelValue'])
+
 const editor = useEditor({
-  content: '<p>Silahkan Ketik Berita disini</p>',
+  content: props.modelValue,
   extensions: [
     StarterKit,
     Underline,
@@ -60,11 +70,13 @@ const editor = useEditor({
     }),
     BubbleMenu
     // new TipTapCustomImage()
-  ]
+  ],
+  onUpdate: () => {
+    emits('update:modelValue', editor.value.getHTML())
+  }
 })
 
 function setcontenteditor(content) {
-  // console.log($content)
   const isSame = editor.value.getHTML() === content
   if (isSame) {
     return
@@ -72,7 +84,22 @@ function setcontenteditor(content) {
 
   const index = content.indexOf('{"result":')
   editor.value.commands.setContent(content.substring(0, index - 1), false)
+  emits('update:modelValue', editor.value.getHTML())
 }
+
+watch(() => props.modelValue, (first, prev) => {
+  // console.log('watch', first)
+  const isSame = editor.value.getHTML() === first
+
+  // JSON
+  // const isSame = JSON.stringify(this.editor.getJSON()) === JSON.stringify(value)
+
+  if (isSame) {
+    return
+  }
+
+  editor.value.commands.setContent(first, false)
+})
 </script>
 
 <style lang="scss">
@@ -87,17 +114,14 @@ function setcontenteditor(content) {
   // display: flex;
   // flex-direction: column;
 
-  p {
-    display:flex;
-    img{
-      margin:5px;
-    }
+  p:has(img) {
+    float:none;
   }
 
    pre {
     background: #0D0D0D;
     color: #FFF;
-    font-family: 'JetBrainsMono', monospace;
+    // font-family: 'JetBrainsMono', monospace;
     padding: 10px;
     border-radius: 0.5rem;
 
@@ -111,8 +135,6 @@ function setcontenteditor(content) {
 
   img {
     max-width: 100%;
-    height: auto;
-
     &.ProseMirror-selectednode {
       outline: 3px solid $primary;
     }
@@ -120,15 +142,26 @@ function setcontenteditor(content) {
 
   .custom-image-small {
     width: 200px;
-    height: auto;
+    height: fit-content;
+    // height: auto;
   }
   .custom-image-medium {
     width: 500px;
-    height: auto;
+    height: fit-content;
+    // height: auto;
   }
   .custom-image-large {
     width: 100%;
-    height: auto;
+    height: fit-content;
+    // height: auto;
+  }
+  .custom-image-left {
+    float: left;
+    margin-right: 0.5rem;
+  }
+  .custom-image-right {
+    float: right;
+    margin-left: 0.5rem;
   }
 
   blockquote {

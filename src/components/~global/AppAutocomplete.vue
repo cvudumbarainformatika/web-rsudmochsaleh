@@ -19,6 +19,8 @@
     :disable="disable"
     :loading="loading"
     lazy-rules
+    :multiple="multiple"
+    :use-chips="multiple"
     :rules="[anotherValid]"
     @filter="filterFn"
     @focus="getFocus"
@@ -48,7 +50,8 @@ const props = defineProps({
   filled: { type: Boolean, default: true },
   outlined: { type: Boolean, default: false },
   valid: { type: Boolean, default: false },
-  filterred: { type: Boolean, default: true }
+  filterred: { type: Boolean, default: true },
+  multiple: { type: Boolean, default: false }
 })
 const refAuto = ref(null)
 const optionx = ref(props.source)
@@ -99,6 +102,9 @@ function anotherValid (val) {
 
 function createValue (val, done) {
   if (!props.filterred) {
+    // if (props.multiple) {
+    //   console.log(val)
+    // }
     emits('onEnter', val)
     done(val)
   }

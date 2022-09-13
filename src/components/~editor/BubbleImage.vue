@@ -25,6 +25,22 @@
         label="Large"
         @click="editor.chain().focus().setSize({ size: 'large' }).run()"
       />
+      <q-btn
+        size="xs"
+        color="primary"
+        rounded
+        glossy
+        label="Left"
+        @click="editor.chain().focus().setPos({ pos: 'left' }).run()"
+      />
+      <q-btn
+        size="xs"
+        color="primary"
+        rounded
+        glossy
+        label="Right"
+        @click="editor.chain().focus().setPos({ pos: 'right' }).run()"
+      />
     </q-btn-group>
   </div>
 </template>

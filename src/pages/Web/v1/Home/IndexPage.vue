@@ -1,41 +1,21 @@
 <template>
   <q-page>
-    <q-scroll-area
-      class="absolute-top fit"
-      @scroll="onScroll"
-    >
-      <!-- header -->
-      <!-- <header-web /> -->
-      <!-- carousel -->
-      <carousel-web />
-      <!-- section -->
-      <section-one />
-      <section-two class="q-pb-lg" />
-      <section-three class="q-pb-lg" />
-      <section-four class="q-pb-lg" />
-      <app-footer />
-    </q-scroll-area>
+    <Suspense>
+      <HomePage />
+      <template #fallback>
+        <app-loading />
+      </template>
+    </Suspense>
+    <!-- <app-loading /> -->
   </q-page>
 </template>
 
 <script setup>
-// import { scroll } from 'quasar'
-// const { getScrollTarget, setVerticalScrollPosition } = scroll
-// import HeaderWeb from './HeaderWeb.vue'
-import CarouselWeb from 'src/components/~web/CarouselWeb.vue'
-import SectionOne from 'src/components/~web/SectionOne.vue'
-import SectionTwo from 'src/components/~web/SectionTwo.vue'
-import SectionThree from 'src/components/~web//SectionThree.vue'
-import SectionFour from './SectionFour.vue'
-import { useAppStore } from 'src/stores/app'
+import { defineAsyncComponent } from 'vue'
 
-const store = useAppStore()
-const onScroll = (info) => {
-  const moveToY = info.verticalPosition
-  if (moveToY > 100) {
-    store.changeVisible(true)
-  } else {
-    store.changeVisible(false)
-  }
-}
+const HomePage = defineAsyncComponent(() => import('./HomePage.vue'/* webpackChunkName: "HomePage" */))
 </script>
+
+<style lang="scss" scoped>
+
+</style>

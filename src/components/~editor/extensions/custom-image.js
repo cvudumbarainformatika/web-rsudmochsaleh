@@ -6,7 +6,8 @@ export default Image.extend({
 
   addOptions: {
     ...Image.options,
-    sizes: ['small', 'medium', 'large']
+    sizes: ['small', 'medium', 'large'],
+    pos: ['left', 'middle', 'right']
   },
 
   addAttributes() {
@@ -14,6 +15,10 @@ export default Image.extend({
       ...Image.config.addAttributes(),
       size: {
         default: 'small',
+        rendered: false
+      },
+      pos: {
+        default: 'left',
         rendered: false
       }
 
@@ -85,6 +90,39 @@ export default Image.extend({
         if (dispatch) {
           tr.replaceRangeWith(selection.from, selection.to, node)
         }
+      },
+      setPos: (attributes) => ({ tr, dispatch }) => {
+        // Check it's a valid size option
+        if (!this.options.pos.includes(attributes.pos)) {
+          return false
+        }
+
+        const { selection } = tr
+
+        // We're calling, for example:
+        //
+        // editor
+        //   .chain()
+        //   .focus()
+        //   .setPos({ pos: 'left' })
+        //   .run()
+        //
+        // from the bubble menu
+        // so `attributes` is { size: 'small' }
+        // which will add/overwrite the current
+        // `selection.node.attrs` attributes
+        // including, importantly, `src` :)
+
+        const options = {
+          ...selection.node.attrs,
+          ...attributes
+        }
+
+        const node = this.type.create(options)
+
+        if (dispatch) {
+          tr.replaceRangeWith(selection.from, selection.to, node)
+        }
       }
     }
   },
@@ -95,7 +133,8 @@ export default Image.extend({
     // corresponding class
 
     const size = node.attrs.size
-    HTMLAttributes.class = ' custom-image-' + size
+    const pos = node.attrs.pos
+    HTMLAttributes.class = ' custom-image-' + size + ' custom-image-' + pos
 
     return [
       'img',

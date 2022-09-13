@@ -41,9 +41,13 @@ h1,h2,h3,h4,h5 {
 }
 
 .container-padding {
-  @media(max-width: $breakpoint-lg-max){
-    padding-left: 150px;
-    padding-right: 150px;
+  @media(min-width: $breakpoint-lg-min){
+    padding-left: 15%;
+    padding-right: 15%;
+  }
+  @media(max-width: $breakpoint-lg-min){
+    padding-left: 15%;
+    padding-right: 15%;
   }
   @media(max-width: $breakpoint-sm-min){
       padding-left: 10px;

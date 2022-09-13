@@ -3,16 +3,29 @@
     <q-list
       bordered
       separator
-      class="rounded-borders"
+      class="rounded-borders q-mb-xl"
     >
       <q-item-label header>
         Table Data Berita
       </q-item-label>
       <q-separator />
+      <div
+        v-if="store.items.length === 0"
+        class="column flex-center text-grey-8"
+        style="min-height:300px"
+      >
+        <q-icon
+          name="list_alt"
+          size="md"
+        />
+        <div>Data belum ada</div>
+      </div>
       <q-item
-        v-for="n in 10"
+        v-for="(item, n) in store.items"
+        v-else
         :key="n"
         class="q-py-sm"
+        tag="String"
       >
         <q-item-section
           avatar
@@ -20,20 +33,19 @@
         >
           <q-img
             :ratio="16/9"
-            src="~assets/images/rsud.jpg"
+            :src="pathImg + item.thumbnail"
           />
         </q-item-section>
 
-        <q-item-section>
+        <q-item-section top>
           <q-item-label lines="1">
-            <span class="text-weight-medium">[quasarframework/quasar]</span>
-            <span class="text-grey-8"> - GitHub repository</span>
+            <span class="text-weight-bold f-16">{{ item.judul }}</span>
           </q-item-label>
           <q-item-label
             caption
-            lines="1"
+            lines="2"
           >
-            @rstoenescu in #3: > Generic type parameter for props
+            <div v-html="item.content" />
           </q-item-label>
           <q-item-label
             lines="1"
@@ -54,6 +66,7 @@
               dense
               round
               icon="delete"
+              @click="store.deletesData(item.id)"
             />
             <q-btn
               class="gt-xs"
@@ -73,6 +86,20 @@
           </div>
         </q-item-section>
       </q-item>
+      <q-separator />
+      <q-item-label header>
+        Table Data Berita
+      </q-item-label>
     </q-list>
   </q-card>
 </template>
+
+<script setup>
+import { pathImg } from 'src/boot/axios'
+import { useBeritaTable } from 'src/stores/admin/berita/table'
+
+const store = useBeritaTable()
+
+store.getDataTable()
+
+</script>

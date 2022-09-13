@@ -1,5 +1,5 @@
 <template>
-  <q-page class="padding-page">
+  <q-page>
     <div class="row q-col-gutter-lg">
       <div class="col-md-8 col-xs-12">
         <app-cardnews />
@@ -59,5 +59,9 @@ const slide = ref(1)
 <style lang="scss" scoped>
 .padding-page {
   padding-top:60px;
+}
+
+.border__tab {
+  border:1px solid $grey-4;
 }
 </style>

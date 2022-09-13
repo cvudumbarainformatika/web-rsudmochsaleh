@@ -20,6 +20,7 @@
     :input-class="currency?'text-right':''"
     :mask="currency?mask:''"
     :reverse-fill-mask="currency"
+    @update:model-value="(val)=>emits('change', val)"
   >
     <template
       v-if="error"
@@ -52,7 +53,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-// const emits = defineEmits(['showDate'])
+const emits = defineEmits(['change'])
 const props = defineProps({
   icon: {
     type: String,

@@ -1,13 +1,14 @@
 import { defineStore } from 'pinia'
 import { api } from 'boot/axios'
 // import { routerInstance } from 'src/boot/router'
-// import { notifErr, notifSuccess } from 'src/modules/utils'
+import { notifSuccess } from 'src/modules/utils'
 // import { Dialog } from 'quasar'
 
 export const useCategoryStore = defineStore('category_index', {
   state: () => ({
     items: [],
-    loading: false
+    loading: false,
+    pick: 'all'
   }),
 
   // getters: {
@@ -19,10 +20,36 @@ export const useCategoryStore = defineStore('category_index', {
   actions: {
     async getAll () {
       this.loading = true
-      const resp = await api.get('/v1/categories')
-      console.log('categories', resp)
-      this.items = resp.data
-      this.loading = false
+      await api.get('/v1/categories').then((resp) => {
+        console.log('categories', resp)
+        this.items = resp.data
+        this.loading = false
+      })
+    },
+
+    async storeData (params) {
+      this.loading = true
+      await api.post('/v1/store_category', params).then((resp) => {
+        console.log('categories', resp)
+        notifSuccess(resp)
+        this.getAll()
+        this.loading = false
+        return new Promise((resolve, reject) => {
+          resolve(resp)
+        })
+      })
+    },
+    async deleteData (params) {
+      this.loading = true
+      await api.post('/v1/delete_category', params).then((resp) => {
+        console.log('categories', resp)
+        notifSuccess(resp)
+        this.getAll()
+        this.loading = false
+        return new Promise((resolve, reject) => {
+          resolve(resp)
+        })
+      })
     }
   }
 })

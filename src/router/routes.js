@@ -40,9 +40,14 @@ const routes = [
         path: '/berita',
         component: () => import('pages/Web/TemplateIndex.vue'),
         children: [
-          { path: '', name: 'berita', component: () => import('src/pages/Web/v1/Berita/IndexPage.vue') },
+          { path: '', name: 'berita', component: () => import(/* webpackChunkName: "index-berita" */'src/pages/Web/v1/Berita/IndexPage.vue') },
           {
-            path: 'page/berita/:slug',
+            path: '/berita/:page',
+            // meta: { carousel: false },
+            component: () => import(/* webpackChunkName: "page-berita" */ 'src/pages/Web/v1/Berita/PageBerita.vue')
+          },
+          {
+            path: '/berita/:page/:slug',
             // meta: { carousel: false },
             component: () => import(/* webpackChunkName: "page-slug" */ 'src/pages/Web/v1/Berita/PageSlug.vue')
           }

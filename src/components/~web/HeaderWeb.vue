@@ -54,7 +54,9 @@
       </q-bar>
     </div>
     <!-- </transition> -->
-    <div :class="store.visible?'bg-primary':'transparent'">
+    <div
+      :class="store.visible?'bg-primary':'transparent'"
+    >
       <q-bar
         class="container-padding"
         style="height:60px"
@@ -96,12 +98,20 @@
         </div>
       </q-bar>
     </div>
+    <div
+      v-show="!beranda"
+      v-if="store.visible"
+      class="container-padding bg-white"
+    >
+      <app-tab-header />
+    </div>
   </div>
 </template>
 <script setup>
 import { pathImg } from 'src/boot/axios'
 import { useAppStore } from 'src/stores/app'
 import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 defineProps({
   fixed: {
@@ -111,7 +121,11 @@ defineProps({
 })
 
 const store = useAppStore()
+const route = useRoute()
+const beranda = computed(() => route.name === 'beranda')
 store.getAppHeader()
+
+// console.log(route)
 
 const logo = computed(() => {
   if (store.logo === null) {
