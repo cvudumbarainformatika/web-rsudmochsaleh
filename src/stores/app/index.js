@@ -5,6 +5,7 @@ import { notifSuccess } from 'src/modules/utils'
 export const useAppStore = defineStore('app', {
   state: () => ({
     logo: null,
+    banner: null,
     header: {
       phone: '0812-3766-0656',
       link_fb: 'https://facebook.com',
@@ -81,6 +82,7 @@ export const useAppStore = defineStore('app', {
             this.header.email = resp.data.email
 
             this.logo = resp.data.logo
+            this.banner = resp.data.banner
 
             // sections
             this.section_one = resp.data.section_one
@@ -116,6 +118,23 @@ export const useAppStore = defineStore('app', {
       this.loading = true
       try {
         await api.post('/v1/header/store_logo', file, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }).then((resp) => {
+          console.log(resp)
+          notifSuccess(resp)
+          this.getAppHeader()
+          this.loading = false
+        })
+      } catch (error) {
+        this.loading = false
+      }
+    },
+    async updateBanner(file) {
+      this.loading = true
+      try {
+        await api.post('/v1/header/store_banner', file, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }

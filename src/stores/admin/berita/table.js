@@ -66,16 +66,20 @@ export const useBeritaTable = defineStore('berita_table', {
     },
     async getDataTable () {
       this.loading = true
-      const params = { params: this.params }
-      const resp = await api.get('/v1/beritas', params)
-      console.log('items', resp)
-      if (resp.status === 200) {
-        this.items = resp.data.data
-        this.meta = resp.data.meta
-        this.setColumns(resp.data.data)
+      try {
+        const params = { params: this.params }
+        const resp = await api.get('/v1/beritas', params)
+        console.log('items', resp)
+        if (resp.status === 200) {
+          this.items = resp.data.data
+          this.meta = resp.data
+          this.setColumns(resp.data.data)
+          this.loading = false
+        }
+        this.loading = false
+      } catch (error) {
         this.loading = false
       }
-      this.loading = false
     },
     async deletesData (payload) {
       const params = { id: payload }

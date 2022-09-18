@@ -140,7 +140,7 @@
       <!-- </div> -->
       <q-separator />
       <q-item-label header>
-        Table Data Berita
+        <app-pagination-table :meta="store.meta" />
       </q-item-label>
     </q-list>
   </q-card>

@@ -47,7 +47,7 @@ export const useAuthStore = defineStore('auth', {
       this.token = token
       this.user = user
       this.loading = false
-      routerInstance.push('/admin')
+      routerInstance.push('/setset')
     },
     REMOVE_LOKAL () {
       storage.deleteLocalToken()

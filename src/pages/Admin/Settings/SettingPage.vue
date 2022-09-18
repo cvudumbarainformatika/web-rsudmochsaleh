@@ -106,7 +106,7 @@
     >
       <template #content>
         <div>
-          BANNER
+          <app-banner-web admin />
         </div>
       </template>
     </app-card>

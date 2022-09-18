@@ -1,7 +1,7 @@
 
 const routes = [
   {
-    path: '/admin',
+    path: '/setset',
     component: () => import('layouts/Admin/v2/AdminLayout.vue'),
     meta: { requireAuth: true },
     children: [

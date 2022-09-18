@@ -65,17 +65,21 @@ export const usePelayananTable = defineStore('pelayanan_table', {
       this.getDataTable()
     },
     async getDataTable () {
-      this.loading = true
-      const params = { params: this.params }
-      const resp = await api.get('/v1/pelayanans', params)
-      console.log('items', resp)
-      if (resp.status === 200) {
-        this.items = resp.data.data
-        this.meta = resp.data.meta
-        this.setColumns(resp.data.data)
+      try {
+        this.loading = true
+        const params = { params: this.params }
+        const resp = await api.get('/v1/pelayanans', params)
+        console.log('items', resp)
+        if (resp.status === 200) {
+          this.items = resp.data.data
+          this.meta = resp.data
+          this.setColumns(resp.data.data)
+          this.loading = false
+        }
+        this.loading = false
+      } catch (error) {
         this.loading = false
       }
-      this.loading = false
     },
     async deletesData (payload) {
       const params = { id: payload }
