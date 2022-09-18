@@ -19,11 +19,11 @@
       <div class="row q-col-gutter-lg q-mt-lg">
         <!-- BIG NEWS -->
         <div class="col-md-7 col-xs-12">
-          <app-cardnews />
+          <app-cardnews :big-card-news="storeBerita.bigCardNews" />
         </div>
         <!-- CHILD NEWS -->
         <div class="col-md-5 col-xs-12">
-          <app-list-news />
+          <app-list-news :items="storeBerita.smallCardNews" />
         </div>
       </div>
     </div>
@@ -42,6 +42,6 @@ const items = computed(() => {
 console.log(items)
 
 onMounted(() => {
-  storeBerita.getData()
+  storeBerita.getData('all')
 })
 </script>

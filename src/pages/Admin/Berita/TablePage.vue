@@ -6,7 +6,24 @@
       class="rounded-borders q-mb-xl"
     >
       <q-item-label header>
-        Table Data Berita
+        <div class="row items-center justify-between">
+          <div>Table Data Berita</div>
+          <div>
+            <q-select
+              v-model="sel"
+              dense
+              filled
+              :options="filters"
+              label="Filter"
+              map-options
+              emit-value
+              option-label="label"
+              option-value="status"
+              style="min-width:100px"
+              @update:model-value="changeFilter"
+            />
+          </div>
+        </div>
       </q-item-label>
       <q-separator />
       <div
@@ -42,16 +59,45 @@
             <span class="text-weight-bold f-16">{{ item.judul }}</span>
           </q-item-label>
           <q-item-label
-            caption
             lines="2"
           >
             <div v-html="item.content" />
           </q-item-label>
           <q-item-label
+            caption
             lines="1"
-            class="q-mt-xs text-body2 text-weight-bold text-primary text-uppercase"
+            align="right"
           >
-            <span class="cursor-pointer">Open in GitHub</span>
+            <div class="f-10">
+              <q-badge
+                round
+                color="primary"
+                :label="getCategories(item.categories)"
+              />
+            </div>
+          </q-item-label>
+          <q-item-label
+            lines="1"
+            class="q-mt-xs text-body2 text-weight-bold text-uppercase"
+          >
+            <span
+              class="cursor-pointer"
+              :class="item.status === 1?'text-negative':'text-primary'"
+              @click="updateStatus(item)"
+            >{{ item.status === 1? 'Draft / Belum di Publish':'Published' }}</span>
+            <span>
+              <q-btn
+                v-if="item.status === 2"
+                no-caps
+                dense
+                size="xs"
+                color="info"
+                label="view"
+                class="q-ml-md"
+                :to="{name:'berita', params:{page:item.categories[0].url}, query:{page:item.slug}}"
+                target="_blank"
+              />
+            </span>
           </q-item-label>
         </q-item-section>
 
@@ -61,27 +107,20 @@
           <div class="text-grey-8 q-gutter-xs">
             <q-btn
               class="gt-xs"
-              size="12px"
+              size="sm"
               flat
               dense
               round
               icon="delete"
-              @click="store.deletesData(item.id)"
+              @click="deleteData(item)"
             />
             <q-btn
-              class="gt-xs"
-              size="12px"
+              size="sm"
               flat
               dense
               round
-              icon="done"
-            />
-            <q-btn
-              size="12px"
-              flat
-              dense
-              round
-              icon="more_vert"
+              icon="edit"
+              @click="form.editForm(item)"
             />
           </div>
         </q-item-section>
@@ -95,11 +134,52 @@
 </template>
 
 <script setup>
+import { useQuasar } from 'quasar'
 import { pathImg } from 'src/boot/axios'
 import { useBeritaTable } from 'src/stores/admin/berita/table'
+import { ref } from 'vue'
+import { useBeritaForm } from '../../../stores/admin/berita/form'
 
+const $q = useQuasar()
 const store = useBeritaTable()
+const form = useBeritaForm()
+
+const sel = ref('')
+const filters = ref([
+  { status: '', label: 'Semua' },
+  { status: 1, label: 'Draft' },
+  { status: 2, label: 'Publish' }
+])
 
 store.getDataTable()
+
+function deleteData(item) {
+  $q.dialog({
+    title: 'Pemberitahuan!',
+    message: `Apakah data <b> ${item.judul} </b> Akan di hapus?`,
+    cancel: true,
+    persistent: true,
+    html: true
+  }).onOk(() => {
+    store.deletesData(item.id)
+  }).onCancel(() => {
+    // console.log('Cancel')
+  }).onDismiss(() => {
+    // console.log('I am triggered on both OK and Cancel')
+  })
+}
+
+function changeFilter(val) {
+  store.setStatus(val)
+}
+function updateStatus(val) {
+  console.log(val)
+  const status = val.status === 1 ? 2 : 1
+  store.updateStatus(val.id, status)
+}
+
+function getCategories(item) {
+  return item.map(x => x.nama).join(', ')
+}
 
 </script>

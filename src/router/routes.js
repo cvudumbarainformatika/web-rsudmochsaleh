@@ -40,17 +40,34 @@ const routes = [
         path: '/berita',
         component: () => import('pages/Web/TemplateIndex.vue'),
         children: [
-          { path: '', name: 'berita', component: () => import(/* webpackChunkName: "index-berita" */'src/pages/Web/v1/Berita/IndexPage.vue') },
+          // { path: '', name: 'berita', component: () => import(/* webpackChunkName: "index-berita" */'src/pages/Web/v1/Berita/IndexPage.vue') },
+          { path: '', redirect: '/berita/all' },
           {
-            path: '/berita/:page',
-            // meta: { carousel: false },
+            path: '/berita/:page?',
+            name: 'berita',
             component: () => import(/* webpackChunkName: "page-berita" */ 'src/pages/Web/v1/Berita/PageBerita.vue')
-          },
-          {
-            path: '/berita/:page/:slug',
-            // meta: { carousel: false },
-            component: () => import(/* webpackChunkName: "page-slug" */ 'src/pages/Web/v1/Berita/PageSlug.vue')
           }
+          // {
+          //   path: '/berita/:page/:slug',
+          //   name: 'slug.berita',
+          //   component: () => import(/* webpackChunkName: "page-slug" */ 'src/pages/Web/v1/Berita/PageSlug.vue')
+          // }
+          // {
+          //   path: '/page-berita',
+          //   // redirect: '/berita/all/',
+          //   name: 'page.berita',
+          //   component: () => import('src/pages/Web/v1/Berita/IndexPage.vue'),
+          //   children: [
+          //     {
+          //       path: '/page-berita/:page',
+          //       component: () => import(/* webpackChunkName: "page-berita" */ 'src/pages/Web/v1/Berita/PageBerita.vue')
+          //     },
+          //     {
+          //       path: '/page-berita/:page/:slug',
+          //       component: () => import(/* webpackChunkName: "page-slug" */ 'src/pages/Web/v1/Berita/PageSlug.vue')
+          //     }
+          //   ]
+          // }
         ]
       }
     ]

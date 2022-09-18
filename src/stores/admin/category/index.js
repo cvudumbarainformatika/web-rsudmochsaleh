@@ -18,6 +18,10 @@ export const useCategoryStore = defineStore('category_index', {
   // },
 
   actions: {
+    setSelected(val) {
+      this.pick = val
+    },
+
     async getAll () {
       this.loading = true
       await api.get('/v1/categories').then((resp) => {

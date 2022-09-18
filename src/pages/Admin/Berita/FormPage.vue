@@ -85,7 +85,7 @@
                     thumbnail
                   >
                     <q-checkbox
-                      v-model="selectedCategories"
+                      v-model="store.selectedCategories"
                       size="xs"
                       :val="item.id"
                       @update:model-value="arrToString"
@@ -183,11 +183,22 @@ import { useQuasar } from 'quasar'
 import { notifErrVue } from 'src/modules/utils'
 import { sanitizeTitle } from 'src/modules/shared'
 import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { pathImg } from 'src/boot/axios'
 
 const $q = useQuasar()
+const router = useRouter()
 const store = useBeritaForm()
 const storeCategories = useCategoryStore()
-const selectedCategories = ref([])
+// const selectedCategories = computed({
+//   get() {
+//     return store.selectedCategories
+//   },
+//   set(newVal){
+
+//   }
+// })
+// const selectedCategories = ref([])
 // const proxyEdit = ref(false)
 const newCategori = ref(null)
 // const content = ref('ketik berita disini')
@@ -198,6 +209,9 @@ const tempImg = ref(null)
 const previewImage = computed(() => {
   const imgUrl = tempImg.value
   if (imgUrl === null) {
+    if (store.form.image !== null) {
+      return pathImg + store.form.image
+    }
     return new URL('../../../assets/images/no-image.png', import.meta.url).href
   }
   return URL.createObjectURL(imgUrl)
@@ -215,39 +229,53 @@ function setSlug(val) {
 }
 
 function arrToString(arr) {
-  const result = arr.join(',')
-  console.log(result)
+  // const result = arr.join(',')
+  console.log(arr)
 }
 
 function onSave() {
-  console.log(store.form.content)
+  // console.log(store.form.content)
+  const formData = new FormData()
   if (store.form.title === null || store.form.title === '') {
     return notifErrVue('maaf, Judul diisi terlebih dahulu!')
   }
-  if (tempImg.value === null) {
-    return notifErrVue('maaf!, Gambar Thumbnail Belum dipilih')
+  if (store.edited === false) {
+    if (tempImg.value === null) {
+      return notifErrVue('maaf!, Gambar Thumbnail Belum dipilih')
+    }
   }
+
   if (store.form.content === null || store.form.content === '' || store.form.content === '<p></p>') {
     return notifErrVue('maaf, Berita Belum terisi!')
   }
-  if (selectedCategories.value.length === 0) {
+  if (store.selectedCategories.length === 0) {
     return notifErrVue('maaf, Seleksi Kategori terlebih dahulu!')
   }
 
-  const formData = new FormData()
+  if (tempImg.value !== null) {
+    formData.append('thumbnail', tempImg.value)
+  }
+  if (store.form.id) {
+    formData.append('id', store.form.id)
+  }
+
   formData.append('judul', store.form.title)
   formData.append('slug', store.form.slug)
   formData.append('content', store.form.content)
-  formData.append('thumbnail', tempImg.value)
+
   // formData.append('category_id', selectedCategories.value)
-  for (let i = 0; i < selectedCategories.value.length; i++) {
-    formData.append('category_id[]', selectedCategories.value[i])
+  for (let i = 0; i < store.selectedCategories.length; i++) {
+    formData.append('category_id[]', store.selectedCategories[i])
   }
+
+  // console.log('tempImg', tempImg.value)
+  // console.log('edited', store.edited)
+  // console.log(router)
 
   store.saveData(formData).then(() => {
     tempImg.value = null
-    selectedCategories.value = []
-    store.resetForm()
+    store.resetFORM()
+    router.push('/admin/berita')
   })
 }
 
@@ -256,7 +284,8 @@ function addKategori() {
     return
   }
   const params = {
-    nama: newCategori.value
+    nama: newCategori.value,
+    url: sanitizeTitle(newCategori.value)
   }
   storeCategories.storeData(params).then(() => {
     newCategori.value = null
@@ -269,7 +298,8 @@ function editCategory(scope, id) {
   }
   const params = {
     id,
-    nama: scope.value
+    nama: scope.value,
+    url: sanitizeTitle(scope.value)
   }
   storeCategories.storeData(params).then(() => {
     scope.set()
@@ -296,6 +326,7 @@ function deleteCategory(i) {
 }
 
 onMounted(() => {
+  tempImg.value = null
   storeCategories.getAll()
 })
 

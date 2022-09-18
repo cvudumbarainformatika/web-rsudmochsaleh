@@ -1,37 +1,11 @@
 <template>
   <q-page>
-    <div class="row q-col-gutter-lg">
+    <!-- <div class="row q-col-gutter-lg">
       <div class="col-md-8 col-xs-12">
-        <app-cardnews />
+        <app-cardnews :big-card-news="store.bigCardNews" />
         <q-separator class="q-my-md" />
         <div class="f-14 text-weight-bold">
           Berita Terpopuler
-        </div>
-        <q-separator class="q-mt-md" />
-        <div>
-          <q-carousel
-            v-model="slide"
-            transition-prev="slide-right"
-            transition-next="slide-left"
-            swipeable
-            animated
-            infinite
-            autoplay
-            arrows
-            class="rounded-borders"
-            height="250px"
-          >
-            <q-carousel-slide
-              :name="1"
-              class="column no-wrap"
-            >
-              <div class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap">
-                <app-smallcard-news class="col-4" />
-                <app-smallcard-news class="col-4" />
-                <app-smallcard-news class="col-4" />
-              </div>
-            </q-carousel-slide>
-          </q-carousel>
         </div>
       </div>
       <div class="col-md-4 col-xs-12">
@@ -39,21 +13,40 @@
           Berita Terbaru
         </div>
         <q-separator class="q-my-md" />
-        <app-list-news />
+        <app-list-news :items="store.smallCardNews" />
         <q-separator class="q-my-md" />
         <div class="f-14 text-weight-bold">
           Kategori
         </div>
         <q-separator class="q-my-md" />
       </div>
-    </div>
+    </div> -->
+    <router-view v-slot="{ Component }">
+      <transition
+        name="fade"
+        mode="out-in"
+      >
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </q-page>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+// import { ref } from 'vue'
+// import { useBeritaWeb } from 'src/stores/web/berita'
+// import { onMounted } from 'vue'
+// import { useRoute } from 'vue-router'
 
-const slide = ref(1)
+// const route = useRoute()
+// // import { computed } from 'vue'
+// const store = useBeritaWeb()
+
+// onMounted(() => {
+//   const params = Object.keys(route.params).length === 0 ? 'all' : route.params.page
+//   store.getData(params)
+// })
+// const slide = ref(1)
 </script>
 
 <style lang="scss" scoped>

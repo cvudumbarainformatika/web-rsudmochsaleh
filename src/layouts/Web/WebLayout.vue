@@ -4,6 +4,8 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <app-footer />
   </q-layout>
 </template>
 

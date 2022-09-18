@@ -8,7 +8,7 @@ export const useBeritaStore = defineStore('berita_table', {
   //   doubleCount: (state) => state.counter * 2
   // },
   actions: {
-    increment () {
+    async getWebBerita () {
       this.counter++
     }
   }

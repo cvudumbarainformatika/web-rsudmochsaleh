@@ -1,21 +1,24 @@
 <template>
-  <div class="editor">
+  <div>
     <editor-button
+      v-if="edited"
       :editor="editor"
       @onimportword="setcontenteditor"
     />
-    <editor-content
-      :editor="editor"
-    />
-    <bubble-menu
-      v-if="editor"
-      v-show="editor.isActive('custom-image')"
-      :editor="editor"
-    >
-      <!-- <q-btn-group rounded> -->
-      <bubble-image :editor="editor" />
+    <div :class="edited?'editor':''">
+      <editor-content
+        :editor="editor"
+      />
+      <bubble-menu
+        v-if="editor && edited"
+        v-show="editor.isActive('custom-image')"
+        :editor="editor"
+      >
+        <!-- <q-btn-group rounded> -->
+        <bubble-image :editor="editor" />
       <!-- </q-btn-group> -->
-    </bubble-menu>
+      </bubble-menu>
+    </div>
   </div>
 </template>
 
@@ -43,6 +46,10 @@ const props = defineProps({
   modelValue: {
     type: String,
     default: null
+  },
+  edited: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -50,6 +57,7 @@ const emits = defineEmits(['update:modelValue'])
 
 const editor = useEditor({
   content: props.modelValue,
+  editable: props.edited,
   extensions: [
     StarterKit,
     Underline,
@@ -100,17 +108,60 @@ watch(() => props.modelValue, (first, prev) => {
 
   editor.value.commands.setContent(first, false)
 })
+watch(() => props.edited, (first, prev) => {
+  console.log('watch edited', first)
+  editor.value.setEditable(first, false)
+})
 </script>
 
 <style lang="scss">
   .editor {
     border:1px solid $grey-3;
+    height:100vh;
+    overflow: auto !important;
   }
+
+[contenteditable=false] {
+  color: $grey-10;
+  // cursor: none;
+
+  .ProseMirror{
+    p:has(img) {
+      float:none;
+    }
+    p {
+      img.custom-image{
+        &-small {
+          width: 200px !important;
+          // height: fit-content;
+          // height: auto;
+        }
+        &-medium {
+          width: 500px !important;
+          // height: fit-content;
+          // height: auto;
+        }
+        &-large {
+          width: 100% !important;
+          // height: fit-content;
+          // height: auto;
+        }
+        &-left {
+          float: left;
+          margin-right: 0.5rem;
+        }
+        &-right {
+          float: right;
+          margin-left: 0.5rem;
+        }
+      }
+    }
+  }
+}
 .ProseMirror{
   width: 100% !important;
-  overflow: auto !important;
-  height:100vh;
   padding: 10px;
+  height:100%;
   // display: flex;
   // flex-direction: column;
 
@@ -141,17 +192,17 @@ watch(() => props.modelValue, (first, prev) => {
   }
 
   .custom-image-small {
-    width: 200px;
+    width: 200px !important;
     height: fit-content;
     // height: auto;
   }
   .custom-image-medium {
-    width: 500px;
+    width: 500px !important;
     height: fit-content;
     // height: auto;
   }
   .custom-image-large {
-    width: 100%;
+    width: 100% !important;
     height: fit-content;
     // height: auto;
   }

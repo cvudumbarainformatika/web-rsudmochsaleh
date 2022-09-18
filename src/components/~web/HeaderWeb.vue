@@ -92,6 +92,8 @@
             :key="i"
             :to="`/${menu.name}`"
             class="menu__item"
+            :class="route.name===menu.name?'active':''"
+            exact
           >
             {{ menu.title }}
           </router-link>
@@ -181,6 +183,11 @@ a.menu__item {
     }
 }
 a.router-link-active {
+  background-color: $secondary;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+a.active {
   background-color: $secondary;
   border-radius: 5px;
   transition: all 0.3s ease;

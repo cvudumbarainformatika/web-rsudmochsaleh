@@ -1,49 +1,55 @@
 <template>
   <q-page
-    class="container-padding page--web"
+    v-scroll="onScroll"
+    class="container-padding"
   >
-    <q-scroll-area
+    <!-- <q-scroll-area
       class="absolute-top fit"
       @scroll="onScroll"
+    > -->
+    <!-- banner -->
+    <app-banner-web />
+    <!-- tab router header -->
+    <!-- <keep-alive> -->
+    <div>
+      <app-tab-header />
+    </div>
+    <!-- </keep-alive> -->
+    <div
+      style="min-height:400px"
     >
-      <!-- banner -->
-      <app-banner-web />
-      <!-- tab router header -->
-      <!-- <keep-alive> -->
-      <div
-        class="container-padding"
-      >
-        <app-tab-header />
-      </div>
-      <!-- </keep-alive> -->
-      <div
-        class="container-padding"
-        style="min-height:400px"
-      >
-        <div>
-          <router-view />
-        </div>
-      </div>
-      <!-- footer -->
-      <app-footer />
-    </q-scroll-area>
+      <router-view v-slot="{ Component }">
+        <transition
+          name="fade"
+          mode="out-in"
+        >
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </div>
+    <!-- footer -->
+    <!-- </q-scroll-area> -->
   </q-page>
 </template>
 <script setup>
 import { useAppStore } from 'src/stores/app'
 import { useCategoryStore } from 'src/stores/admin/category'
+import { onMounted } from 'vue'
 // import { computed } from 'vue'
 // import { ref } from 'vue'
 
 const storeCategory = useCategoryStore()
 // const categories = computed(() => storeCategory.items)
 
-storeCategory.getAll()
+onMounted(() => {
+  storeCategory.getAll()
+})
 
 const store = useAppStore()
-const onScroll = (info) => {
-  const moveToY = info.verticalPosition
-  if (moveToY > 100) {
+const onScroll = (position) => {
+  // const moveToY = position.verticalPosition
+  // console.log(position)
+  if (position > 150) {
     store.changeVisible(true)
   } else {
     store.changeVisible(false)
@@ -59,4 +65,7 @@ const onScroll = (info) => {
   top:60px;
 }
 
+.web--padding{
+
+}
 </style>

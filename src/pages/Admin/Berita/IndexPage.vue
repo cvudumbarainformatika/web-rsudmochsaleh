@@ -27,7 +27,7 @@
           color="primary"
           icon="add"
           size="sm"
-          :to="`/admin/berita/form/${'add'}`"
+          @click="form.addForm"
         />
       </div>
     </div>
@@ -46,7 +46,10 @@
 </template>
 
 <script setup>
+import { useBeritaForm } from 'src/stores/admin/berita/form'
 import { useRoute, useRouter } from 'vue-router'
+
+const form = useBeritaForm()
 
 const route = useRoute()
 const router = useRouter()

@@ -17,7 +17,7 @@ const $q = useQuasar()
 // console.log($q.dark.isActive)
 $q.dark.set(false)
 $q.iconSet.set(customIcons)
-document.body.setAttribute(['data-theme'], 'custom')
+document.body.setAttribute(['data-theme'], 'wew')
 
 // onMounted(() => {
 //   for (let i = 0; i < store.themes.length; i++) {

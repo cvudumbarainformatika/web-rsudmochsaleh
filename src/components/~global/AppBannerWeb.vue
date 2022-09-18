@@ -1,5 +1,5 @@
 <template>
-  <div class="container-padding">
+  <div>
     <q-parallax
       :height="250"
       :speed="0.5"

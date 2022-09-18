@@ -12,6 +12,7 @@ export const useBeritaTable = defineStore('berita_table', {
     loading: false,
     params: {
       q: '',
+      status: '',
       page: 1,
       per_page: 10,
       order_by: 'created_at',
@@ -48,6 +49,11 @@ export const useBeritaTable = defineStore('berita_table', {
       this.params.page = 1
       this.getDataTable()
     },
+    setStatus (payload) {
+      this.params.status = payload
+      this.params.page = 1
+      this.getDataTable()
+    },
     setColumns (payload) {
       const thumb = payload.map(x => Object.keys(x))
       this.columns = thumb[0]
@@ -75,6 +81,18 @@ export const useBeritaTable = defineStore('berita_table', {
       const params = { id: payload }
       try {
         await api.post('/v1/berita/destroy', params).then(resp => {
+          notifSuccess(resp)
+          this.getDataTable()
+        })
+      } catch (error) {
+        console.log('err berita', error.response)
+        notifErr(error.response)
+      }
+    },
+    async updateStatus (id, sta) {
+      const params = { id, status: sta }
+      try {
+        await api.post('/v1/berita/update_status', params).then(resp => {
           notifSuccess(resp)
           this.getDataTable()
         })
