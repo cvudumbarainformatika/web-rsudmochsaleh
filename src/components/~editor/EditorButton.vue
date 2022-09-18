@@ -143,12 +143,12 @@
       <q-separator
         vertical
       />
-      <menu-bar-btn
+      <!-- <menu-bar-btn
         icon="image"
         tooltip="masukkan gambar"
-      />
+      /> -->
       <menu-bar-btn
-        icon="collections"
+        icon="image"
         tooltip="gallery & upload gambar"
         @click="dialogGallery"
       />

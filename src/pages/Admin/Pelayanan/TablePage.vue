@@ -7,8 +7,8 @@
     >
       <q-item-label header>
         <div class="row items-center justify-between">
-          <div>Table Data Berita</div>
-          <div>
+          <div>Table Data Pelayanan</div>
+          <!-- <div>
             <q-select
               v-model="sel"
               dense
@@ -22,7 +22,7 @@
               style="min-width:100px"
               @update:model-value="changeFilter"
             />
-          </div>
+          </div> -->
         </div>
       </q-item-label>
       <q-separator />
@@ -62,20 +62,20 @@
         >
           <q-img
             :ratio="16/9"
-            :src="pathImg + item.thumbnail"
+            :src="getImage(item.thumbnail)"
           />
         </q-item-section>
 
         <q-item-section top>
           <q-item-label lines="1">
-            <span class="text-weight-bold f-16">{{ item.judul }}</span>
+            <span class="text-weight-bold f-16">{{ item.nama }}</span>
           </q-item-label>
           <q-item-label
             lines="2"
           >
             <div v-html="item.content" />
           </q-item-label>
-          <q-item-label
+          <!-- <q-item-label
             caption
             lines="1"
             align="right"
@@ -87,8 +87,8 @@
                 :label="getCategories(item.categories)"
               />
             </div>
-          </q-item-label>
-          <q-item-label
+          </q-item-label> -->
+          <!-- <q-item-label
             lines="1"
             class="q-mt-xs text-body2 text-weight-bold text-uppercase"
           >
@@ -99,18 +99,16 @@
             >{{ item.status === 1? 'Draft / Belum di Publish':'Published' }}</span>
             <span>
               <q-btn
-                v-if="item.status === 2"
                 no-caps
                 dense
                 size="xs"
                 color="info"
                 label="view"
                 class="q-ml-md"
-                :to="{name:'berita', params:{page:item.categories[0].url}, query:{page:item.slug}}"
                 target="_blank"
               />
             </span>
-          </q-item-label>
+          </q-item-label> -->
         </q-item-section>
 
         <q-item-section
@@ -140,7 +138,7 @@
       <!-- </div> -->
       <q-separator />
       <q-item-label header>
-        Table Data Berita
+        Table Data Pelayanan
       </q-item-label>
     </q-list>
   </q-card>
@@ -149,27 +147,34 @@
 <script setup>
 import { useQuasar } from 'quasar'
 import { pathImg } from 'src/boot/axios'
-import { useBeritaTable } from 'src/stores/admin/berita/table'
-import { ref } from 'vue'
-import { useBeritaForm } from '../../../stores/admin/berita/form'
+import { usePelayananForm } from 'src/stores/admin/pelayanan/form'
+import { usePelayananTable } from 'src/stores/admin/pelayanan/table'
+// import { ref } from 'vue'
 
 const $q = useQuasar()
-const store = useBeritaTable()
-const form = useBeritaForm()
+const store = usePelayananTable()
+const form = usePelayananForm()
 
-const sel = ref('')
-const filters = ref([
-  { status: '', label: 'Semua' },
-  { status: 1, label: 'Draft' },
-  { status: 2, label: 'Publish' }
-])
+// const sel = ref('')
+// const filters = ref([
+//   { status: '', label: 'Semua' },
+//   { status: 1, label: 'Draft' },
+//   { status: 2, label: 'Publish' }
+// ])
 
 store.getDataTable()
+
+function getImage(image) {
+  if (image === null || image === '') {
+    return new URL('../../../assets/images/no-image.png', import.meta.url).href
+  }
+  return pathImg + image
+}
 
 function deleteData(item) {
   $q.dialog({
     title: 'Pemberitahuan!',
-    message: `Apakah data <b> ${item.judul} </b> Akan di hapus?`,
+    message: `Apakah data <b> ${item.nama} </b> Akan di hapus?`,
     cancel: true,
     persistent: true,
     html: true
@@ -182,17 +187,17 @@ function deleteData(item) {
   })
 }
 
-function changeFilter(val) {
-  store.setStatus(val)
-}
-function updateStatus(val) {
-  console.log(val)
-  const status = val.status === 1 ? 2 : 1
-  store.updateStatus(val.id, status)
-}
+// function changeFilter(val) {
+//   store.setStatus(val)
+// }
+// function updateStatus(val) {
+//   console.log(val)
+//   const status = val.status === 1 ? 2 : 1
+//   store.updateStatus(val.id, status)
+// }
 
-function getCategories(item) {
-  return item.map(x => x.nama).join(', ')
-}
+// function getCategories(item) {
+//   return item.map(x => x.nama).join(', ')
+// }
 
 </script>

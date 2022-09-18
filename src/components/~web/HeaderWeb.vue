@@ -101,11 +101,19 @@
       </q-bar>
     </div>
     <div
-      v-show="!beranda"
-      v-if="store.visible"
+      v-show="berita && store.visible"
       class="container-padding bg-white"
     >
       <app-tab-header />
+    </div>
+    <div
+      v-show="pelayanan && store.visible"
+      class="container-padding bg-white"
+    >
+      <TabPelayanan
+        v-model="storePelayanan.tab"
+        :items="storePelayanan.items"
+      />
     </div>
   </div>
 </template>
@@ -114,6 +122,8 @@ import { pathImg } from 'src/boot/axios'
 import { useAppStore } from 'src/stores/app'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import TabPelayanan from 'src/pages/Web/v1/Pelayanan/TabPelayanan.vue'
+import { usePelayananWeb } from 'src/stores/web/pelayanan'
 
 defineProps({
   fixed: {
@@ -123,8 +133,11 @@ defineProps({
 })
 
 const store = useAppStore()
+const storePelayanan = usePelayananWeb()
 const route = useRoute()
-const beranda = computed(() => route.name === 'beranda')
+// const beranda = computed(() => route.name === 'beranda')
+const berita = computed(() => route.name === 'berita')
+const pelayanan = computed(() => route.name === 'pelayanan')
 store.getAppHeader()
 
 // console.log(route)
@@ -141,8 +154,9 @@ const menus = ref([
   { name: 'beranda', url: '/', title: 'Beranda', active: false },
   { name: 'berita', url: '/berita', title: 'Berita', active: false },
   { name: 'pelayanan', url: '/pelayanan', title: 'Pelayanan', active: false },
-  { name: 'galeri', url: '/galeri', title: 'Galeri', active: false },
-  { name: 'profil', url: '/profil', title: 'Profil', active: false }
+  { name: 'buku-tamu', url: '/buku-tamu', title: 'Buku Tamu', active: false }
+  // { name: 'galeri', url: '/galeri', title: 'Galeri', active: false },
+  // { name: 'profil', url: '/profil', title: 'Profil', active: false }
 ])
 
 </script>

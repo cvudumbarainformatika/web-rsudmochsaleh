@@ -161,6 +161,7 @@ watch(() => props.edited, (first, prev) => {
 .ProseMirror{
   width: 100% !important;
   padding: 10px;
+  min-height:300px;
   height:100%;
   // display: flex;
   // flex-direction: column;

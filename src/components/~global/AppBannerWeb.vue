@@ -9,8 +9,8 @@
       </template>
 
       <div class="absolute-bottom text-center q-ma-lg">
-        <div class=" my--style text-h6 text-white">
-          Berita
+        <div class=" my--style text-h6 text-white text-capitalize">
+          {{ route.name }}
         </div>
       </div>
     </q-parallax>
@@ -18,7 +18,10 @@
 </template>
 
 <script setup>
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
+console.log('banner', route)
 </script>
 
 <style lang="scss" scoped>

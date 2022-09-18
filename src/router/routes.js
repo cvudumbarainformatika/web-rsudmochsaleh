@@ -20,10 +20,21 @@ const routes = [
         path: '/admin/berita',
         component: () => import(/* webpackChunkName: "admin.berita" */'pages/Admin/Berita/IndexPage.vue'),
         children: [
-          { path: '', name: 'admin.berita', component: () => import('pages/Admin/Berita/TablePage.vue') },
+          { path: '', name: 'admin.berita', component: () => import('pages/Admin/Berita/IndexTable.vue') },
           {
             path: '/admin/berita/form/:id?',
             component: () => import(/* webpackChunkName: "admin.berita-slug" */ 'pages/Admin/Berita/FormPage.vue')
+          }
+        ]
+      },
+      {
+        path: '/admin/pelayanan',
+        component: () => import(/* webpackChunkName: "admin.pelayanan" */'pages/Admin/Pelayanan/IndexPage.vue'),
+        children: [
+          { path: '', name: 'admin.pelayanan', component: () => import('src/pages/Admin/Pelayanan/TablePage.vue') },
+          {
+            path: '/admin/pelayanan/form/:id?',
+            component: () => import(/* webpackChunkName: "admin.pelayanan-form" */ 'pages/Admin/Pelayanan/FormPage.vue')
           }
         ]
       }
@@ -47,27 +58,30 @@ const routes = [
             name: 'berita',
             component: () => import(/* webpackChunkName: "page-berita" */ 'src/pages/Web/v1/Berita/PageBerita.vue')
           }
-          // {
-          //   path: '/berita/:page/:slug',
-          //   name: 'slug.berita',
-          //   component: () => import(/* webpackChunkName: "page-slug" */ 'src/pages/Web/v1/Berita/PageSlug.vue')
-          // }
-          // {
-          //   path: '/page-berita',
-          //   // redirect: '/berita/all/',
-          //   name: 'page.berita',
-          //   component: () => import('src/pages/Web/v1/Berita/IndexPage.vue'),
-          //   children: [
-          //     {
-          //       path: '/page-berita/:page',
-          //       component: () => import(/* webpackChunkName: "page-berita" */ 'src/pages/Web/v1/Berita/PageBerita.vue')
-          //     },
-          //     {
-          //       path: '/page-berita/:page/:slug',
-          //       component: () => import(/* webpackChunkName: "page-slug" */ 'src/pages/Web/v1/Berita/PageSlug.vue')
-          //     }
-          //   ]
-          // }
+        ]
+      },
+      {
+        path: '/pelayanan',
+        component: () => import('pages/Web/TemplateIndex.vue'),
+        children: [
+          { path: '', redirect: '/pelayanan/all' },
+          {
+            path: '/pelayanan/:page?',
+            name: 'pelayanan',
+            component: () => import(/* webpackChunkName: "page-pelayanan" */ 'src/pages/Web/v1/Pelayanan/PagePelayanan.vue')
+          }
+        ]
+      },
+      {
+        path: '/buku-tamu',
+        component: () => import('pages/Web/TemplateIndex.vue'),
+        children: [
+          { path: '', redirect: '/buku-tamu/public' },
+          {
+            path: '/buku-tamu/:page?',
+            name: 'buku-tamu',
+            component: () => import(/* webpackChunkName: "page-buku-tamu" */ 'src/pages/Web/v1/BukuTamu/PageBukuTamu.vue')
+          }
         ]
       }
     ]

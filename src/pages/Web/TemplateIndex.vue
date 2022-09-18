@@ -12,7 +12,7 @@
     <!-- tab router header -->
     <!-- <keep-alive> -->
     <div>
-      <app-tab-header />
+      <app-tab-header v-if="route.name==='berita'" />
     </div>
     <!-- </keep-alive> -->
     <div
@@ -35,10 +35,12 @@
 import { useAppStore } from 'src/stores/app'
 import { useCategoryStore } from 'src/stores/admin/category'
 import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 // import { computed } from 'vue'
 // import { ref } from 'vue'
 
 const storeCategory = useCategoryStore()
+const route = useRoute()
 // const categories = computed(() => storeCategory.items)
 
 onMounted(() => {

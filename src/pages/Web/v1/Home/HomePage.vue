@@ -1,20 +1,20 @@
 <template>
-  <q-page>
-    <q-scroll-area
+  <q-page v-scroll="onScroll">
+    <!-- <q-scroll-area
       class="absolute-top fit"
-      @scroll="onScroll"
-    >
-      <!-- header -->
-      <!-- <header-web /> -->
-      <!-- carousel -->
-      <carousel-web />
-      <!-- section -->
-      <section-one />
-      <section-two class="q-pb-lg" />
-      <section-three class="q-pb-lg" />
-      <section-four class="q-pb-lg" />
-      <app-footer />
-    </q-scroll-area>
+
+    > -->
+    <!-- header -->
+    <!-- <header-web /> -->
+    <!-- carousel -->
+    <carousel-web />
+    <!-- section -->
+    <section-one />
+    <section-two class="q-pb-lg" />
+    <section-three class="q-pb-lg" />
+    <section-four class="q-pb-lg" />
+    <!-- <app-footer /> -->
+    <!-- </q-scroll-area> -->
   </q-page>
 </template>
 
@@ -32,7 +32,7 @@ import { useAppStore } from 'src/stores/app'
 
 const store = useAppStore()
 const onScroll = (info) => {
-  const moveToY = info.verticalPosition
+  const moveToY = info
   if (moveToY > 100) {
     store.changeVisible(true)
   } else {
