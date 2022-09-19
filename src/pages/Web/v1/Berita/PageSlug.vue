@@ -78,7 +78,7 @@ const logo = computed(() => {
     return new URL('../../../../assets/logos/logo.png', import.meta.url).href
   }
 
-  return pathImg + store.logo
+  return pathImg + storeApp.logo
 })
 
 const url = ref(window.location.origin + route.fullPath)
