@@ -3,6 +3,7 @@
     bordered
     separator
     class="bg-white rounded-borders"
+    dense
   >
     <template v-if="items.length > 0">
       <q-item
@@ -12,24 +13,26 @@
         clickable
         @click="beritaClick(item)"
       >
-        <q-item-section avatar>
+        <q-item-section
+          avatar
+        >
           <q-avatar
             rounded
-            size="110px"
+            size="90px"
           >
             <q-img
               :src="pathImg + item.thumbnail"
-              style="max-width: 110px; height: 90px;"
+              :ratio="1"
               fit="cover"
               class="rounded-borders"
             />
           </q-avatar>
         </q-item-section>
 
-        <q-item-section>
+        <q-item-section top>
           <q-item-label
             lines="2"
-            class="f-12 text-weight-bold"
+            class="f-12 text-weight-bold q-pt-xs"
           >
             {{ item.judul }}
           </q-item-label>
@@ -97,6 +100,6 @@ function beritaClick(item) {
 
 <style lang="scss" scoped>
 .q-item {
-  padding: 5px 5px !important;
+  padding: 2px 10px 2px 2px !important;
 }
 </style>

@@ -5,6 +5,7 @@ import { api } from 'src/boot/axios'
 export const useBeritaWeb = defineStore('berita_web', {
   state: () => ({
     beranda: [],
+    populars: [],
 
     id: null,
     content: null,
@@ -52,6 +53,16 @@ export const useBeritaWeb = defineStore('berita_web', {
       }
       // const resp = await api.get('/v1/berita/data_beranda')
       // console.log(resp)
+    },
+    async getPopulars() {
+      try {
+        await api.get('/v1/berita/web_popular').then((resp) => {
+          console.log('berita populer ', resp)
+          this.populars = resp.data
+        })
+      } catch (error) {
+        console.log(error)
+      }
     },
     async getContent(payload) {
       this.loading = true
