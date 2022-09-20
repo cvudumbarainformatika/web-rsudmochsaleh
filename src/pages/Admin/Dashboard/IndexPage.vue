@@ -1,25 +1,14 @@
 <template>
-  <q-page padding>
-    <q-card>
-      <q-card-section>
-        <div
-          class="columm flex-center"
-          style="height:300px"
-        >
-          <div>Di update setelah data berita sudah banyak terpublish</div>
-        </div>
-      </q-card-section>
-    </q-card>
+  <q-page>
+    <Suspense>
+      <DashboardPage />
+      <template #fallback>
+        <app-loading />
+      </template>
+    </Suspense>
   </q-page>
 </template>
-
 <script setup>
-
+import { defineAsyncComponent } from 'vue'
+const DashboardPage = defineAsyncComponent(() => import('./DashboardPage.vue'/* webpackChunkName: "DashboardPage" */))
 </script>
-
-<style lang="scss" scoped>
-// .image-uploader {
-//   max-width:300px;
-// }
-
-</style>
