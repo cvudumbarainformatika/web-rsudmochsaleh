@@ -37,6 +37,17 @@ const routes = [
             component: () => import(/* webpackChunkName: "admin.pelayanan-form" */ 'pages/Admin/Pelayanan/FormPage.vue')
           }
         ]
+      },
+      {
+        path: '/admin/profil',
+        component: () => import(/* webpackChunkName: "admin.profil" */'pages/Admin/Profil/IndexPage.vue'),
+        children: [
+          { path: '', name: 'admin.profil', component: () => import('src/pages/Admin/Profil/IndexTable.vue') },
+          {
+            path: '/admin/profil/form/:id?',
+            component: () => import(/* webpackChunkName: "admin.profil-form" */ 'pages/Admin/Profil/FormPage.vue')
+          }
+        ]
       }
     ]
   },
@@ -52,7 +63,13 @@ const routes = [
         component: () => import('pages/Web/TemplateIndex.vue'),
         children: [
           // { path: '', name: 'berita', component: () => import(/* webpackChunkName: "index-berita" */'src/pages/Web/v1/Berita/IndexPage.vue') },
-          { path: '', redirect: '/berita/all' },
+          {
+            path: '',
+            redirect: to => ({
+              name: 'berita',
+              params: { page: 'all' }
+            })
+          },
           {
             path: '/berita/:page?',
             name: 'berita',
@@ -69,6 +86,24 @@ const routes = [
             path: '/pelayanan/:page?',
             name: 'pelayanan',
             component: () => import(/* webpackChunkName: "page-pelayanan" */ 'src/pages/Web/v1/Pelayanan/PagePelayanan.vue')
+          }
+        ]
+      },
+      {
+        path: '/profil',
+        component: () => import('pages/Web/TemplateIndex.vue'),
+        children: [
+          {
+            path: '',
+            redirect: to => ({
+              name: 'profil',
+              params: { page: 'rsud' }
+            })
+          },
+          {
+            path: '/profil/:page',
+            name: 'profil',
+            component: () => import(/* webpackChunkName: "index-profil" */ 'src/pages/Web/v1/Profil/IndexProfil.vue')
           }
         ]
       },

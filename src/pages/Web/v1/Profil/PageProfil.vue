@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <TabPelayanan
+    <TabProfil
       v-model="store.tab"
       :items="store.items"
     />
@@ -19,12 +19,12 @@
             class="bg-primary text-white q-py-sm q-px-md sotel"
             style="max-width:40%"
           >
-            Pelayanan
+            Profil
           </div>
         </div>
         <q-separator />
         <div class="content">
-          <ListBigPelayanan
+          <ListBigProfil
             :items="store.items"
             @click="clickList"
           />
@@ -65,12 +65,6 @@
                 />
               </div>
             </div>
-          </div>
-          <div v-else>
-            <app-editor
-              v-model="item.content"
-              :edited="false"
-            />
           </div> -->
           <div v-if="item.thumbnail">
             <div class="q-py-md">
@@ -92,14 +86,14 @@
 </template>
 
 <script setup>
-import { usePelayananWeb } from 'src/stores/web/pelayanan'
+import { useProfilWeb } from 'src/stores/web/profil'
 import { onMounted } from 'vue'
 import { pathImg } from 'src/boot/axios'
-import ListBigPelayanan from './ListBigPelayanan.vue'
-import TabPelayanan from './TabPelayanan.vue'
-// import TabPelayanan from './TabPelayanan.vue'
+import ListBigProfil from './ListBigProfil.vue'
+import TabProfil from './TabProfil.vue'
+// import TabProfil from './TabProfil.vue'
 // const tab = ref('all')
-const store = usePelayananWeb()
+const store = useProfilWeb()
 
 onMounted(() => {
   store.getData()

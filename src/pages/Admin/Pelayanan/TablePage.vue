@@ -138,7 +138,14 @@
       <!-- </div> -->
       <q-separator />
       <q-item-label header>
-        Table Data Pelayanan
+        <app-pagination-table
+          v-if="store.items.length > 0"
+          :meta="store.meta"
+          @next="(val)=>store.setPage(val)"
+          @prev="(val)=>store.setPage(val)"
+          @last="(val)=>store.setPage(val)"
+          @first="(val)=>store.setPage(val)"
+        />
       </q-item-label>
     </q-list>
   </q-card>

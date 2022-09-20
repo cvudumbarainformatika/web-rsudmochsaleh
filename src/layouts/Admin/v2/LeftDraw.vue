@@ -91,7 +91,8 @@ const menus = ref([
   { route: 'admin.dashboard', path: '/admin/dashboard', label: 'Dashboard', icon: 'dashboard' },
   { route: 'admin.settings', path: '/admin/settings', label: 'Seting Website', icon: 'dvr' },
   { route: 'admin.berita', path: '/admin/berita', label: 'Manage Berita', icon: 'newspaper' },
-  { route: 'admin.pelayanan', path: '/admin/pelayanan', label: 'Manage Pelayanan', icon: 'medical_services' }
+  { route: 'admin.pelayanan', path: '/admin/pelayanan', label: 'Manage Pelayanan', icon: 'medical_services' },
+  { route: 'admin.profil', path: '/admin/profil', label: 'Manage Profil', icon: 'extension' }
 ])
 const $q = useQuasar()
 // const mobile = $q.screen.lt.md

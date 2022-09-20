@@ -73,9 +73,9 @@
           <div
             v-else
             class="column flex-center"
-            style="height:200px"
+            style="height:100px"
           >
-            Belum Ada Berita Popular
+            Belum Ada Berita terpopuler
           </div>
         </div>
         <!-- CHILD NEWS -->

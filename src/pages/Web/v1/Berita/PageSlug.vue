@@ -52,12 +52,13 @@
       v-model="store.content"
       :edited="false"
     />
-    <div class="text-right text-grey f-14">
+    <q-separator />
+    <!-- <div class="text-right text-grey f-14">
       <q-icon
         size="18px"
         name="visibility"
       /> {{ store.views }}
-    </div>
+    </div> -->
   </div>
 </template>
 

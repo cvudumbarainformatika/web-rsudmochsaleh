@@ -3,11 +3,11 @@
     <div class="row items-center justify-between title-page q-mb-md">
       <div>
         <div class="text-h6">
-          Pelayanan
+          profil
         </div>
         <div class="f-14">
-          <span v-if="!route.params.id">Manage Data Pelayanan</span>
-          <span v-else>Form Data Pelayanan</span>
+          <span v-if="!route.params.id">Manage Data profil</span>
+          <span v-else>Form Data profil</span>
         </div>
       </div>
       <div>
@@ -46,9 +46,9 @@
 </template>
 
 <script setup>
-import { usePelayananForm } from 'src/stores/admin/pelayanan/form'
+import { useProfilForm } from 'src/stores/admin/profil/form'
 import { useRoute, useRouter } from 'vue-router'
-const form = usePelayananForm()
+const form = useProfilForm()
 const route = useRoute()
 const router = useRouter()
 console.log(router)

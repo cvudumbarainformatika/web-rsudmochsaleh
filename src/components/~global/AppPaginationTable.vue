@@ -20,7 +20,7 @@
             color="primary"
             icon="icon-mat-skip_previous"
             size="sm"
-            @click="emits('first')"
+            @click="emits('first', 1)"
           />
           <q-btn
             :disable="meta.current_page === 1"
@@ -29,7 +29,7 @@
             color="primary"
             icon="icon-mat-chevron_left"
             size="sm"
-            @click="emits('prev')"
+            @click="emits('prev',meta.current_page - 1)"
           />
           <div class="bold q-pa-xs">
             {{ meta.current_page }} / {{ meta.last_page }}
@@ -41,7 +41,7 @@
             color="primary"
             icon="icon-mat-chevron_right"
             size="sm"
-            @click="emits('next')"
+            @click="emits('next', meta.current_page + 1)"
           />
           <q-btn
             :disable="meta.current_page === meta.last_page"
@@ -50,7 +50,7 @@
             color="primary"
             icon="icon-mat-skip_next"
             size="sm"
-            @click="emits('last')"
+            @click="emits('last', meta.last_page)"
           />
         </div>
       </div>
