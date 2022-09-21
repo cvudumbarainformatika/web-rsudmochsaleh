@@ -41,10 +41,10 @@ h1,h2,h3,h4,h5 {
 }
 
 .container-padding {
-  // @media(min-width: $breakpoint-xl-max){
-  //   padding-left: 15% !important;
-  //   padding-right: 15% !important;
-  // }
+  @media(min-width: $breakpoint-xl-min){
+    padding-left: 15% !important;
+    padding-right: 15% !important;
+  }
   @media(max-width: $breakpoint-lg-min){
     padding-left: 15% !important;
     padding-right: 15% !important;
