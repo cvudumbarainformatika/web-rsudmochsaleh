@@ -85,7 +85,7 @@
                   class="text-right f-12 q-mb-sm cursor-pointer"
                   @click="goToLink('https://probolinggokota.go.id')"
                 >
-                  <span>probolinggokota.com</span>
+                  <span>probolinggokota.go.id</span>
                 </div>
                 <div class="q-pr-md row text-center f-12 q-mb-sm">
                   <!-- <span>www.app.blblba.com</span> -->

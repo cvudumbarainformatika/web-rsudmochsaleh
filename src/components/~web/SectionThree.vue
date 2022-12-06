@@ -3,7 +3,7 @@
     <div class="q-my-lg q-py-lg">
       <div class="text-center">
         <div class="text-h4 text-weight-bold">
-          <span class="text-primary">Direksi Utama </span>
+          <span class="text-primary">Direksi </span>
           <span>{{ store.header.title }} </span>
         </div>
       </div>

@@ -69,7 +69,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         await api.post('/v1/logout').then(resp => {
           this.REMOVE_LOKAL()
-          routerInstance.replace('/login')
+          routerInstance.replace('/setset/login')
           waitLoad('done')
         })
       } catch (error) {

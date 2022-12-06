@@ -48,6 +48,17 @@ const routes = [
             component: () => import(/* webpackChunkName: "admin.profil-form" */ 'pages/Admin/Profil/FormPage.vue')
           }
         ]
+      },
+      {
+        path: '/admin/user',
+        component: () => import(/* webpackChunkName: "admin.user" */'pages/Admin/User/IndexPage.vue'),
+        children: [
+          { path: '', name: 'admin.user', component: () => import('src/pages/Admin/User/IndexTable.vue') },
+          {
+            path: '/admin/user/form/:id?',
+            component: () => import(/* webpackChunkName: "admin.user-form" */ 'pages/Admin/User/FormPage.vue')
+          }
+        ]
       }
     ]
   },
@@ -124,7 +135,7 @@ const routes = [
 
   // login
   {
-    path: '/login',
+    path: '/setset/login',
     component: () => import('layouts/Auth/AuthLayout.vue'),
     meta: { requireAuth: false },
     children: [

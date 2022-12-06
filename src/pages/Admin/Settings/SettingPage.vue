@@ -86,7 +86,7 @@
     <!-- Setting section three -->
     <app-card
       title="Setting Direksi"
-      desc="tambah / edit data direksi utama yang ingin ditampilkan"
+      desc="tambah / edit data direksi yang ingin ditampilkan"
       class="q-mt-md"
     >
       <template #content>

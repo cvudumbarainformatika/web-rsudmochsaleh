@@ -30,7 +30,7 @@ export default route(function (/* { store, ssrContext } */) {
 
   Router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requireAuth) && !LocalStorage.getItem('token')) {
-      next({ path: '/login' })
+      next({ path: '/setset/login' })
     } else {
       next()
     }
