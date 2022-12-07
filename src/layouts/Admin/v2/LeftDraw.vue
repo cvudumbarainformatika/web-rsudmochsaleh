@@ -93,6 +93,7 @@ const menus = ref([
   { route: 'admin.berita', path: '/admin/berita', label: 'Manage Berita', icon: 'newspaper' },
   { route: 'admin.pelayanan', path: '/admin/pelayanan', label: 'Manage Pelayanan', icon: 'medical_services' },
   { route: 'admin.profil', path: '/admin/profil', label: 'Manage Profil', icon: 'extension' },
+  { route: 'admin.ppid', path: '/admin/ppid', label: 'Manage Ppid', icon: 'badge' },
   { route: 'admin.user', path: '/admin/user', label: 'Manage User', icon: 'people' }
 ])
 const $q = useQuasar()

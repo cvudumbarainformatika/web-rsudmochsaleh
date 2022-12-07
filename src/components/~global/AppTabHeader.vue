@@ -60,6 +60,8 @@ const route = useRoute()
 //   storeBerita.getData(params)
 // }
 
+// console.log('asdasd', items)
+
 watch(() => selected.value, (obj, old) => {
   console.log('watch old', old)
   const newObj = obj || 'all'

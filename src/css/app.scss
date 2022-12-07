@@ -45,13 +45,21 @@ h1,h2,h3,h4,h5 {
     padding-left: 15% !important;
     padding-right: 15% !important;
   }
+  @media(max-width: $breakpoint-lg-max){
+    padding-left: 15% !important;
+    padding-right: 15% !important;
+  }
   @media(max-width: $breakpoint-lg-min){
     padding-left: 15% !important;
     padding-right: 15% !important;
   }
+  @media(max-width: $breakpoint-md-max){
+    padding-left: 15% !important;
+    padding-right: 15% !important;
+  }
   @media(max-width: $breakpoint-md-min){
-    padding-left: 0% !important;
-    padding-right: 0% !important;
+    padding-left: 2% !important;
+    padding-right: 2% !important;
   }
   // @media(max-width: $breakpoint-sm-max){
   //     padding-left: 10px;

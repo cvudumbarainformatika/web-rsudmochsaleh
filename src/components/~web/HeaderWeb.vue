@@ -155,6 +155,7 @@ const menus = ref([
   { name: 'berita', url: '/berita', title: 'Berita', active: false },
   { name: 'pelayanan', url: '/pelayanan', title: 'Pelayanan', active: false },
   { name: 'profil', url: '/profil', title: 'Profil', active: false },
+  { name: 'PPID', url: '/ppid', title: 'PPID', active: false },
   { name: 'buku-tamu', url: '/buku-tamu', title: 'Buku Tamu', active: false }
   // { name: 'galeri', url: '/galeri', title: 'Galeri', active: false },
   // { name: 'profil', url: '/profil', title: 'Profil', active: false }

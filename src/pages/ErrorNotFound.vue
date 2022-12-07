@@ -1,12 +1,24 @@
 <template>
-  <div class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center">
+  <div class="fullscreen bg-primary text-white text-center q-pa-md flex flex-center">
     <div>
-      <div style="font-size: 30vh">
+      <q-img
+        :src="previewImage"
+        fit="fill"
+        width="250px"
+        class="cursor-pointer"
+      />
+      <div
+        class="text-weight-thin"
+        style="font-size: 20vh; margin-top:-20px;"
+      >
         404
       </div>
 
-      <div class="text-h2" style="opacity:.4">
-        Oops. Nothing here...
+      <div
+        class="text-h5"
+        style="opacity:.4; margin-top: -50px;"
+      >
+        Oops. Salah Alamat ...
       </div>
 
       <q-btn
@@ -22,10 +34,8 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { computed } from 'vue'
 
-export default defineComponent({
-  name: 'ErrorNotFound'
-})
+const previewImage = computed(() => new URL('../assets/images/mad_saleh_minum.png', import.meta.url).href)
 </script>

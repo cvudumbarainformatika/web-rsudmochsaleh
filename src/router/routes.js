@@ -39,6 +39,17 @@ const routes = [
         ]
       },
       {
+        path: '/admin/ppid',
+        component: () => import('pages/Admin/Ppid/IndexPage.vue'),
+        children: [
+          { path: '', name: 'admin.ppid', component: () => import('src/pages/Admin/Ppid/TablePage.vue') },
+          {
+            path: '/admin/ppid/form/:id?',
+            component: () => import('pages/Admin/Ppid/FormPage.vue')
+          }
+        ]
+      },
+      {
         path: '/admin/profil',
         component: () => import(/* webpackChunkName: "admin.profil" */'pages/Admin/Profil/IndexPage.vue'),
         children: [
@@ -97,6 +108,18 @@ const routes = [
             path: '/pelayanan/:page?',
             name: 'pelayanan',
             component: () => import(/* webpackChunkName: "page-pelayanan" */ 'src/pages/Web/v1/Pelayanan/PagePelayanan.vue')
+          }
+        ]
+      },
+      {
+        path: '/ppid',
+        component: () => import('pages/Web/TemplateIndex.vue'),
+        children: [
+          { path: '', redirect: '/ppid/all' },
+          {
+            path: '/ppid/:page?',
+            name: 'ppid',
+            component: () => import(/* webpackChunkName: "page-ppid" */ 'src/pages/Web/v1/Ppid/PagePpid.vue')
           }
         ]
       },

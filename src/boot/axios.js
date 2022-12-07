@@ -4,9 +4,9 @@ import { getLocalToken } from 'src/modules/storage'
 import { notifErr } from 'src/modules/utils'
 import { setCssVar } from 'quasar'
 
-// const SERV = 'http://192.168.43.70/api.webrsudmochsaleh/public'
+const SERV = 'http://localhost/api.webrsudmohsaleh/public'
 // const SERV = 'http://localhost/api.webrsudmochsaleh/public'
-const SERV = 'https://rsudmochsaleh.my.id'
+// const SERV = 'https://rsudmochsaleh.my.id'
 const SERVER = SERV + '/api'
 
 const api = axios.create({ baseURL: SERVER })
