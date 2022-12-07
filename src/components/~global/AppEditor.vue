@@ -38,6 +38,7 @@ import { Color } from '@tiptap/extension-color'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import TextAlign from '@tiptap/extension-text-align'
+import Youtube from '@tiptap/extension-youtube'
 import CustomImage from '../~editor/extensions/custom-image'
 import { watch } from 'vue'
 // import { computed } from 'vue'
@@ -69,6 +70,15 @@ const editor = useEditor({
     TaskList, TaskItem,
     TextAlign.configure({
       types: ['heading', 'paragraph']
+    }),
+    Youtube.configure({
+      inline: false,
+      width: 480,
+      height: 320,
+      controls: false,
+      nocookie: true,
+      allowFullscreen: true,
+      autoplay: true
     }),
     CustomImage.configure({
       inline: true,

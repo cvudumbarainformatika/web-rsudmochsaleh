@@ -24,6 +24,7 @@
     "@tiptap/extension-text-align": "^2.0.0-beta.31",
     "@tiptap/extension-text-style": "^2.0.0-beta.26",
     "@tiptap/extension-underline": "^2.0.0-beta.25",
+    "@tiptap/extension-youtube": "^2.0.0-beta.205",
     "@tiptap/starter-kit": "^2.0.0-beta.191",
     "@tiptap/vue-3": "^2.0.0-beta.96",
     "axios": "^0.21.1",
