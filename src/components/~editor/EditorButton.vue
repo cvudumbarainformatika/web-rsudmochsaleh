@@ -171,7 +171,7 @@
       <menu-bar-btn
         icon="smart_display"
         tooltip="upload doc word"
-        @click="addVideo"
+        @click="emits('onAddYoutube')"
       />
 
       <!-- <button @click="editor.chain().focus().setHardBreak().run()">
@@ -207,7 +207,7 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['onimportword'])
+const emits = defineEmits(['onimportword', 'onAddYoutube'])
 
 const word = ref(null)
 const refWord = ref(null)
@@ -275,13 +275,4 @@ function dialogGallery() {
   dialogImage.value = true
 }
 
-function addVideo() {
-  const url = prompt('Enter YouTube URL')
-
-  props.editor.commands.setYoutubeVideo({
-    src: url,
-    width: Math.max(320, parseInt(this.width, 10)) || 640,
-    height: Math.max(180, parseInt(this.height, 10)) || 480
-  })
-}
 </script>

@@ -4,6 +4,7 @@
       v-if="edited"
       :editor="editor"
       @onimportword="setcontenteditor"
+      @on-add-youtube="addVideo"
     />
     <div :class="edited?'editor':''">
       <editor-content
@@ -40,7 +41,7 @@ import TaskList from '@tiptap/extension-task-list'
 import TextAlign from '@tiptap/extension-text-align'
 import Youtube from '@tiptap/extension-youtube'
 import CustomImage from '../~editor/extensions/custom-image'
-import { watch } from 'vue'
+import { onBeforeUnmount, ref, watch } from 'vue'
 // import { computed } from 'vue'
 
 const props = defineProps({
@@ -73,9 +74,7 @@ const editor = useEditor({
     }),
     Youtube.configure({
       inline: false,
-      width: 480,
-      height: 320,
-      controls: false,
+      controls: true,
       nocookie: true,
       allowFullscreen: true,
       autoplay: true
@@ -105,6 +104,19 @@ function setcontenteditor(content) {
   emits('update:modelValue', editor.value.getHTML())
 }
 
+const vWidth = ref('360')
+const vHeight = ref('210')
+
+function addVideo() {
+  const url = prompt('Enter YouTube URL')
+
+  editor.value.commands.setYoutubeVideo({
+    src: url,
+    width: Math.max(320, parseInt(vWidth.value, 10)) || 360,
+    height: Math.max(180, parseInt(vHeight.value, 10)) || 210
+  })
+}
+
 watch(() => props.modelValue, (first, prev) => {
   // console.log('watch', first)
   const isSame = editor.value.getHTML() === first
@@ -122,6 +134,11 @@ watch(() => props.edited, (first, prev) => {
   console.log('watch edited', first)
   editor.value.setEditable(first, false)
 })
+
+onBeforeUnmount(() => {
+  editor.value.destroy()
+})
+
 </script>
 
 <style lang="scss">
@@ -230,6 +247,26 @@ watch(() => props.edited, (first, prev) => {
     padding-left: .75rem;
     border-left: 3px solid rgba(#0D0D0D, 0.1);
   }
+
+  iframe {
+    border: 8px solid #000;
+    border-radius: 4px;
+    min-width: 200px;
+    min-height: 200px;
+    display: block;
+    outline: 0px solid transparent;
+  }
+
+  div[data-youtube-video] {
+    cursor: move;
+    padding-right: 24px;
+  }
+
+  .ProseMirror-selectednode iframe {
+    transition: outline 0.15s;
+    outline: 6px solid #ece111;
+  }
+
 }
 
 hr.ProseMirror-selectednode {
@@ -257,4 +294,5 @@ ul[data-type="taskList"] {
     }
   }
 }
+
 </style>
