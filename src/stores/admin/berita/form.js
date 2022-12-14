@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { api } from 'src/boot/axios'
 import { routerInstance } from 'src/boot/router'
 import { notifErr, notifSuccess } from 'src/modules/utils'
+import { dateDbFormat } from 'src/modules/formatter'
 
 export const useBeritaForm = defineStore('berita_form', {
   state: () => ({
@@ -63,10 +64,15 @@ export const useBeritaForm = defineStore('berita_form', {
     },
 
     editForm(item) {
+      let tgl = item.tanggal
+      if (tgl !== null || tgl !== '') {
+        tgl = dateDbFormat(tgl)
+      }
       this.resetFORM()
       this.setForm('id', item.id)
       this.setForm('title', item.judul)
       this.setForm('slug', item.slug)
+      this.setForm('tanggal', tgl)
       this.setForm('content', item.content)
       this.setForm('image', item.thumbnail)
 

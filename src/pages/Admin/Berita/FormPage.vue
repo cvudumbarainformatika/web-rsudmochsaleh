@@ -40,7 +40,6 @@
               class="q-mt-md"
             />
             <app-input-date
-              valid
               :model="store.form.tanggal"
               icon="event"
               label="Tanggal"
@@ -270,6 +269,7 @@ function onSave() {
 
   formData.append('judul', store.form.title)
   formData.append('slug', store.form.slug)
+  formData.append('tanggal', store.form.tanggal)
   formData.append('content', store.form.content)
 
   // formData.append('category_id', selectedCategories.value)
@@ -337,7 +337,7 @@ function deleteCategory(i) {
 onMounted(() => {
   tempImg.value = null
   storeCategories.getAll()
-  store.setToday()
+  // store.setToday()
 })
 
 </script>
