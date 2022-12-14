@@ -9,6 +9,7 @@ export const useBeritaForm = defineStore('berita_form', {
       title: null,
       slug: null,
       content: null,
+      tanggal: null,
       kategori: null,
       image: null
     },
@@ -26,6 +27,14 @@ export const useBeritaForm = defineStore('berita_form', {
     },
     setKategori(val) {
       this.form.kategori = val
+    },
+    setToday () {
+      const date = new Date()
+      const year = date.getFullYear()
+      const month = ('0' + (date.getMonth() + 1)).slice(-2)
+      const day = ('0' + date.getDate()).slice(-2)
+      const formatDb = year + '-' + month + '-' + day
+      this.form.tanggal = formatDb
     },
     // resetForm() {
     //   this.form.title = null

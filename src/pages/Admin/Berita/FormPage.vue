@@ -2,7 +2,7 @@
   <q-card>
     <q-card-section>
       <div class="row q-col-gutter-lg">
-        <div class="col-md-8 col-xs-12">
+        <div class="col-md-8 col-lg-8 col-xl-8 col-xs-12 col-sm-12">
           <app-input
             v-model="store.form.title"
             label="Judul*"
@@ -11,132 +11,141 @@
           />
           <app-editor v-model="store.form.content" />
         </div>
-        <div class="col-md-4 col-xs-12">
-          <q-scroll-area class="full-height">
-            <q-form
-              @submit="onSave"
+        <div class="col-md-4 col-lg-4 col-xl-4 col-xs-12 col-sm-12">
+          <!-- <q-scroll-area class="full-height"> -->
+          <q-form
+            @submit="onSave"
+          >
+            <q-img
+              :src="previewImage"
+              fit="fill"
+              class="full-height cursor-pointer"
+              @click="imgClick()"
+            />
+            <q-file
+              ref="fileRef"
+              v-model="tempImg"
+              filled
+              dense
+              label="Gambar Thumbnail"
+              accept="image/*"
+              class="q-mb-md"
+            />
+
+            <app-input
+              v-model="store.form.slug"
+              label="Slug Otomatis input"
+              readonly
+              valid
+              class="q-mt-md"
+            />
+            <app-input-date
+              valid
+              :model="store.form.tanggal"
+              icon="event"
+              label="Tanggal"
+              outlined
+              class="q-mt-md"
+              @set-model="(val)=>store.setForm('tanggal', val)"
+            />
+            <q-list
+              bordered
+              separator
+              dense
+              class="q-mt-md"
             >
-              <q-img
-                :src="previewImage"
-                fit="fill"
-                class="full-height cursor-pointer"
-                @click="imgClick()"
-              />
-              <q-file
-                ref="fileRef"
-                v-model="tempImg"
-                filled
-                dense
-                label="Gambar Thumbnail"
-                accept="image/*"
-                class="q-mb-md"
-              />
-
-              <app-input
-                v-model="store.form.slug"
-                label="Slug Otomatis input"
-                readonly
-                valid
-                class="q-mt-md"
-              />
-              <q-list
-                bordered
-                separator
-                dense
-                class="q-mt-md"
-              >
-                <q-item-section>
-                  <div class="flex items-center justify-between q-pa-md">
-                    <div>Pilih Kategori</div>
-                    <q-btn
-                      round
-                      icon="add"
-                      size="xs"
-                      color="primary"
+              <q-item-section>
+                <div class="flex items-center justify-between q-pa-md">
+                  <div>Pilih Kategori</div>
+                  <q-btn
+                    round
+                    icon="add"
+                    size="xs"
+                    color="primary"
+                  >
+                    <q-popup-proxy
+                      transition-show="flip-up"
+                      transition-hide="flip-down"
+                      @before-show="newCategori = null"
                     >
-                      <q-popup-proxy
-                        transition-show="flip-up"
-                        transition-hide="flip-down"
-                        @before-show="newCategori = null"
-                      >
-                        <div class="q-pa-sm">
-                          <q-input
-                            ref="inputCategoriRef"
-                            v-model="newCategori"
-                            dense
-                            label="Tambah Kategori : Enter"
-                            style="min-width:200px"
-                            @keydown.enter="addKategori"
-                          />
-                        </div>
-                      </q-popup-proxy>
-                    </q-btn>
-                  </div>
-                </q-item-section>
-                <q-separator />
-
-                <q-item
-                  v-for="(item, i) in categories"
-                  :key="i"
-                >
-                  <!-- {{ selectedCategories }} -->
-                  <q-item-section
-                    avatar
-                    thumbnail
-                  >
-                    <q-checkbox
-                      v-model="store.selectedCategories"
-                      size="xs"
-                      :val="item.id"
-                      @update:model-value="arrToString"
-                    />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>
-                      {{ item.nama }}
-                      <q-popup-edit
-                        v-slot="scope"
-                        v-model="item.nama"
-                        :cover="true"
-                        :offset="[0, 0]"
-                        auto-save
-                        :validate="val => val.length > 0"
-                      >
+                      <div class="q-pa-sm">
                         <q-input
-                          v-model="scope.value"
+                          ref="inputCategoriRef"
+                          v-model="newCategori"
                           dense
-                          autofocus
-                          counter
-                          @keyup.enter="editCategory(scope, item.id)"
+                          label="Tambah Kategori : Enter"
+                          style="min-width:200px"
+                          @keydown.enter="addKategori"
                         />
-                      </q-popup-edit>
-                    </q-item-label>
-                  </q-item-section>
-                  <q-item-section
-                    side
-                  >
-                    <q-btn
-                      icon="delete"
-                      size="xs"
-                      color="negative"
-                      flat
-                      round
-                      padding="sm"
-                      @click="deleteCategory(i)"
-                    />
-                  </q-item-section>
-                </q-item>
-              </q-list>
+                      </div>
+                    </q-popup-proxy>
+                  </q-btn>
+                </div>
+              </q-item-section>
+              <q-separator />
 
-              <div class="q-py-md">
-                <app-btn
-                  class="full-width"
-                  label="Simpan Draft"
-                  :loading="store.loading"
-                />
-              </div>
-            </q-form>
-          </q-scroll-area>
+              <q-item
+                v-for="(item, i) in categories"
+                :key="i"
+              >
+                <!-- {{ selectedCategories }} -->
+                <q-item-section
+                  avatar
+                  thumbnail
+                >
+                  <q-checkbox
+                    v-model="store.selectedCategories"
+                    size="xs"
+                    :val="item.id"
+                    @update:model-value="arrToString"
+                  />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>
+                    {{ item.nama }}
+                    <q-popup-edit
+                      v-slot="scope"
+                      v-model="item.nama"
+                      :cover="true"
+                      :offset="[0, 0]"
+                      auto-save
+                      :validate="val => val.length > 0"
+                    >
+                      <q-input
+                        v-model="scope.value"
+                        dense
+                        autofocus
+                        counter
+                        @keyup.enter="editCategory(scope, item.id)"
+                      />
+                    </q-popup-edit>
+                  </q-item-label>
+                </q-item-section>
+                <q-item-section
+                  side
+                >
+                  <q-btn
+                    icon="delete"
+                    size="xs"
+                    color="negative"
+                    flat
+                    round
+                    padding="sm"
+                    @click="deleteCategory(i)"
+                  />
+                </q-item-section>
+              </q-item>
+            </q-list>
+
+            <div class="q-py-md">
+              <app-btn
+                class="full-width"
+                label="Simpan Draft"
+                :loading="store.loading"
+              />
+            </div>
+          </q-form>
+          <!-- </q-scroll-area> -->
         </div>
       </div>
     </q-card-section>
@@ -328,6 +337,7 @@ function deleteCategory(i) {
 onMounted(() => {
   tempImg.value = null
   storeCategories.getAll()
+  store.setToday()
 })
 
 </script>
