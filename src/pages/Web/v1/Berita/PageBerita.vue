@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <app-loading v-if="store.loading" />
+    <app-loading-new v-if="store.loading" />
     <div
       v-else
       class="row q-col-gutter-lg q-mb-xl"
@@ -69,6 +69,10 @@
         >
           Belum Ada Berita terpopuler
         </div>
+
+        <div>
+          sadfa
+        </div>
       </div>
       <div class="col-md-4 col-lg-4 col-xs-12">
         <div class="f-14 text-weight-bold">
@@ -127,6 +131,8 @@ import PageSlug from './PageSlug.vue'
 const route = useRoute()
 // import { computed } from 'vue'
 const store = useBeritaWeb()
+
+// const coba = ref(true)
 
 const p = ref({
   q: route.query.page || '',

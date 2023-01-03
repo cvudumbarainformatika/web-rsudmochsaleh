@@ -9,5 +9,8 @@ const dateHuman = (val) => {
 const dateClock = (val) => {
   return date.formatDate(val, 'DD MMM YYYY, hh:mm')
 }
+const dateWeb = (val) => {
+  return date.formatDate(val, 'DD MMMM YYYY')
+}
 
-export { dateDbFormat, dateHuman, dateClock }
+export { dateDbFormat, dateHuman, dateClock, dateWeb }

@@ -11,6 +11,7 @@ export const useBeritaWeb = defineStore('berita_web', {
     content: null,
     judul: null,
     slug: null,
+    tanggal: null,
     thumbnail: null,
     created_at: null,
 
@@ -74,6 +75,7 @@ export const useBeritaWeb = defineStore('berita_web', {
           this.slug = resp.data.slug
           this.id = resp.data.id
           this.thumbnail = resp.data.thumbnail
+          this.tanggal = resp.data.tanggal
           this.created_at = resp.data.created_at
           this.views = resp.data.berita_views_count
           this.isContent = true

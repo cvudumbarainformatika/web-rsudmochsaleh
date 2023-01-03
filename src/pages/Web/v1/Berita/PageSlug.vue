@@ -13,7 +13,7 @@
           </q-btn>
           <div class="column q-ml-sm">
             <div>{{ storeApp.header.title }}</div>
-            <div>{{ dateClock(store.created_at) }} WIB</div>
+            <div>{{ dateWeb(store.tanggal) }}</div>
           </div>
         </div>
         <div>
@@ -68,7 +68,7 @@ import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { pathImg } from 'src/boot/axios'
 import { useAppStore } from 'src/stores/app'
-import { dateClock } from 'src/modules/formatter'
+import { dateWeb } from 'src/modules/formatter'
 
 const route = useRoute()
 const store = useBeritaWeb()

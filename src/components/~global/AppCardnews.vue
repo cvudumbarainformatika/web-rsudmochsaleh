@@ -20,7 +20,7 @@
           <q-icon
             name="edit_calendar"
             class="q-pr-xs"
-          /> <div>{{ dateHuman(bigCardNews.created_at) }}</div>
+          /> <div>{{ dateHuman(bigCardNews.tanggal) }}</div>
         </div>
         <div class="flex items-center">
           <q-icon

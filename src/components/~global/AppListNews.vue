@@ -41,7 +41,7 @@
               <q-icon
                 name="edit_calendar"
                 class="q-pr-xs "
-              /> <div>{{ dateHuman(item.created_at) }}</div>
+              /> <div>{{ dateHuman(item.tanggal) }}</div>
             </div>
             <!-- <div class="flex items-center">
               <q-icon
