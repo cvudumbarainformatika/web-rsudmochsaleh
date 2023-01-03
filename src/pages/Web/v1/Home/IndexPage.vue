@@ -3,7 +3,7 @@
     <Suspense>
       <HomePage />
       <template #fallback>
-        <app-loading />
+        <app-loading-new />
       </template>
     </Suspense>
     <!-- <app-loading /> -->

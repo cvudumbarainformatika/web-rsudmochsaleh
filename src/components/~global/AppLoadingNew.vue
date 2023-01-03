@@ -1,8 +1,8 @@
 <template>
   <div
-    class="flex column flex-center"
+    class="fullscreen z-top"
   >
-    <div>
+    <div class="flex column flex-center items-center absolute-center z-top">
       <LottieAnimation
         ref="anim"
         :animation-data="pulse"
@@ -13,10 +13,13 @@
         @complete="complete"
         @enter-frame="enterFrame"
       />
+      <div
+        class="text-weight-bolder absolute-center text-white"
+      >
+        Harap Tunggu ...
+      </div>
     </div>
-    <div class="text-lg">
-      Harap Tunggu ...
-    </div>
+    <div class="light-dimmed" />
   </div>
 </template>
 
@@ -64,3 +67,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.loadingOp {
+  background-color: #fff;
+  opacity: .5;
+}
+</style>

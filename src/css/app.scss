@@ -71,6 +71,18 @@ h1,h2,h3,h4,h5 {
   // }
 }
 
+.flex-1 {
+  flex: 1 1 0%;
+}
+.flex-auto {
+  flex: 1 1 auto;
+}
+.flex-initial{
+  flex: 0 1 auto;
+}
+.flex-none {
+  	flex: none;
+}
 
 // =====================================================MOBILE
 @media(max-width:800px){

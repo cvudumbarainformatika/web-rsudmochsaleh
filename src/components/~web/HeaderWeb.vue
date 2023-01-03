@@ -10,13 +10,15 @@
       leave-active-class="animated fadeOut"
     > -->
     <div
-      v-if="!store.visible"
       class="header-one transparent"
     >
-      <q-bar class="container-padding bg-primary text-white">
+      <q-bar
+        class="container-padding bg-primary text-white"
+        style="height:40px !important;"
+      >
         <q-icon
           name="call"
-          size="14px"
+          size="18px"
         />
         <div class="f-12">
           {{ store.header.phone }}
@@ -61,11 +63,11 @@
         class="container-padding"
         style="height:60px"
       >
-        <div class="logo-web text-center q-pa-xs bg-primary">
+        <div class="logo-web text-center q-pa-xs bg-primary overflow-hidden">
           <q-skeleton
             v-if="store.loading"
             type="QAvatar"
-            style="height: 45px; margin-top:5px;"
+            style="height: 45px; margin-top:5px; margin-bottom: 10px;"
           />
           <q-img
             :src="logo"
@@ -74,10 +76,10 @@
           />
         </div>
         <div class="title-website q-ml-sm">
-          <div class="f-18">
+          <div class="f-16">
             {{ store.header.title }}
           </div>
-          <div class="f-10">
+          <div class="f-8">
             {{ store.header.desc }}
           </div>
         </div>
@@ -85,7 +87,7 @@
 
         <div
           v-if="fixed"
-          class="menu__header deskt-only flex"
+          class="menu__header deskt-only on-right"
         >
           <router-link
             v-for="(menu, i) in menus"
@@ -144,7 +146,7 @@ store.getAppHeader()
 
 const logo = computed(() => {
   if (store.logo === null) {
-    return new URL('../../assets/logos/logo.png', import.meta.url).href
+    return new URL('../../assets/logos/logo-rsud.png', import.meta.url).href
   }
 
   return pathImg + store.logo
