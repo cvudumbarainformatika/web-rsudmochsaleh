@@ -67,7 +67,7 @@ watch(() => selected.value, (obj, old) => {
   const newObj = obj || 'all'
   console.log('watch new', newObj)
   store.setSelected(newObj)
-  storeBerita.getData(newObj)
+  storeBerita.getDataPagin(newObj)
 })
 </script>
 

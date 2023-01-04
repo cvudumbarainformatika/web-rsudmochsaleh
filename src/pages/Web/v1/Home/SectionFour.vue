@@ -1,13 +1,6 @@
 <template>
   <div class="container-padding bg-grey-3 q-pt-lg">
     <div
-      v-if="items.length ===0"
-      class="column flex-center q-py-lg"
-    >
-      Belum Ada Berita
-    </div>
-    <div
-      v-else
       class="q-py-lg"
     >
       <div class="text-center q-pb-lg">
@@ -19,7 +12,61 @@
       <div class="row q-col-gutter-lg q-mt-lg">
         <!-- BIG NEWS -->
         <div class="col-md-7 col-xs-12">
-          <app-cardnews :big-card-news="storeBerita.bigCardNews" />
+          <div v-if="items.length === 0">
+            <q-card
+              flat
+            >
+              <q-skeleton
+                height="300px"
+                square
+              />
+
+              <q-card-section>
+                <q-skeleton
+                  type="text"
+                  class="text-subtitle1"
+                />
+                <q-skeleton
+                  type="text"
+                  width="50%"
+                  class="text-subtitle1"
+                />
+                <q-skeleton
+                  type="text"
+                  class="text-caption"
+                />
+              </q-card-section>
+              <q-card-section>
+                <div class="row q-col-gutter-sm">
+                  <div
+                    v-for="(n,i) in n=3"
+                    :key="i"
+                    class="col"
+                  >
+                    <q-skeleton
+                      class="flex-1 q-pa-sm"
+                      height="120px"
+                      square
+                    />
+                    <q-skeleton
+                      type="text"
+                      class="text-subtitle1"
+                    />
+                    <q-skeleton
+                      type="text"
+                      class="text-subtitle1"
+                      width="70%"
+                    />
+                  </div>
+                </div>
+              </q-card-section>
+            </q-card>
+          </div>
+
+          <app-cardnews
+            v-else
+            :big-card-news="storeBerita.bigCardNews"
+          />
           <!-- Berita Terpopuler
           <q-separator class="q-mt-md" /> -->
           <div v-if="firstArr.length > 2">
@@ -74,17 +121,70 @@
             v-else
             class="column flex-center"
             style="height:100px"
-          >
-            Belum Ada Berita terpopuler
-          </div>
+          />
         </div>
         <!-- CHILD NEWS -->
         <div class="col-md-5 col-xs-12">
-          <app-list-news :items="storeBerita.smallCardNews" />
+          <app-list-news
+            v-if="items.length"
+            :items="storeBerita.smallCardNews"
+          />
+          <div v-else>
+            <div
+              v-for="(y,z) in y=7"
+              :key="z"
+            >
+              <div class="row q-col-gutter-sm">
+                <div class="row flex-1">
+                  <q-skeleton
+                    size="80px"
+                    square
+                    animation="fade"
+                    class="q-mb-sm q-mr-sm"
+                  />
+                  <div
+                    class="flex-1"
+                  >
+                    <q-skeleton
+                      type="text"
+                      square
+                      width="30%"
+                      animation="fade"
+                    />
+                    <q-skeleton
+                      type="text"
+                      square
+                      height="12px"
+                      animation="fade"
+                    />
+                    <q-skeleton
+                      type="text"
+                      square
+                      height="12px"
+                      width="75%"
+                      animation="fade"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+      <div class="flex-1 items-center flex-center text-center q-pa-lg q-mt-lg">
+        <app-btn
+          v-if="items.length"
+          rounded
+          label="Selengkapnya"
+          to="/berita/all"
+        />
+        <q-skeleton
+          v-else
+          type="QChip"
+          animation="fade"
+        />
+      </div>
     </div>
-    <div class="">ddddddd</div>
   </div>
 </template>
 

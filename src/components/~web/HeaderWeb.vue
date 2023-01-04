@@ -92,9 +92,9 @@
           <router-link
             v-for="(menu, i) in menus"
             :key="i"
-            :to="`/${menu.name}`"
+            :to="`/${menu.url}`"
             class="menu__item"
-            :class="route.name===menu.name?'active':''"
+            :class="route.name===menu.name? 'active' : '' "
             exact
           >
             {{ menu.title }}
@@ -142,7 +142,7 @@ const berita = computed(() => route.name === 'berita')
 const pelayanan = computed(() => route.name === 'pelayanan')
 store.getAppHeader()
 
-// console.log(route)
+console.log('route from headerWeb', route)
 
 const logo = computed(() => {
   if (store.logo === null) {
@@ -153,12 +153,12 @@ const logo = computed(() => {
 })
 
 const menus = ref([
-  { name: 'beranda', url: '/', title: 'Beranda', active: false },
-  { name: 'berita', url: '/berita', title: 'Berita', active: false },
-  { name: 'pelayanan', url: '/pelayanan', title: 'Pelayanan', active: false },
-  { name: 'profil', url: '/profil', title: 'Profil', active: false },
-  { name: 'PPID', url: '/ppid', title: 'PPID', active: false },
-  { name: 'buku-tamu', url: '/buku-tamu', title: 'Buku Tamu', active: false }
+  { name: 'beranda', url: 'beranda', title: 'Beranda', active: false },
+  { name: 'berita', url: 'berita/all', title: 'Berita', active: false },
+  { name: 'pelayanan', url: 'pelayanan', title: 'Pelayanan', active: false },
+  { name: 'profil', url: 'profil', title: 'Profil', active: false },
+  { name: 'PPID', url: 'ppid', title: 'PPID', active: false },
+  { name: 'buku-tamu', url: 'buku-tamu', title: 'Buku Tamu', active: false }
   // { name: 'galeri', url: '/galeri', title: 'Galeri', active: false },
   // { name: 'profil', url: '/profil', title: 'Profil', active: false }
 ])

@@ -11,7 +11,7 @@
         </div>
         <div v-else>
           <app-cardnews
-            :big-card-news="store.bigCardNews"
+            :big-card-news="store.bigCardForPageBerita"
           />
         </div>
         <div v-if="firstArr.length > 2">
@@ -79,7 +79,17 @@
           Berita Terbaru
         </div>
         <q-separator class="q-my-md" />
-        <app-list-news :items="store.smallCardNews" />
+        <app-list-news :items="store.smallCardForPageBerita" />
+        <q-separator class="q-my-md" />
+        <div class="flex row items-center">
+          <q-pagination
+            v-model="current"
+            color="black"
+            :max="maxPagin"
+            :max-pages="6"
+            :boundary-numbers="false"
+          />
+        </div>
         <!-- <q-separator class="q-my-md" />
         <div class="f-14 text-weight-bold">
           Terpopuler
@@ -88,35 +98,6 @@
       </div>
 
       <!-- {{ store.smallCardNews }} -->
-
-      <!-- {{ route.params }} -->
-      <!-- Berita Terpopuler -->
-      <!-- <q-separator class="q-mt-md" />
-        <div>
-          <q-carousel
-            v-model="slide"
-            transition-prev="slide-right"
-            transition-next="slide-left"
-            swipeable
-            animated
-            infinite
-            autoplay
-            arrows
-            class="rounded-borders"
-            height="250px"
-          >
-            <q-carousel-slide
-              :name="1"
-              class="column no-wrap"
-            >
-              <div class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap">
-                <app-smallcard-news class="col-4" />
-                <app-smallcard-news class="col-4" />
-                <app-smallcard-news class="col-4" />
-              </div>
-            </q-carousel-slide>
-          </q-carousel>
-        </div> -->
     </div>
   </q-page>
 </template>
@@ -132,7 +113,19 @@ const route = useRoute()
 // import { computed } from 'vue'
 const store = useBeritaWeb()
 
-// const coba = ref(true)
+const current = computed({
+  get() {
+    return store.params.page
+  },
+  set(nValue) {
+    store.changeParams('page', nValue)
+  }
+})
+
+const maxPagin = computed(() => {
+  const m = store.meta
+  return m === null ? 0 : m.last_page
+})
 
 const p = ref({
   q: route.query.page || '',
@@ -155,10 +148,14 @@ const secondArr = computed(() => {
 
 onMounted(() => {
   // const params = Object.keys(route.params).length === 0 ? 'all' : route.params.page
+  store.getDataPagin(p.value.page)
   store.getPopulars()
-  if (route.query.page) {
-    store.getContent(p.value)
-  }
+  store.getContent(p.value)
+  console.log('mounted', p.value)
+
+  // if (route.query.page) {
+  //   store.getContent(p.value)
+  // }
 })
 </script>
 

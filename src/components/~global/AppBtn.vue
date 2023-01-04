@@ -9,6 +9,8 @@
     :loading="loading"
     :disable="loading"
     style="min-width:100px"
+    :rounded="rounded"
+    :to="to"
   >
     <div
       class="f-12"
@@ -54,6 +56,10 @@ const props = defineProps({
     default: false
   },
   fullwidth: {
+    type: Boolean,
+    default: false
+  },
+  rounded: {
     type: Boolean,
     default: false
   },

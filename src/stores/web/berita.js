@@ -7,6 +7,17 @@ export const useBeritaWeb = defineStore('berita_web', {
     beranda: [],
     populars: [],
 
+    beritas: [],
+    meta: null,
+    params: {
+      q: null,
+      category: 'all',
+      page: 1,
+      perPage: 8,
+      orderBy: 'created_at',
+      sort: 'desc'
+    },
+
     id: null,
     content: null,
     judul: null,
@@ -20,6 +31,18 @@ export const useBeritaWeb = defineStore('berita_web', {
     loading: false
   }),
   getters: {
+    bigCardForPageBerita: (state) => state.beritas.length ? state.beritas[0] : null,
+    smallCardForPageBerita: (state) => {
+      const arr = state.beritas
+      if (state.isContent === false || state.content === null) {
+        if (arr.length > 0) {
+          return arr.slice(1)
+        }
+        return []
+      }
+      const filterObj = arr.filter(item => item.id !== state.id)
+      return filterObj
+    },
     bigCardNews: (state) => {
       if (state.beranda.length > 0) {
         return state.beranda[0]
@@ -39,6 +62,27 @@ export const useBeritaWeb = defineStore('berita_web', {
     }
   },
   actions: {
+    changeParams(key, payload) {
+      this.params[key] = payload
+      console.log(this.params)
+    },
+    async getDataPagin(payload) {
+      this.loading = true
+      this.params.category = payload
+      try {
+        const params = { params: this.params }
+        await api.get('/v1/berita/berita_paginate', params).then((resp) => {
+          console.log('berita beranda paginate', resp)
+          this.beritas = resp.data.data
+          this.meta = resp.data
+          this.isContent = false
+          this.loading = false
+        })
+      } catch (error) {
+        console.log(error)
+        this.loading = false
+      }
+    },
     async getData(params) {
       this.loading = true
       try {
@@ -52,8 +96,6 @@ export const useBeritaWeb = defineStore('berita_web', {
         console.log(error)
         this.loading = false
       }
-      // const resp = await api.get('/v1/berita/data_beranda')
-      // console.log(resp)
     },
     async getPopulars() {
       try {
@@ -67,6 +109,7 @@ export const useBeritaWeb = defineStore('berita_web', {
     },
     async getContent(payload) {
       this.loading = true
+      console.log('get content ...', payload)
       try {
         await api.get(`/v1/berita/web_content?q=${payload.q}`).then((resp) => {
           console.log('berita content ', resp)
