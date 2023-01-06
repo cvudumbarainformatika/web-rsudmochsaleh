@@ -6,59 +6,107 @@
     dense
   >
     <template v-if="items.length > 0">
-      <q-item
-        v-for="(item, n) in items"
-        :key="n"
-        v-ripple
-        clickable
-        @click="beritaClick(item)"
-      >
-        <q-item-section
-          avatar
+      <template v-if="!loading">
+        <q-item
+          v-for="(item, n) in items"
+          :key="n"
+          v-ripple
+          clickable
+          @click="beritaClick(item)"
         >
-          <q-avatar
-            rounded
-            size="90px"
+          <q-item-section
+            avatar
           >
-            <q-img
-              :src="pathImg + item.thumbnail"
-              :ratio="1"
-              fit="cover"
-              class="rounded-borders"
-            />
-          </q-avatar>
-        </q-item-section>
+            <q-avatar
+              rounded
+              size="90px"
+            >
+              <q-img
+                :src="pathImg + item.thumbnail"
+                :ratio="1"
+                fit="cover"
+                class="rounded-borders"
+              />
+            </q-avatar>
+          </q-item-section>
 
-        <q-item-section top>
-          <q-item-label
-            lines="2"
-            class="f-12 text-weight-bold q-pt-xs"
-          >
-            {{ item.judul }}
-          </q-item-label>
-          <div class="flex items-center text-grey q-my-sm f-10">
-            <div class="flex items-center q-mr-sm">
-              <q-icon
-                name="edit_calendar"
-                class="q-pr-xs "
-              /> <div>{{ dateHuman(item.tanggal) }}</div>
-            </div>
-            <!-- <div class="flex items-center">
-              <q-icon
-                name="bookmark"
-                class="q-pr-xs "
-              /> <div>Kategori : Berita</div>
-            </div>
-          </div> -->
+          <q-item-section top>
             <q-item-label
               lines="2"
-              class="f-10 q-mt-sm"
+              class="f-12 text-weight-bold q-pt-xs"
             >
-              <div v-html="item.content" />
+              {{ item.judul }}
             </q-item-label>
+            <div class="flex items-center text-grey q-my-sm f-10">
+              <div class="flex items-center q-mr-sm">
+                <q-icon
+                  name="edit_calendar"
+                  class="q-pr-xs "
+                /> <div>{{ dateHuman(item.tanggal) }}</div>
+              </div>
+              <q-item-label
+                lines="2"
+                class="f-10 q-mt-sm"
+              >
+                <div v-html="item.content" />
+              </q-item-label>
+            </div>
+          </q-item-section>
+        </q-item>
+      </template>
+      <template v-else>
+        <div
+          v-for="(y, x) in y = items.length"
+          :key="x"
+          class="row flex-1"
+        >
+          <q-skeleton
+            size="90px"
+            square
+            animation="fade"
+            class="q-mb-sm q-mr-sm"
+          />
+          <div
+            class="flex-1"
+          >
+            <q-skeleton
+              type="text"
+              square
+              width="40%"
+              animation="fade"
+            />
+            <q-skeleton
+              type="text"
+              square
+              height="10px"
+              width="10%"
+              animation="fade"
+              class="q-my-xs"
+            />
+            <q-skeleton
+              type="text"
+              square
+              height="12px"
+              width="95%"
+              animation="fade"
+            />
+            <q-skeleton
+              type="text"
+              square
+              height="12px"
+              width="90%"
+              animation="fade"
+            />
+            <q-skeleton
+              type="text"
+              square
+              height="12px"
+              width="60%"
+              animation="fade"
+            />
           </div>
-        </q-item-section>
-      </q-item>
+        </div>
+      </template>
     </template>
 
     <template v-else>
@@ -80,6 +128,10 @@ defineProps({
   items: {
     type: Array,
     default: () => []
+  },
+  loading: {
+    type: Boolean,
+    default: false
   }
 })
 

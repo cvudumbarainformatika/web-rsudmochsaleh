@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-deprecated-v-on-native-modifier -->
 <template>
   <div
     class="bg-transparent text-white"
@@ -85,7 +86,7 @@
         </div>
         <q-space />
 
-        <div
+        <!-- <div
           v-if="fixed"
           class="menu__header deskt-only on-right"
         >
@@ -99,6 +100,81 @@
           >
             {{ menu.title }}
           </router-link>
+        </div> -->
+        <div
+          v-if="fixed"
+          class="menu__header deskt-only on-right"
+        >
+          <q-btn
+            v-for="(menu, i) in menus"
+            :key="i"
+            color="primary"
+            :label="menu.title"
+            @mouseover="menuOver=true"
+            @mouseout="menuOver = false"
+          >
+            <template v-if="menu.name==='pelayanan'">
+              <q-menu v-model="menuOpen">
+                <q-list
+                  style="min-width: 100px"
+                  @mouseover="listOver = true"
+                  @mouseout="listOver = false"
+                >
+                  <q-item
+                    v-close-popup
+                    clickable
+                  >
+                    <q-item-section>Settings</q-item-section>
+                  </q-item>
+                  <q-separator />
+                  <q-item
+                    v-close-popup
+                    clickable
+                  >
+                    <q-item-section>Help &amp; Pelayanan</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
+            </template>
+            <template v-if="menu.name === 'profil' && menuOver ==='profil'">
+              <q-menu>
+                <q-list style="min-width: 100px">
+                  <q-item
+                    v-close-popup
+                    clickable
+                  >
+                    <q-item-section>Settings</q-item-section>
+                  </q-item>
+                  <q-separator />
+                  <q-item
+                    v-close-popup
+                    clickable
+                  >
+                    <q-item-section>Help &amp; Profil</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
+            </template>
+            <template v-if="menu.name==='PPID' && menuOver==='PPID'">
+              <q-menu>
+                <q-list style="min-width: 100px">
+                  <q-item
+                    v-close-popup
+                    clickable
+                  >
+                    <q-item-section>Settings</q-item-section>
+                  </q-item>
+                  <q-separator />
+                  <q-item
+                    v-close-popup
+                    clickable
+                  >
+                    <q-item-section>Help &amp; Ppid</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
+            </template>
+          </q-btn>
         </div>
       </q-bar>
     </div>
@@ -140,9 +216,14 @@ const route = useRoute()
 // const beranda = computed(() => route.name === 'beranda')
 const berita = computed(() => route.name === 'berita')
 const pelayanan = computed(() => route.name === 'pelayanan')
+const menuOver = ref(false)
+const listOver = ref(false)
+const menuOpen = ref(false)
 store.getAppHeader()
+storePelayanan.getData()
 
 console.log('route from headerWeb', route)
+console.log('header Web..', storePelayanan.items)
 
 const logo = computed(() => {
   if (store.logo === null) {
@@ -162,6 +243,10 @@ const menus = ref([
   // { name: 'galeri', url: '/galeri', title: 'Galeri', active: false },
   // { name: 'profil', url: '/profil', title: 'Profil', active: false }
 ])
+
+// onMounted(() => {
+//   console.log('header Web..', storePelayanan.items)
+// })
 
 </script>
 

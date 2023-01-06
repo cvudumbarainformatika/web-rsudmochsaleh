@@ -62,21 +62,38 @@
             </q-carousel-slide>
           </q-carousel>
         </div>
-        <div
+        <!-- <div
           v-else
           class="column flex-center"
           style="height:100px"
         >
           Belum Ada Berita terpopuler
-        </div>
+        </div> -->
 
         <div>
-          sadfa
+          <div class="f-14 text-weight-bold">
+            Berita Lainnya
+          </div>
+          <q-separator class="q-my-md" />
+          <app-list-news
+            :items="store.smallCardForPageBerita"
+            :loading="store.loadingMore"
+          />
+          <q-separator class="q-my-md" />
+          <div class="flex flex-center">
+            <q-pagination
+              v-model="current"
+              color="black"
+              :max="maxPagin"
+              :max-pages="6"
+              :boundary-numbers="false"
+            />
+          </div>
         </div>
       </div>
       <div class="col-md-4 col-lg-4 col-xs-12">
-        <div class="f-14 text-weight-bold">
-          Berita Terbaru
+        <!-- <div class="f-14 text-weight-bold">
+          Berita Lainnya
         </div>
         <q-separator class="q-my-md" />
         <app-list-news :items="store.smallCardForPageBerita" />
@@ -86,15 +103,10 @@
             v-model="current"
             color="black"
             :max="maxPagin"
-            :max-pages="6"
+            :max-pages="10"
             :boundary-numbers="false"
           />
-        </div>
-        <!-- <q-separator class="q-my-md" />
-        <div class="f-14 text-weight-bold">
-          Terpopuler
-        </div>
-        <q-separator class="q-my-md" /> -->
+        </div> -->
       </div>
 
       <!-- {{ store.smallCardNews }} -->
@@ -118,7 +130,7 @@ const current = computed({
     return store.params.page
   },
   set(nValue) {
-    store.changeParams('page', nValue)
+    store.changeParams(nValue, p.value.page)
   }
 })
 

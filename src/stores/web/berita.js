@@ -28,7 +28,8 @@ export const useBeritaWeb = defineStore('berita_web', {
 
     views: 0,
     isContent: false,
-    loading: false
+    loading: false,
+    loadingMore: false
   }),
   getters: {
     bigCardForPageBerita: (state) => state.beritas.length ? state.beritas[0] : null,
@@ -62,13 +63,20 @@ export const useBeritaWeb = defineStore('berita_web', {
     }
   },
   actions: {
-    changeParams(key, payload) {
-      this.params[key] = payload
-      console.log(this.params)
+    changeParams(hal, cat) {
+      this.params.page = hal
+      this.params.category = cat
+      // console.log('chamnge params', this.params)
+      this.getDataPagin(cat, 'loadMore')
     },
-    async getDataPagin(payload) {
-      this.loading = true
-      this.params.category = payload
+    async getDataPagin(payload, loadmore) {
+      const more = !((!loadmore || loadmore === 'undefined' || loadmore === null || loadmore === undefined))
+      console.log('more', more)
+      more ? this.loadingMore = true : this.loading = true
+      if (!more) {
+        this.params.page = 1
+      }
+      this.params.category = (!payload || payload === 'undefined' || payload === null || payload === undefined) ? 'all' : payload
       try {
         const params = { params: this.params }
         await api.get('/v1/berita/berita_paginate', params).then((resp) => {
@@ -77,10 +85,12 @@ export const useBeritaWeb = defineStore('berita_web', {
           this.meta = resp.data
           this.isContent = false
           this.loading = false
+          this.loadingMore = false
         })
       } catch (error) {
         console.log(error)
         this.loading = false
+        this.loadingMore = false
       }
     },
     async getData(params) {
