@@ -11,8 +11,8 @@ export const useAppStore = defineStore('app', {
       link_fb: 'https://facebook.com',
       link_instagram: 'https://instagram.com',
       link_youtube: 'https://instagram.com',
-      title: 'Title Header',
-      desc: 'Deskripsi Website',
+      title: 'UOBK RSUD DOKTER MOHAMAD SALEH',
+      desc: 'UOBK RSUD DOKTER MOHAMAD SALEH ADALAH RUMAH SAKIT PEMERINTAH YANG BERTIPE B PENDIDIKAN',
       email: null,
       link_map: null
     },

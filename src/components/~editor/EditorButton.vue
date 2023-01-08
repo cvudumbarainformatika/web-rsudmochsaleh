@@ -179,15 +179,55 @@
       </button> -->
     </div>
     <!-- dialog gallery -->
-    <app-dialog
+    <!-- <app-dialog
       v-model="dialogImage"
       label="File Image Manager"
       @on-ok="getImage"
+      @on-close="dialogImage = false"
     >
       <template #default>
         <app-gallery @select-image="imageGetter" />
       </template>
-    </app-dialog>
+    </app-dialog> -->
+
+    <q-dialog
+      v-model="dialogImage"
+      full-width
+      full-height
+      persistent
+    >
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">
+            File Image Manager
+          </div>
+        </q-card-section>
+
+        <q-separator />
+        <div
+          style="max-height: 80vh; height:73vh"
+          class="scroll"
+        >
+          <app-gallery @select-image="imageGetter" />
+        </div>
+        <q-separator />
+
+        <q-card-actions align="right">
+          <q-btn
+            color="dark"
+            no-caps
+            label="Close"
+            @click="dialogImage = false"
+          />
+          <q-btn
+            label="OK"
+            no-caps
+            color="primary"
+            @click="getImage"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 <script setup>
@@ -242,8 +282,8 @@ function getImage() {
   if (imageSelected.value === null) {
     return notifErrVue('pilih Gambar terlebih dahulu')
   }
-  props.editor.chain().focus().setImage({ src: imageSelected.value }).run()
   dialogImage.value = false
+  props.editor.chain().focus().setImage({ src: imageSelected.value }).run()
 }
 function imageGetter(val) {
   imageSelected.value = val

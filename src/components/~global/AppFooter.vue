@@ -4,7 +4,7 @@
   >
     <div class="full-width q-mt-lg text-white">
       <div class="container-padding">
-        <div class="q-py-lg">
+        <div :class="`${mobile?'q-px-lg':'q-py-lg' }`">
           <div class="row">
             <div class="col-12 col-md-4">
               <div class="column">
@@ -102,6 +102,12 @@
 </template>
 <script setup>
 import { useAppStore } from 'src/stores/app'
+import { useQuasar } from 'quasar'
+import { ref } from 'vue'
+
+const $q = useQuasar()
+const mobile = ref($q.platform.is.mobile)
+console.log('footer', mobile)
 
 const store = useAppStore()
 

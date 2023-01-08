@@ -8,6 +8,8 @@
       infinite
       :autoplay="true"
       :style="`height:${height}px`"
+      swipeable
+      navigation
     >
       <!-- transition-prev="slide-right"
     transition-next="slide-left" -->
@@ -21,10 +23,16 @@
           v-show="img.title!=='null'"
           class="absolute-bottom custom-caption"
         >
-          <div class="text-h3">
+          <div class="text-h3 deskt-only">
             {{ img.title==="null" || img.title===""?'':img.title }}
           </div>
-          <div class="text-subtitle1">
+          <div class="f-14 text-weight-bold mobile-only">
+            {{ img.title==="null" || img.title===""?'':img.title }}
+          </div>
+          <div class="text-subtitle1 deskt-only">
+            {{ img.desc==="null" || img.desc===""?'':img.desc }}
+          </div>
+          <div class="f-12 mobile-only">
             {{ img.desc==="null" || img.desc===""?'':img.desc }}
           </div>
         </div>

@@ -6,7 +6,7 @@ const removeToken = () => {
   storage.deleteLocalToken()
   storage.deleteHeaderToken()
   storage.deleteUser()
-  routerInstance.replace('/login')
+  routerInstance.replace('/setset/login')
 }
 
 const notifErr = (resp) => {
@@ -83,7 +83,7 @@ const waitLoad = (cond) => {
   if (cond === 'show') {
     Loading.show({
       message: 'Harap bersabar. Menunggu...',
-      boxClass: 'bg-dark text-white',
+      // boxClass: 'bg-primary text-white',
       spinner: QSpinnerCube,
       // spinnerColor: 'yellow',
       spinnerSize: 30

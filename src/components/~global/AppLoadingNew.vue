@@ -13,12 +13,13 @@
         @complete="complete"
         @enter-frame="enterFrame"
       />
-      <div
+      <!-- <div
         class="text-weight-bolder absolute-center text-white"
       >
         Harap Tunggu ...
-      </div>
+      </div> -->
     </div>
+    <!-- <div class="bg-white full-width full-height" /> -->
     <div class="light-dimmed" />
   </div>
 </template>

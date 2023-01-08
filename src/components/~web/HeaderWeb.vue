@@ -64,23 +64,23 @@
         class="container-padding"
         style="height:60px"
       >
-        <div class="logo-web text-center q-pa-xs bg-primary overflow-hidden">
-          <q-skeleton
+        <div class="logo-web text-center q-pa-xs bg-primary overflow-hidden deskt-only">
+          <!-- <q-skeleton
             v-if="store.loading"
             type="QAvatar"
             style="height: 45px; margin-top:5px; margin-bottom: 10px;"
-          />
+          /> -->
           <q-img
             :src="logo"
             :ratio="1"
             fit="cover"
           />
         </div>
-        <div class="title-website q-ml-sm">
-          <div class="f-16">
+        <div class="title-website q-ml-sm deskt-only">
+          <div :class="`f-14 text-weight-bold ${store.visible? 'text-white':'text-primary'}`">
             {{ store.header.title }}
           </div>
-          <div class="f-8">
+          <div :class="`f-8 text-weight-light ${store.visible? 'text-white':'text-black'}`">
             {{ store.header.desc }}
           </div>
         </div>
@@ -103,78 +103,134 @@
         </div> -->
         <div
           v-if="fixed"
-          class="menu__header deskt-only on-right"
+          class="menu__header deskt-only on-right q-py-sm"
         >
-          <q-btn
+          <template
             v-for="(menu, i) in menus"
             :key="i"
-            color="primary"
-            :label="menu.title"
-            @mouseover="menuOver=true"
-            @mouseout="menuOver = false"
           >
-            <template v-if="menu.name==='pelayanan'">
-              <q-menu v-model="menuOpen">
+            <q-btn
+              :id="menu.name"
+              flat
+              no-caps
+              color="white"
+              :label="menu.title"
+              :to="`/${menu.url}`"
+              class="menu__item"
+              :class="route.name===menu.name? 'active' : '' "
+              @mouseover="() => {
+                menuOver = true
+                checkMenu(menu.name)
+              }"
+              @mouseout="menuOver = false"
+            >
+              <!-- <template v-if="menu.name==='pelayanan'"> -->
+              <q-menu
+                v-if="menu.name==='pelayanan'"
+                v-model="menuPelayanan"
+                fit
+                transition-show="jump-down"
+                transition-hide="jump-up"
+              >
                 <q-list
                   style="min-width: 100px"
-                  @mouseover="listOver = true"
-                  @mouseout="listOver = false"
+                  @mouseover.native="listOver = true"
+                  @mouseout.native="listOver = false"
                 >
                   <q-item
+                    v-for="(dropdownPelayanan, n) in storePelayanan.items"
+                    :key="n"
                     v-close-popup
                     clickable
+                    :to="{ name: 'pelayanan' }"
+                    @click="storePelayanan.setTab(dropdownPelayanan.nama)"
                   >
-                    <q-item-section>Settings</q-item-section>
+                    <q-item-section>{{ dropdownPelayanan.nama }}</q-item-section>
                   </q-item>
                   <q-separator />
-                  <q-item
+                  <!-- <q-item
                     v-close-popup
                     clickable
                   >
                     <q-item-section>Help &amp; Pelayanan</q-item-section>
-                  </q-item>
+                  </q-item> -->
                 </q-list>
               </q-menu>
-            </template>
-            <template v-if="menu.name === 'profil' && menuOver ==='profil'">
-              <q-menu>
-                <q-list style="min-width: 100px">
+              <q-menu
+                v-if="menu.name==='profil'"
+                v-model="menuProfil"
+                fit
+                transition-show="jump-down"
+                transition-hide="jump-up"
+              >
+                <q-list
+                  style="min-width: 100px"
+                  @mouseover.native="listOver = true"
+                  @mouseout.native="listOver = false"
+                >
                   <q-item
+                    v-for="(dopdownProfil, n) in storeProfil.items"
+                    :key="n"
                     v-close-popup
                     clickable
+                    :to="{ name: 'profil' }"
+                    @click="storeProfil.setTab(dopdownProfil.nama)"
                   >
-                    <q-item-section>Settings</q-item-section>
+                    <q-item-section>{{ dopdownProfil.nama }}</q-item-section>
                   </q-item>
                   <q-separator />
-                  <q-item
+                  <!-- <q-item
                     v-close-popup
                     clickable
                   >
                     <q-item-section>Help &amp; Profil</q-item-section>
-                  </q-item>
+                  </q-item> -->
                 </q-list>
               </q-menu>
-            </template>
-            <template v-if="menu.name==='PPID' && menuOver==='PPID'">
-              <q-menu>
-                <q-list style="min-width: 100px">
+              <q-menu
+                v-if="menu.name==='PPID'"
+                v-model="menuPpid"
+                fit
+                transition-show="jump-down"
+                transition-hide="jump-up"
+              >
+                <q-list
+                  style="min-width: 100px"
+                  @mouseover.native="listOver = true"
+                  @mouseout.native="listOver = false"
+                >
                   <q-item
+                    v-for="(dropdownPpid, n) in storePpid.items"
+                    :key="n"
                     v-close-popup
                     clickable
+                    :to="{ name: 'ppid' }"
+                    @click="storePpid.setTab(dropdownPpid.nama)"
                   >
-                    <q-item-section>Settings</q-item-section>
+                    <q-item-section>{{ dropdownPpid.nama }}</q-item-section>
                   </q-item>
                   <q-separator />
-                  <q-item
+                  <!-- <q-item
                     v-close-popup
                     clickable
                   >
-                    <q-item-section>Help &amp; Ppid</q-item-section>
-                  </q-item>
+                    <q-item-section>Help &amp; Profil</q-item-section>
+                  </q-item> -->
                 </q-list>
               </q-menu>
-            </template>
-          </q-btn>
+            </q-btn>
+          </template>
+        </div>
+        <div
+          class="mobile-only on-right"
+        >
+          <q-btn
+            flat
+            round
+            :color="`${store.visible?'white':'primary'}`"
+            icon="menu"
+            @click="drawer = !drawer"
+          />
         </div>
       </q-bar>
     </div>
@@ -193,15 +249,34 @@
         :items="storePelayanan.items"
       />
     </div>
+
+    <!-- drawer for mobile -->
+    <div
+      v-if="mobile"
+      class="mobile-only"
+    >
+      <mobileDrawer
+        v-model="drawer"
+        :logo="logo"
+        :menus="menus"
+        :route="route.name"
+      />
+    </div>
   </div>
 </template>
 <script setup>
 import { pathImg } from 'src/boot/axios'
 import { useAppStore } from 'src/stores/app'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import TabPelayanan from 'src/pages/Web/v1/Pelayanan/TabPelayanan.vue'
 import { usePelayananWeb } from 'src/stores/web/pelayanan'
+import { useProfilWeb } from 'src/stores/web/profil'
+import { usePpidWeb } from 'src/stores/web/ppid'
+
+import mobileDrawer from './mobileDrawer.vue'
+
+import { debounce, useQuasar } from 'quasar'
 
 defineProps({
   fixed: {
@@ -210,20 +285,34 @@ defineProps({
   }
 })
 
+const drawer = ref(false)
+
 const store = useAppStore()
 const storePelayanan = usePelayananWeb()
+const storeProfil = useProfilWeb()
+const storePpid = usePpidWeb()
 const route = useRoute()
+const $q = useQuasar()
 // const beranda = computed(() => route.name === 'beranda')
 const berita = computed(() => route.name === 'berita')
 const pelayanan = computed(() => route.name === 'pelayanan')
 const menuOver = ref(false)
 const listOver = ref(false)
-const menuOpen = ref(false)
+const menuPelayanan = ref(false)
+const menuProfil = ref(false)
+const menuPpid = ref(false)
+
+const mobile = ref($q.platform.is.mobile)
+// const targetEl = ref(null)
+
 store.getAppHeader()
 storePelayanan.getData()
+storeProfil.getData()
+storePpid.getData()
 
 console.log('route from headerWeb', route)
 console.log('header Web..', storePelayanan.items)
+console.log('header Web q..', $q.platform)
 
 const logo = computed(() => {
   if (store.logo === null) {
@@ -232,6 +321,37 @@ const logo = computed(() => {
 
   return pathImg + store.logo
 })
+
+const checkMenu = (val) => {
+  // const non = (val === 'berita' || val === 'beranda' || val === 'buku-tamu')
+  if (menuOver.value || listOver.value) {
+    // debounce(menuOpen.value = val, 500)
+    if (val === 'pelayanan') {
+      menuPelayanan.value = true
+      menuProfil.value = false
+      menuPpid.value = false
+    } else if (val === 'profil') {
+      menuProfil.value = true
+      menuPelayanan.value = false
+      menuPpid.value = false
+    } else if (val === 'PPID') {
+      menuPpid.value = true
+      menuPelayanan.value = false
+      menuProfil.value = false
+    }
+  } else {
+    // debounce(menuOpen.value = null, 500)
+    menuPelayanan.value = false
+    menuProfil.value = false
+    menuPpid.value = false
+  }
+}
+
+// debounce(checkMenu, 500)
+const debouncedFilter = debounce(checkMenu, 300)
+
+watch(() => menuOver.value, debouncedFilter)
+watch(() => listOver.value, debouncedFilter)
 
 const menus = ref([
   { name: 'beranda', url: 'beranda', title: 'Beranda', active: false },
@@ -257,7 +377,7 @@ const menus = ref([
     overflow: hidden;
 }
 
-a.menu__item {
+.menu__item {
   position: relative;
   margin-right: 3px;
   font-size: 12px;

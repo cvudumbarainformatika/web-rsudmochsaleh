@@ -21,20 +21,19 @@
           </div>
         </div>
         <q-form
-          ref="myForm"
           class="q-pa-md"
           style="margin-top:70px"
           @submit="onSubmit"
         >
           <app-input
-            v-model="form.email"
+            v-model="email"
             dense
             label="email"
             validator="email"
             icon="icon-mat-email"
           />
           <app-input
-            v-model="form.password"
+            v-model="password"
             dense
             type="password"
             label="password"
@@ -43,11 +42,19 @@
           />
 
           <div style="margin-top:50px">
-            <app-btn
+            <!-- <app-btn
               type="submit"
               :loading="storeAuth.loading"
               class="full-width"
               label="Login"
+            /> -->
+            <q-btn
+              label="Submit"
+              type="submit"
+              color="primary"
+              no-caps
+              class="full-width"
+              :disable="storeAuth.loading"
             />
           </div>
         </q-form>
@@ -65,7 +72,7 @@
   </q-page>
 </template>
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/auth'
 import { useAppStore } from 'src/stores/app'
@@ -75,23 +82,52 @@ const storeAuth = useAuthStore()
 const app = useAppStore()
 const $q = useQuasar()
 
-const myForm = ref(null)
-const form = ref({
-  email: '',
-  password: '',
-  device_name: $q.platform.is.name + '-' + $q.platform.is.platform
+onMounted(() => {
+  app.getAppHeader()
+  console.log('app store auth', app.themes)
+})
+
+// const myForm = ref(null)
+// const form = ref({
+//   email: '',
+//   password: '',
+//   device_name: $q.platform.is.name + '-' + $q.platform.is.platform
+// })
+
+const email = ref(null)
+const password = ref(null)
+const deviceName = ref($q.platform.is.name + '-' + $q.platform.is.platform)
+
+const prim = computed(() => {
+  let pri = '#423a8e'
+  if (app.themes.length > 0) {
+    pri = app.themes[0].value
+  }
+  return pri
+})
+const second = computed(() => {
+  let sec = '#06b8b8'
+  if (app.themes.length > 0) {
+    sec = app.themes[1].value
+  }
+  return sec
 })
 
 const logo = computed(() => {
   if (app.logo === null) {
-    return new URL('../../assets/logos/logo.png', import.meta.url).href
+    return new URL('../../assets/logos/logo-rsud.png', import.meta.url).href
   } else {
     return pathImg + app.logo
   }
 })
 
-function onSubmit () {
-  storeAuth.login(form.value)
+const onSubmit = () => {
+  const form = {
+    email: email.value,
+    password: password.value,
+    device_name: deviceName.value
+  }
+  storeAuth.login(form)
 }
 
 </script>
@@ -108,7 +144,7 @@ function onSubmit () {
       height:200px;
       position: absolute;
       border-radius: 0 0 50% 50%;
-      background: linear-gradient(-45deg, $secondary, $primary);
+      background: linear-gradient(-45deg, v-bind(prim), v-bind(second));
       overflow: hidden;
     }
 }

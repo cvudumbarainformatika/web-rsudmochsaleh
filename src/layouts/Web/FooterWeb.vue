@@ -96,6 +96,12 @@
   </div>
 </template>
 <script setup>
+import { useQuasar } from 'quasar'
+import { ref } from 'vue'
+
+const $q = useQuasar()
+const mobile = ref($q.platform.is.mobile)
+console.log('footer', mobile)
 
 function goToMap() {
   window.open('https://goo.gl/maps/BoSVGuESqtakgyiq5', '_blank')

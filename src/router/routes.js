@@ -61,6 +61,17 @@ const routes = [
         ]
       },
       {
+        path: '/admin/gallery_animasi',
+        component: () => import('pages/Admin/Lottie/IndexPage.vue'),
+        children: [
+          { path: '', name: 'admin.gallery_animasi', component: () => import('pages/Admin/Lottie/IndexTable.vue') }
+          // {
+          //   path: '/admin/berita/form/:id?',
+          //   component: () => import( 'pages/Admin/Berita/FormPage.vue')
+          // }
+        ]
+      },
+      {
         path: '/admin/user',
         component: () => import(/* webpackChunkName: "admin.user" */'pages/Admin/User/IndexPage.vue'),
         children: [

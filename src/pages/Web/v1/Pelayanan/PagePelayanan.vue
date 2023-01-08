@@ -45,33 +45,6 @@
         </div>
         <q-separator />
         <div class="content">
-          <!-- <div
-            v-if="item.thumbnail"
-            class="row q-col-gutter-lg"
-          >
-            <div class="col-md-7 col-lg-7 col-xl-7 col-xs-12 col-sm-12">
-              <app-editor
-                v-model="item.content"
-                :edited="false"
-              />
-            </div>
-            <div class="col-md-5 col-lg-5 col-xl-5 col-xs-12 col-sm-12">
-              <div class="q-py-md">
-                <q-img
-                  :ratio="1"
-                  :src="pathImg + item.thumbnail"
-                  img-class="my-pict-style"
-                  class="my-pict-style"
-                />
-              </div>
-            </div>
-          </div>
-          <div v-else>
-            <app-editor
-              v-model="item.content"
-              :edited="false"
-            />
-          </div> -->
           <div v-if="item.thumbnail">
             <div class="q-py-md">
               <q-img
@@ -109,6 +82,8 @@ function clickList(val) {
   console.log(val)
   store.setTab(val)
 }
+
+console.log('pelayanan', store.tab)
 </script>
 
 <style lang="scss" scoped>

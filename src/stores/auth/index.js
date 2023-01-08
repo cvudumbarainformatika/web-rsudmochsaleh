@@ -6,11 +6,11 @@ import { waitLoad } from 'src/modules/utils'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    state: () => ({
-      token: localStorage.getItem('token') ? storage.getLocalToken() : null,
-      user: localStorage.getItem('user') ? storage.getUser() : null,
-      loading: false
-    })
+    // state: () => ({
+    token: localStorage.getItem('token') ? storage.getLocalToken() : null,
+    user: localStorage.getItem('user') ? storage.getUser() : null,
+    loading: false
+    // })
   }),
   getters: {
     isAuth (state) {
