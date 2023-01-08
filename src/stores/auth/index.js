@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { api } from 'boot/axios'
 import * as storage from 'src/modules/storage'
 import { routerInstance } from 'src/boot/router'
-import { waitLoad } from 'src/modules/utils'
+import { waitLoad, removeToken } from 'src/modules/utils'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -20,7 +20,8 @@ export const useAuthStore = defineStore('auth', {
     userGetter: () => storage.getUser() !== null || storage.getUser() !== undefined
   },
   actions: {
-    async login (payload) {
+    async login(payload) {
+      console.log('login ...')
       this.loading = true
       waitLoad('show')
       try {
@@ -74,6 +75,7 @@ export const useAuthStore = defineStore('auth', {
         })
       } catch (error) {
         console.log(error)
+        removeToken()
         waitLoad('done')
       }
     }

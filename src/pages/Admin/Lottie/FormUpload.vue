@@ -15,11 +15,11 @@
         style="max-height: 70vh; height:68vh"
         class="scroll"
       >
-        <q-uploader
+        <!-- <q-uploader
           bordered
           label="Upload Animasi Json"
           :url="SERVER+'/v1/lottie/upload'"
-          field-name="images[]"
+          field-name="jsons[]"
           :headers="[
             {name: 'Authorization', value: `Bearer ${token}`}
           ]"
@@ -52,65 +52,64 @@
                 <div class="f-10">
                   Klik tanda plus diatas
                 </div>
-              <!-- {{ scope }} -->
               </div>
               <div
                 v-else
                 class="row q-col-gutter-md"
                 style="min-height:250px"
               >
-                <div
-                  v-for="file in scope.files"
-                  :key="file.__key"
-                  class="col-4"
-                >
-                  <q-card>
-                    <!-- <q-img
-                    v-if="file.__img"
-                    thumbnail
-                    :ratio="16/9"
-                    fit="cover"
-                    :src="file.__img.src"
+                <q-list separator>
+                  <q-item
+                    v-for="file in scope.files"
+                    :key="file.__key"
                   >
-                    <div class="absolute-bottom">
-                      <div class="f-12 ellipsis">
+                    <q-item-section>
+                      <q-item-label class="full-width ellipsis">
                         {{ file.name }}
-                      </div>
-                      <div class="f-10">
+                      </q-item-label>
+
+                      <q-item-label caption>
+                        Status: {{ file.__status }}
+                      </q-item-label>
+
+                      <q-item-label caption>
                         {{ file.__sizeLabel }} / {{ file.__progressLabel }}
-                      </div>
-                    </div>
-                    <div class="absolute no-padding transparent">
-                      <q-icon
-                        :name="file.__status==='uploaded'?'done_all':'warnimg'"
-                        size="sm"
-                        :color="file.__status==='idle'?'negative':'green-5'"
-                        class="q-pa-xs"
-                      />
-                    </div>
-                  </q-img> -->
-                    <q-card-actions align="right">
+                      </q-item-label>
+                    </q-item-section>
+
+                    <q-item-section
+                      v-if="file.__img"
+                      thumbnail
+                      class="gt-xs"
+                    >
+                      <img :src="file.__img.src">
+                    </q-item-section>
+
+                    <q-item-section
+                      top
+                      side
+                    >
                       <q-btn
+                        class="gt-xs"
+                        size="12px"
                         flat
+                        dense
                         round
-                        color="grey"
-                        size="sm"
-                        icon="content_copy"
-                      />
-                      <q-btn
-                        flat
-                        round
-                        color="negative"
-                        size="sm"
                         icon="delete"
+                        @click="scope.removeFile(file)"
                       />
-                    </q-card-actions>
-                  </q-card>
-                </div>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
               </div>
             </div>
           </template>
-        </q-uploader>
+        </q-uploader> -->
+
+        <q-uploader
+          url="/assets/upload-lottie"
+          style="max-width: 300px"
+        />
       </div>
     </q-card-section>
     <q-separator />
@@ -132,13 +131,30 @@
 </template>
 
 <script setup>
-import { SERVER } from 'src/boot/axios'
-import * as storage from 'src/modules/storage'
+// import { LottieAnimation } from 'lottie-web-vue'
+// import { SERVER } from 'src/boot/axios'
+// import * as storage from 'src/modules/storage'
+// import { ref } from 'vue'
 
-const token = storage.getLocalToken()
+// const token = storage.getLocalToken()
 const emits = defineEmits(['onOk', 'onClose'])
 
-function onRejected (entries) {
-  console.log(entries)
-}
+// const anim = ref(null)
+
+// const loopComplete = () => {
+//   console.log('loopComplete')
+// }
+
+// const complete = () => {
+//   console.log('complete')
+// }
+
+// const enterFrame = () => {
+//   console.log('enterFrame')
+// }
+
+// function onRejected (entries) {
+//   console.log(entries)
+// }
+
 </script>

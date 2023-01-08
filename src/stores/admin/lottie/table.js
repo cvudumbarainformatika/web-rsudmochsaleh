@@ -14,7 +14,7 @@ export const useLottieTable = defineStore('lottie_table', {
       q: '',
       status: '',
       page: 1,
-      per_page: 10,
+      per_page: 20,
       order_by: 'created_at',
       sort: 'desc'
     },

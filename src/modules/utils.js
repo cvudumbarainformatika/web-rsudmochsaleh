@@ -93,4 +93,4 @@ const waitLoad = (cond) => {
   }
 }
 
-export { notifSuccess, notifErr, notifErrVue, notifSuccessVue, waitLoad }
+export { notifSuccess, notifErr, notifErrVue, notifSuccessVue, waitLoad, removeToken }

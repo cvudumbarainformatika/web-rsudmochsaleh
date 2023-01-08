@@ -11,6 +11,8 @@
     "custom-icons:watch": "watch \"npm run custom-icons\" src/custom-icons/svg"
   },
   "dependencies": {
+    "@lottiefiles/lottie-player": "^1.6.2",
+    "@lottiefiles/vue-lottie-player": "^1.1.0",
     "@quasar/extras": "^1.0.0",
     "@tiptap/extension-code-block-lowlight": "^2.0.0-beta.73",
     "@tiptap/extension-color": "^2.0.0-beta.12",
@@ -29,13 +31,17 @@
     "@tiptap/starter-kit": "^2.0.0-beta.191",
     "@tiptap/vue-3": "^2.0.0-beta.96",
     "axios": "^0.21.1",
+    "lottie-player-vue": "^0.0.16",
+    "lottie-vuejs": "^0.1.0",
     "lottie-web-vue": "^2.0.6",
     "lowlight": "^2.7.0",
     "pinia": "^2.0.11",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
+    "vue-lottie": "^0.2.1",
     "vue-router": "^4.0.0",
-    "vue-social-sharing": "^4.0.0-alpha4"
+    "vue-social-sharing": "^4.0.0-alpha4",
+    "vue3-lottie": "^2.4.0"
   },
   "devDependencies": {
     "@quasar/app-vite": "^1.0.0",
