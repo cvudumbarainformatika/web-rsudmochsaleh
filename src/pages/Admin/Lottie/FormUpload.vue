@@ -15,7 +15,7 @@
         style="max-height: 70vh; height:68vh"
         class="scroll"
       >
-        <!-- <q-uploader
+        <q-uploader
           bordered
           label="Upload Animasi Json"
           :url="SERVER+'/v1/lottie/upload'"
@@ -31,6 +31,7 @@
           flat
           @rejected="onRejected"
         >
+          <!-- :url="SERVER+'/v1/lottie/upload'" -->
           <template #list="scope">
             <div>
               <div
@@ -104,12 +105,12 @@
               </div>
             </div>
           </template>
-        </q-uploader> -->
+        </q-uploader>
 
-        <q-uploader
+        <!-- <q-uploader
           url="/assets/upload-lottie"
           style="max-width: 300px"
-        />
+        /> -->
       </div>
     </q-card-section>
     <q-separator />
@@ -132,11 +133,11 @@
 
 <script setup>
 // import { LottieAnimation } from 'lottie-web-vue'
-// import { SERVER } from 'src/boot/axios'
-// import * as storage from 'src/modules/storage'
+import { SERVER } from 'src/boot/axios'
+import * as storage from 'src/modules/storage'
 // import { ref } from 'vue'
 
-// const token = storage.getLocalToken()
+const token = storage.getLocalToken()
 const emits = defineEmits(['onOk', 'onClose'])
 
 // const anim = ref(null)
@@ -153,8 +154,8 @@ const emits = defineEmits(['onOk', 'onClose'])
 //   console.log('enterFrame')
 // }
 
-// function onRejected (entries) {
-//   console.log(entries)
-// }
+function onRejected (entries) {
+  console.log(entries)
+}
 
 </script>

@@ -8,9 +8,12 @@
         </div>
       </q-card-section>
       <q-card-section class="bg-grey-4">
-        <div class="row q-col-gutter-md">
+        <div
+          v-if="!store.loading"
+          class="row q-col-gutter-md"
+        >
           <div
-            v-for="(item, i) in items"
+            v-for="(item, i) in store.items"
             :key="i"
             class="col-md-3 col-lg-3 col-sm-6 col-xs-6"
           >
@@ -20,25 +23,24 @@
                 :height="200"
               />
               <div class="f-12 text-center q-pa-md ellipsis">
-                {{ item.nama }}
+                {{ item.url }}
               </div>
             </q-card>
-            <!-- <lottie-vue-player
-              :src="`https://assets10.lottiefiles.com/packages/lf20_tzjfwgud.json`"
-
-              :player-controls="true"
-              style="width: 100%; height:400px"
-            /> -->
-            <!-- <lottie-animation
-              ref="anim"
-              :animation-data="getFile(item.url)"
-              :auto-play="true"
-              :loop="true"
-              :speed="1"
-            /> -->
           </div>
         </div>
+        <div
+          v-else
+          class="column flex-center text-grey-8"
+          style="min-height:300px"
+        >
+          <q-spinner-cube
+            color="primary"
+            size="3em"
+          />
+          <div>Harap Tunggu ...</div>
+        </div>
       </q-card-section>
+      <q-card-section />
     </q-card>
 
     <!-- modal -->
@@ -65,17 +67,18 @@ import { useLottieForm } from 'src/stores/admin/lottie/form'
 import { useLottieTable } from 'src/stores/admin/lottie/table'
 import { onMounted, ref } from 'vue'
 import FormUploadVue from './FormUpload.vue'
+import { pathImg } from 'src/boot/axios'
 
 const form = useLottieForm()
 const store = useLottieTable()
 
-const anim = ref(null)
+// const anim = ref(null)
 const folder = import.meta.globEager('assets/lottie/*.json')
 const items = ref([])
 
 const getFile = (file) => {
   // return new URL(file, import.meta.url).href
-  return new URL('http://localhost/api.webrsudmochsaleh/public/storage/lottie/29361-ambulance-doppler-effect.json').href
+  return new URL(pathImg + 'lottie/' + file, import.meta.url).href
 }
 
 Object.entries(folder).forEach(([path, m]) => {
@@ -97,6 +100,5 @@ function pushed() {
 onMounted(() => {
   store.getDataTable()
   pushed()
-  console.log(anim.value)
 })
 </script>
