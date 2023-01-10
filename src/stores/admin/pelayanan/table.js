@@ -14,7 +14,7 @@ export const usePelayananTable = defineStore('pelayanan_table', {
       q: '',
       status: '',
       page: 1,
-      per_page: 50,
+      per_page: 100,
       order_by: 'created_at',
       sort: 'desc'
     },

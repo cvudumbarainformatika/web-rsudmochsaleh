@@ -9,7 +9,8 @@ export const usePelayananForm = defineStore('pelayanan_form', {
       nama: null,
       slug: null,
       content: null,
-      thumbnail: null
+      thumbnail: null,
+      animation: null
     },
 
     // selectedCategories: [],
@@ -28,7 +29,7 @@ export const usePelayananForm = defineStore('pelayanan_form', {
     // },
     resetFORM () {
       this.form = {}
-      const columns = ['nama', 'slug', 'content', 'thumbnail']
+      const columns = ['nama', 'slug', 'content', 'thumbnail', 'animation']
       for (let i = 0; i < columns.length; i++) {
         this.setForm(columns[i], null)
       }

@@ -7,7 +7,7 @@
     >
       <q-item-label header>
         <div class="row items-center justify-between">
-          <div v-if="!pageForm">
+          <div v-if="!form.formPage">
             Table Submenu Pelayanan
           </div>
           <div v-else>
@@ -17,10 +17,10 @@
             <q-btn
               round
               unelevated
-              color="secondary"
-              icon="add"
+              :color="!form.formPage?'secondary':'dark'"
+              :icon="!form.formPage?'add':'arrow_back'"
               size="sm"
-              @click="pageForm = !pageForm"
+              @click="form.formPage? form.setFormPage(false): form.setFormPage(true)"
             />
           </div>
         </div>
@@ -31,7 +31,7 @@
         enter-active-class="animated animate__fadeInUp"
       >
         <!-- Wrapping only one DOM element, defined by QBtn -->
-        <div v-if="!pageForm">
+        <div v-if="!form.formPage">
           <div
             v-if="store.loading"
             class="column flex-center text-grey-8"
@@ -55,7 +55,10 @@
             <div>Data belum ada</div>
           </div>
           <div v-else>
-            <content-table />
+            <content-table
+              :items="store.items"
+              @on-delete="(val)=> deleteData(val)"
+            />
           </div>
         </div>
       </transition>
@@ -64,7 +67,7 @@
         enter-active-class="animated animate__fadeInUp"
       >
         <div
-          v-if="pageForm"
+          v-if="form.formPage"
         >
           <FormPage />
         </div>
@@ -75,10 +78,36 @@
 
 <script setup>
 import { useSubmenuTable } from 'src/stores/admin/submenu/table'
-import { ref } from 'vue'
+import { useSubmenuForm } from 'src/stores/admin/submenu/form'
 import FormPage from './FormPage.vue'
 import ContentTable from './ContentTable.vue'
+import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useQuasar } from 'quasar'
 
 const store = useSubmenuTable()
-const pageForm = ref(false)
+const form = useSubmenuForm()
+const route = useRoute()
+const $q = useQuasar()
+
+onMounted(() => {
+  console.log('onmounted ...')
+  store.getDataTable(route.params.id)
+})
+
+function deleteData(item) {
+  $q.dialog({
+    title: 'Pemberitahuan!',
+    message: `Apakah data <b> ${item.nama} </b> Akan di hapus?`,
+    cancel: true,
+    persistent: true,
+    html: true
+  }).onOk(() => {
+    store.deletesData(item.id)
+  }).onCancel(() => {
+    // console.log('Cancel')
+  }).onDismiss(() => {
+    // console.log('I am triggered on both OK and Cancel')
+  })
+}
 </script>

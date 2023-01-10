@@ -3,7 +3,7 @@
     position="right"
   >
     <q-card
-      style="width: 350px"
+      style="width: 400px"
       class="full-height"
     >
       <q-linear-progress
@@ -23,22 +23,17 @@
         <q-space />
         <q-btn
           round
-          icon="close"
-          flat
-          @click="emits('onClose')"
+          icon="add"
+          unelevated
+          color="primary"
+          @click="emits('onAdd')"
         />
       </q-card-section>
       <q-separator />
-      <q-card-section class="bg-grey-2">
-        <TablePage />
+      <q-card-section class="bg-grey-4">
+        <TablePage @on-copy="(val)=>emits('onCopy', val)" />
       </q-card-section>
     </q-card>
-    <!-- <Suspense>
-    <TablePage />
-    <template #fallback>
-      <app-loading />
-    </template>
-  </Suspense> -->
   </q-dialog>
 </template>
 
@@ -52,5 +47,5 @@ defineProps({
     default: false
   }
 })
-const emits = defineEmits(['onClose'])
+const emits = defineEmits(['onClose', 'onCopy', 'onAdd'])
 </script>

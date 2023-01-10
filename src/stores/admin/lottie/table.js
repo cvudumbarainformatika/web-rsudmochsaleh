@@ -7,14 +7,14 @@ import { notifErr, notifSuccess } from 'src/modules/utils'
 export const useLottieTable = defineStore('lottie_table', {
   state: () => ({
     items: [],
-    meta: {},
+    meta: null,
     item: {},
     loading: false,
     params: {
       q: '',
       status: '',
       page: 1,
-      per_page: 20,
+      per_page: 12,
       order_by: 'created_at',
       sort: 'desc'
     },
@@ -72,7 +72,7 @@ export const useLottieTable = defineStore('lottie_table', {
         console.log('items', resp)
         if (resp.status === 200) {
           this.items = resp.data.data
-          this.meta = resp.data
+          this.meta = resp.data.meta
           this.setColumns(resp.data.data)
           this.loading = false
         }

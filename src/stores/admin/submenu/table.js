@@ -10,7 +10,8 @@ export const useSubmenuTable = defineStore('submenu_table', {
     item: {},
     loading: false,
     params: {
-      q: ''
+      q: '',
+      pelayanan_id: null
     },
     columns: [],
     columnHide: [
@@ -34,14 +35,16 @@ export const useSubmenuTable = defineStore('submenu_table', {
       this.columns = thumb[0]
       // console.log('columns', this.columns)
     },
-    async getDataTable () {
+    async getDataTable(payload) {
+      this.params.pelayanan_id = payload
+      const params = { params: this.params }
       try {
         this.loading = true
-        const resp = await api.get('/v1/submenus')
+        const resp = await api.get('/v1/submenus', params)
         console.log('items', resp)
         if (resp.status === 200) {
-          this.items = resp.data.data
-          this.setColumns(resp.data.data)
+          this.items = resp.data
+          this.setColumns(resp.data)
           this.loading = false
         }
         this.loading = false
@@ -54,7 +57,11 @@ export const useSubmenuTable = defineStore('submenu_table', {
       try {
         await api.post('/v1/submenu/destroy', params).then(resp => {
           notifSuccess(resp)
-          this.getDataTable()
+          // this.getDataTable()
+          const index = this.items.indexOf(payload)
+          if (index > -1) { // only splice array when item is found
+            this.items.splice(index, 1) // 2nd parameter means remove one item only
+          }
         })
       } catch (error) {
         console.log('err submenu', error.response)

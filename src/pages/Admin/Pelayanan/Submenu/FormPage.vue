@@ -10,6 +10,7 @@
               <app-editor v-model="store.form.content" />
             </div>
             <div class="col-md-4 col-lg-4 col-xl-4 col-xs-12">
+              <!-- {{ store.form.pelayanan_id }} -->
               <q-card
                 flat
                 bordered
@@ -31,11 +32,19 @@
                   class="q-mb-md"
                 />
                 <div class="bg-grey-2">
-                  <app-lottie />
+                  <app-lottie
+                    :key="store.form.animation"
+                    :url="store.form.animation"
+                  />
                 </div>
                 <q-card-actions align="between">
                   <div class="text-left q-ml-sm">
-                    Belum Ada Animasi
+                    <app-input
+                      v-model="store.form.animation"
+                      :label="store.form.animation?'':'Belum Ada Animasi'"
+                      class="q-mb-sm"
+                      disable
+                    />
                   </div>
                   <q-btn
                     flat
@@ -43,12 +52,14 @@
                     color="primary"
                     icon="photo_library"
                     @click="openGallery = !openGallery"
-                  />
+                  >
+                    <q-tooltip>Cari Animasi</q-tooltip>
+                  </q-btn>
                 </q-card-actions>
               </q-card>
               <app-input
                 v-model="store.form.nama"
-                label="Nama Pelayanan"
+                label="Nama Submenu Pelayanan"
                 class="q-mb-sm"
                 @change="setSlug"
               />
@@ -73,22 +84,46 @@
     <app-gallery-animasi
       v-model="openGallery"
       @on-close="openGallery = !openGallery"
+      @on-add="lottie.setModal(true)"
+      @on-copy="(val) => {
+        store.setAnimation(val)
+        openGallery = !openGallery
+      }"
     />
+
+    <!-- modal -->
+    <q-dialog
+      v-model="lottie.modal"
+      full-width
+      full-height
+      persistent
+    >
+      <FormUpload @on-close="lottie.setModal" />
+    </q-dialog>
   </q-page>
 </template>
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { pathImg } from 'src/boot/axios'
 import { sanitizeTitle } from 'src/modules/shared'
 import { notifErrVue } from 'src/modules/utils'
-import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useSubmenuForm } from 'src/stores/admin/submenu/form'
+import { useLottieForm } from 'src/stores/admin/lottie/form'
+import FormUpload from '../../Lottie/FormUpload.vue'
 
-const router = useRouter()
+// const router = useRouter()
+const route = useRoute()
 const store = useSubmenuForm()
+const lottie = useLottieForm()
 const tempImg = ref(null)
 const fileRef = ref(null)
 const openGallery = ref(false)
+
+onMounted(() => {
+  store.setPelayan(route.params.id)
+  console.log(route.params.id)
+})
 
 const previewImage = computed(() => {
   const imgUrl = tempImg.value
@@ -115,6 +150,9 @@ function onSave() {
   if (store.form.content === null || store.form.content === '' || store.form.content === '<p></p>') {
     return notifErrVue('maaf, Content Belum terisi!')
   }
+  if (store.form.animation === null || store.form.animation === '' || store.form.animation === '') {
+    return notifErrVue('maaf, Animasi harus Ada!')
+  }
 
   if (tempImg.value !== null) {
     formData.append('thumbnail', tempImg.value)
@@ -126,11 +164,13 @@ function onSave() {
   formData.append('nama', store.form.nama)
   formData.append('slug', store.form.slug)
   formData.append('content', store.form.content)
+  formData.append('animation', store.form.animation)
+  formData.append('pelayanan_id', store.form.pelayanan_id)
 
   store.saveData(formData).then(() => {
     tempImg.value = null
-    store.resetFORM()
-    router.push('/admin/pelayanan')
+    store.getTable(route.params.id)
+    store.setFormPage(false)
   })
 }
 </script>
