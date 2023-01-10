@@ -1,5 +1,9 @@
 <template>
   <q-page v-scroll="onScroll">
+    <div
+      id="top"
+      class="fixed-top"
+    />
     <!-- <q-scroll-area
       class="absolute-top fit"
 
@@ -15,6 +19,26 @@
     <section-three class="q-pb-lg" />
     <!-- <app-footer /> -->
     <!-- </q-scroll-area> -->
+
+    <transition
+      appear
+      enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut"
+    >
+      <q-page-sticky
+        v-if="store.btnScrollTop"
+        position="bottom-right"
+        :offset="[18, 18]"
+      >
+        <q-btn
+          fab
+          icon="keyboard_arrow_up"
+          color="primary"
+          glossy
+          @click="scrollToElement()"
+        />
+      </q-page-sticky>
+    </transition>
   </q-page>
 </template>
 
@@ -29,6 +53,8 @@ import SectionThree from 'src/components/~web//SectionThree.vue'
 import SectionFour from './SectionFour.vue'
 
 import { useAppStore } from 'src/stores/app'
+import { scroll } from 'quasar'
+const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const store = useAppStore()
 const onScroll = (info) => {
@@ -38,5 +64,19 @@ const onScroll = (info) => {
   } else {
     store.changeVisible(false)
   }
+
+  if (moveToY > 300) {
+    store.setBtnScrollTop(true)
+  } else {
+    store.setBtnScrollTop(false)
+  }
+}
+
+function scrollToElement() {
+  const el = document.getElementById('top')
+  const target = getScrollTarget(el)
+  const offset = el.offsetTop
+  const duration = 500
+  setVerticalScrollPosition(target, offset, duration)
 }
 </script>

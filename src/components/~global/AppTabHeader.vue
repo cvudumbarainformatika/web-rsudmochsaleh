@@ -2,10 +2,11 @@
   <q-tabs
     v-model="selected"
     align="left"
-    class="q-mb-lg text-black border__tab"
+    class="q-mb-lg text-white border__tab bg-primary full-width container-padding"
     inline-label
-    indicator-color="secondary"
-    active-color="secondary"
+    indicator-color="white"
+    active-color="white"
+    dense
   >
     <q-route-tab
       name="all"
@@ -14,7 +15,7 @@
       no-caps
       :to="{ name: 'berita', params: { page: 'all' }}"
       exact
-      exact-active-class="bg-grey-3"
+      exact-active-class="bg-secondary"
       replace
     />
     <q-separator vertical />
@@ -74,6 +75,6 @@ watch(() => selected.value, (obj, old) => {
 <style lang="scss" scoped>
 
 .border__tab {
-  border:1px solid $grey-4;
+  // border:1px solid $grey-4;
 }
 </style>

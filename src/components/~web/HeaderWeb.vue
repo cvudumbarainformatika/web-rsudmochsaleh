@@ -134,6 +134,7 @@
               >
                 <q-list
                   style="min-width: 100px"
+                  dense
                   @mouseover.native="listOver = true"
                   @mouseout.native="listOver = false"
                 >
@@ -164,6 +165,7 @@
                 transition-hide="jump-up"
               >
                 <q-list
+                  dense
                   style="min-width: 100px"
                   @mouseover.native="listOver = true"
                   @mouseout.native="listOver = false"
@@ -234,15 +236,21 @@
         </div>
       </q-bar>
     </div>
-    <div
-      v-show="berita && store.visible"
-      class="container-padding bg-white"
+
+    <transition
+      appear
+      enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut"
     >
-      <app-tab-header />
-    </div>
+      <div
+        v-show="berita && store.visible"
+      >
+        <app-tab-header />
+      </div>
+    </transition>
+
     <div
       v-show="pelayanan && store.visible"
-      class="container-padding bg-white"
     >
       <TabPelayanan
         v-model="storePelayanan.tab"

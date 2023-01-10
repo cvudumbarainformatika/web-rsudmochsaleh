@@ -57,6 +57,14 @@
               :disable="storeAuth.loading"
             />
           </div>
+          <div class="q-pt-md text-right">
+            <q-btn
+              label="Kembali Ke Beranda"
+              flat
+              no-caps
+              to="/"
+            />
+          </div>
         </q-form>
       </q-card-section>
       <div class="absolute-bottom q-pa-lg text-grey-6">

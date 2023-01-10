@@ -42,7 +42,8 @@ export const useAppStore = defineStore('app', {
 
     leftDrawerOpen: true,
     rightDrawerOpen: false,
-    visible: false
+    visible: false,
+    btnScrollTop: false
 
   }),
   getters: {
@@ -56,6 +57,9 @@ export const useAppStore = defineStore('app', {
   actions: {
     changeVisible(x) {
       this.visible = x
+    },
+    setBtnScrollTop(x) {
+      this.btnScrollTop = x
     },
     openRight() {
       this.leftDrawerOpen = !this.leftDrawerOpen

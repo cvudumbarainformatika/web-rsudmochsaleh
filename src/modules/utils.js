@@ -11,7 +11,19 @@ const removeToken = () => {
 
 const notifErr = (resp) => {
   // const msg = resp ? resp.data.message : 'Ada Kesalahan, Harap ulangi!'
-  const status = resp ? resp.status : 500
+  // const status = resp ? resp.status : 500
+
+  if (!resp) {
+    Notify.create({
+      message: 'Maaf! Server tidak merespon atau kesalahan pada jaringan anda',
+      icon: 'icon-eva-message-circle-outline',
+      position: 'top-right',
+      color: 'negative',
+      actions: [
+        { label: 'Dismiss', color: 'yellow', handler: () => { /* console.log('wooow') */ } }
+      ]
+    })
+  }
 
   // unauthenticated
   console.log('utility', resp)

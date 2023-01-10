@@ -4,8 +4,8 @@ import { getLocalToken } from 'src/modules/storage'
 import { notifErr } from 'src/modules/utils'
 import { setCssVar } from 'quasar'
 
-// const SERV = 'http://localhost/api.webrsudmochsaleh/public'
-const SERV = 'http://localhost/api.webrsudmohsaleh/public'
+const SERV = 'http://localhost/api.webrsudmochsaleh/public'
+// const SERV = 'http://localhost/api.webrsudmohsaleh/public'
 // const SERV = 'https://rsudmochsaleh.my.id'
 const SERVER = SERV + '/api'
 
@@ -20,6 +20,7 @@ const interceptResErrors = (err) => {
     // check for response code 123 and redirect to login
     // err = Object.assign(new Error(), { message: err.response.data })
     // console.log('1. interceptResErrors', err.response)
+    console.log('interceptorResponse :', err)
     notifErr(err.response)
   } catch (e) {
     // check for response code 123 and redirect to login

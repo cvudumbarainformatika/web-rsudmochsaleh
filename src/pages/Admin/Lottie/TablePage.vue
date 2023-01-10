@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/attribute-hyphenation -->
 
 <template>
   <div>
@@ -19,7 +20,7 @@
           >
             <q-card round>
               <Vue3Lottie
-                :animation-link="getFile(item.url)"
+                :animationLink="getFile(item.url)"
                 :height="200"
               />
               <div class="f-12 text-center q-pa-md ellipsis">
@@ -78,7 +79,8 @@ const items = ref([])
 
 const getFile = (file) => {
   // return new URL(file, import.meta.url).href
-  return new URL(pathImg + 'lottie/' + file, import.meta.url).href
+  // return new URL(pathImg + 'lottie/' + file, import.meta.url).href
+  return pathImg + 'lottie/' + file
 }
 
 Object.entries(folder).forEach(([path, m]) => {

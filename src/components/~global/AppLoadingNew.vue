@@ -19,8 +19,9 @@
         Harap Tunggu ...
       </div> -->
     </div>
-    <!-- <div class="bg-white full-width full-height" /> -->
-    <div class="light-dimmed" />
+    <div class="bg-white loadingOp full-width full-height" />
+    <!-- <div class="light-dimmed" /> -->
+    <!-- <div class="bg-primary" /> -->
   </div>
 </template>
 
@@ -71,7 +72,6 @@ export default {
 
 <style lang="scss" scoped>
 .loadingOp {
-  background-color: #fff;
-  opacity: .5;
+  opacity: .9;
 }
 </style>

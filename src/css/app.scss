@@ -42,20 +42,20 @@ h1,h2,h3,h4,h5 {
 
 .container-padding {
   @media(min-width: $breakpoint-xl-min){
-    padding-left: 15% !important;
-    padding-right: 15% !important;
+    padding-left: 5% !important;
+    padding-right: 5% !important;
   }
   @media(max-width: $breakpoint-lg-max){
-    padding-left: 15% !important;
-    padding-right: 15% !important;
+    padding-left: 5% !important;
+    padding-right: 5% !important;
   }
   @media(max-width: $breakpoint-lg-min){
-    padding-left: 15% !important;
-    padding-right: 15% !important;
+    padding-left: 5% !important;
+    padding-right: 5% !important;
   }
   @media(max-width: $breakpoint-md-max){
-    padding-left: 15% !important;
-    padding-right: 15% !important;
+    padding-left: 5% !important;
+    padding-right: 5% !important;
   }
   @media(max-width: $breakpoint-md-min){
     padding-left: 2% !important;

@@ -1,8 +1,11 @@
 <template>
   <q-page
     v-scroll="onScroll"
-    class="container-padding"
   >
+    <div
+      id="top"
+      class="fixed-top"
+    />
     <!-- <q-scroll-area
       class="absolute-top fit"
       @scroll="onScroll"
@@ -17,6 +20,7 @@
     <!-- </keep-alive> -->
     <div
       style="min-height:400px"
+      class="container-padding"
     >
       <router-view v-slot="{ Component }">
         <transition
@@ -29,6 +33,25 @@
     </div>
     <!-- footer -->
     <!-- </q-scroll-area> -->
+    <transition
+      appear
+      enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut"
+    >
+      <q-page-sticky
+        v-if="store.btnScrollTop"
+        position="bottom-right"
+        :offset="[18, 18]"
+      >
+        <q-btn
+          fab
+          icon="keyboard_arrow_up"
+          color="primary"
+          glossy
+          @click="scrollToElement()"
+        />
+      </q-page-sticky>
+    </transition>
   </q-page>
 </template>
 <script setup>
@@ -36,6 +59,8 @@ import { useAppStore } from 'src/stores/app'
 import { useCategoryStore } from 'src/stores/admin/category'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { scroll } from 'quasar'
+const { getScrollTarget, setVerticalScrollPosition } = scroll
 // import { computed } from 'vue'
 // import { ref } from 'vue'
 
@@ -48,16 +73,34 @@ onMounted(() => {
 })
 
 const store = useAppStore()
+
 const onScroll = (position) => {
   // const moveToY = position.verticalPosition
-  // console.log(position)
+  // console.log('onScroll', position)
   if (position > 150) {
     store.changeVisible(true)
   } else {
     store.changeVisible(false)
   }
+
+  if (position > 300) {
+    store.setBtnScrollTop(true)
+  } else {
+    store.setBtnScrollTop(false)
+  }
 }
 
+// function goTop() {
+//   window.scrollTo(0, 0)
+// }
+
+function scrollToElement() {
+  const el = document.getElementById('top')
+  const target = getScrollTarget(el)
+  const offset = el.offsetTop
+  const duration = 500
+  setVerticalScrollPosition(target, offset, duration)
+}
 </script>
 
 <style lang="scss" scoped>
