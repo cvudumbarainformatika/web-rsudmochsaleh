@@ -33,8 +33,12 @@ const routes = [
         children: [
           { path: '', name: 'admin.pelayanan', component: () => import('src/pages/Admin/Pelayanan/TablePage.vue') },
           {
+            path: '/admin/pelayanan/submenu/:id?',
+            component: () => import('src/pages/Admin/Pelayanan/Submenu/IndexPage.vue')
+          },
+          {
             path: '/admin/pelayanan/form/:id?',
-            component: () => import(/* webpackChunkName: "admin.pelayanan-form" */ 'pages/Admin/Pelayanan/FormPage.vue')
+            component: () => import('pages/Admin/Pelayanan/FormPage.vue')
           }
         ]
       },

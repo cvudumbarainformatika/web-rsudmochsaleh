@@ -35,7 +35,7 @@
           color="primary"
           size="3em"
         />
-        <div>Harap Tunggu ...</div>
+        <div> Harap Tunggu ... </div>
       </div>
       <!-- <div v-else> -->
       <div
@@ -75,40 +75,6 @@
           >
             <div v-html="item.content" />
           </q-item-label>
-          <!-- <q-item-label
-            caption
-            lines="1"
-            align="right"
-          >
-            <div class="f-10">
-              <q-badge
-                round
-                color="primary"
-                :label="getCategories(item.categories)"
-              />
-            </div>
-          </q-item-label> -->
-          <!-- <q-item-label
-            lines="1"
-            class="q-mt-xs text-body2 text-weight-bold text-uppercase"
-          >
-            <span
-              class="cursor-pointer"
-              :class="item.status === 1?'text-negative':'text-primary'"
-              @click="updateStatus(item)"
-            >{{ item.status === 1? 'Draft / Belum di Publish':'Published' }}</span>
-            <span>
-              <q-btn
-                no-caps
-                dense
-                size="xs"
-                color="info"
-                label="view"
-                class="q-ml-md"
-                target="_blank"
-              />
-            </span>
-          </q-item-label> -->
         </q-item-section>
 
         <q-item-section
@@ -132,6 +98,19 @@
               icon="edit"
               @click="form.editForm(item)"
             />
+            <q-btn
+              unelevated
+              size="sm"
+              dense
+              round
+              color="secondary"
+              icon="arrow_forward"
+              @click="handleSubmenu(item)"
+            >
+              <q-tooltip class="bg-primary">
+                Tambah Submenu
+              </q-tooltip>
+            </q-btn>
           </div>
         </q-item-section>
       </q-item>
@@ -156,11 +135,13 @@ import { useQuasar } from 'quasar'
 import { pathImg } from 'src/boot/axios'
 import { usePelayananForm } from 'src/stores/admin/pelayanan/form'
 import { usePelayananTable } from 'src/stores/admin/pelayanan/table'
+import { useRouter } from 'vue-router'
 // import { ref } from 'vue'
 
 const $q = useQuasar()
 const store = usePelayananTable()
 const form = usePelayananForm()
+const router = useRouter()
 
 // const sel = ref('')
 // const filters = ref([
@@ -206,5 +187,10 @@ function deleteData(item) {
 // function getCategories(item) {
 //   return item.map(x => x.nama).join(', ')
 // }
+
+function handleSubmenu(item) {
+  console.log('item :', item)
+  router.push('/admin/pelayanan/submenu/' + item.id)
+}
 
 </script>

@@ -28,7 +28,7 @@
 <script>
 import { LottieAnimation } from 'lottie-web-vue'
 import { onMounted, ref } from 'vue'
-import ambulanceGrs from 'src/assets/lottie/127025-ambulance.json'
+// import ambulanceGrs from 'src/assets/lottie/127025-ambulance.json'
 import hati from 'src/assets/lottie/4565-heartbeat-medical.json'
 import pulse from 'src/assets/lottie/38359-pulse.json'
 
@@ -62,7 +62,7 @@ export default {
       loopComplete,
       complete,
       enterFrame,
-      ambulanceGrs,
+      // ambulanceGrs,
       hati,
       pulse
     }

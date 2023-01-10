@@ -4,19 +4,13 @@ import { api } from 'boot/axios'
 import { notifErr, notifSuccess } from 'src/modules/utils'
 // import { Dialog } from 'quasar'
 
-export const usePelayananTable = defineStore('pelayanan_table', {
+export const useSubmenuTable = defineStore('submenu_table', {
   state: () => ({
     items: [],
-    meta: {},
     item: {},
     loading: false,
     params: {
-      q: '',
-      status: '',
-      page: 1,
-      per_page: 50,
-      order_by: 'created_at',
-      sort: 'desc'
+      q: ''
     },
     columns: [],
     columnHide: [
@@ -30,27 +24,8 @@ export const usePelayananTable = defineStore('pelayanan_table', {
   },
 
   actions: {
-    setSearch (val) {
-      this.params.q = val
-      this.getDataTable()
-    },
-    setOder (payload) {
-      this.params.order_by = payload
-      this.params.sort === 'desc' ? this.params.sort = 'asc' : this.params.sort = 'desc'
-      this.getDataTable()
-    },
-    setPage (payload) {
-      console.log('setPage', payload)
-      this.params.page = payload
-      this.getDataTable()
-    },
-    setPerPage (payload) {
-      this.params.per_page = payload
-      this.params.page = 1
-      this.getDataTable()
-    },
-    setStatus (payload) {
-      this.params.status = payload
+
+    refreshTable() {
       this.params.page = 1
       this.getDataTable()
     },
@@ -59,20 +34,13 @@ export const usePelayananTable = defineStore('pelayanan_table', {
       this.columns = thumb[0]
       // console.log('columns', this.columns)
     },
-
-    refreshTable() {
-      this.params.page = 1
-      this.getDataTable()
-    },
     async getDataTable () {
       try {
         this.loading = true
-        const params = { params: this.params }
-        const resp = await api.get('/v1/pelayanans', params)
+        const resp = await api.get('/v1/submenus')
         console.log('items', resp)
         if (resp.status === 200) {
           this.items = resp.data.data
-          this.meta = resp.data
           this.setColumns(resp.data.data)
           this.loading = false
         }
@@ -84,24 +52,24 @@ export const usePelayananTable = defineStore('pelayanan_table', {
     async deletesData (payload) {
       const params = { id: payload }
       try {
-        await api.post('/v1/pelayanan/destroy', params).then(resp => {
+        await api.post('/v1/submenu/destroy', params).then(resp => {
           notifSuccess(resp)
           this.getDataTable()
         })
       } catch (error) {
-        console.log('err pelayanan', error.response)
+        console.log('err submenu', error.response)
         notifErr(error.response)
       }
     },
     async updateStatus (id, sta) {
       const params = { id, status: sta }
       try {
-        await api.post('/v1/pelayanan/update_status', params).then(resp => {
+        await api.post('/v1/submenu/update_status', params).then(resp => {
           notifSuccess(resp)
           this.getDataTable()
         })
       } catch (error) {
-        console.log('err pelayanan', error.response)
+        console.log('err submenu', error.response)
         notifErr(error.response)
       }
     }

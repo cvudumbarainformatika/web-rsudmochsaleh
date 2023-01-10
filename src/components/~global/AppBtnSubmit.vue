@@ -1,20 +1,20 @@
 <template>
   <q-btn
+    ref="button"
     unelevated
     :dense="dense"
     no-caps
-    :type="props.type"
+    type="submit"
     :color="props.color"
     :class="props.class"
     :loading="loading"
     :disable="loading"
     style="min-width:100px"
     :rounded="rounded"
-    :icon="icon"
-    :icon-right="iconRight"
+    :to="to"
   >
     <div
-      class="f-12 q-mx-sm"
+      class="f-12"
       :class="color===''?'text-primary':''"
     >
       {{ label }}
@@ -30,6 +30,7 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 
 const props = defineProps({
   type: {
@@ -67,23 +68,12 @@ const props = defineProps({
   dense: {
     type: Boolean,
     default: false
-  },
-  icon: {
-    type: String,
-    default: null
-  },
-  iconRight: {
-    type: String,
-    default: null
   }
 
 })
 
-// const handlerType = computed(() => {
-//   if (typeof props.type === 'submit') {
-//     this.loading = true;
-//   }
-// })
+const button = ref(null)
+console.log(button)
 </script>
 
 <style lang="scss" scoped>

@@ -7,7 +7,8 @@
         </div>
         <div class="f-14">
           <span v-if="!route.params.id">Manage Data Pelayanan</span>
-          <span v-else>Form Data Pelayanan</span>
+          <span v-else-if="route.params.id === 'add'">Form Data Pelayanan</span>
+          <span v-else>Submenu Pelayanan</span>
         </div>
       </div>
       <div>

@@ -26,7 +26,7 @@
       :label="item.nama"
       no-caps
       :to="{ name: 'berita', params: { page: item.url } }"
-      exact-active-class="bg-grey-3"
+      exact-active-class="bg-secondary"
       exact
       replace
     />
