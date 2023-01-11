@@ -191,8 +191,32 @@
                 :submenu-open="submenu"
                 @on-mouse-over-list="listOver =true"
                 @on-mouse-out-list="listOver =false"
-                @on-mouse-over-item="(val)=>checkItem(val)"
-              />
+                @on-mouse-over-item="(val, i)=>checkItem(val, i)"
+              >
+                <template #submenu="{row}">
+                  <q-menu
+                  v-if=""
+                    v-model="submenu"
+                    anchor="top end"
+                    self="top start"
+                    transition-show="flip-right"
+                    transition-hide="flip-left"
+                  >
+                    <q-list
+                      separator
+                    >
+                      <q-item
+                        v-for="(sub, index) in row"
+                        :key="index"
+                        dense
+                        clickable
+                      >
+                        <q-item-section>{{ sub.nama }}</q-item-section>
+                      </q-item>
+                    </q-list>
+                  </q-menu>
+                </template>
+              </dropdown-menu>
 
               <!-- <q-menu
                 v-if="menu.name==='profil'"
@@ -399,14 +423,17 @@ const checkMenu = (val) => {
 }
 
 const submenu = ref(false)
+const subIndex = ref(0)
 // const listSubmenu = ref(false)
 
-function checkItem(item) {
-  console.log('checkItem', item)
+function checkItem(item, i) {
+  console.log('checkItem', i)
   if (item.submenu.length > 0) {
     submenu.value = true
+    subIndex.value = i
   } else {
     submenu.value = false
+    subIndex.value = i
   }
 }
 
