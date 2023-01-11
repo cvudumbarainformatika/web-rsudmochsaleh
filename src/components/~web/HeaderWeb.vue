@@ -195,7 +195,6 @@
               >
                 <template #submenu="{row}">
                   <q-menu
-                  v-if=""
                     v-model="submenu"
                     anchor="top end"
                     self="top start"

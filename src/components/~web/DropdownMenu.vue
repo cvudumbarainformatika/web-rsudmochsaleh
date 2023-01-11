@@ -20,7 +20,7 @@
       >
         <!-- @click="storePelayanan.setTab(item.nama)" -->
         <q-item-section
-          @mouseover="emits('onMouseOverItem', item)"
+          @mouseover="emits('onMouseOverItem', item, n)"
         >
           {{ item.nama }}
         </q-item-section>
@@ -32,7 +32,12 @@
         </q-item-section>
 
         <!-- SUBMENU -->
-        <q-menu
+        <slot
+          v-if="item.submenu.length>0"
+          name="submenu"
+          :row="item.submenu"
+        />
+        <!-- <q-menu
           anchor="top end"
           self="top start"
           transition-show="flip-right"
@@ -51,7 +56,7 @@
               <q-item-section>{{ sub.nama }}</q-item-section>
             </q-item>
           </q-list>
-        </q-menu>
+        </q-menu> -->
       </q-item>
       <q-separator />
     </q-list>
@@ -80,9 +85,9 @@ const props = defineProps({
   }
 })
 
-function coba() {
-  console.log('oooo')
-}
+// function coba() {
+//   console.log('oooo')
+// }
 
 const emits = defineEmits(['onMouseOverItem', 'onMouseOverList', 'onMouseOutList'])
 // const itemListOver = ref(false)
