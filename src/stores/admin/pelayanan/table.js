@@ -12,7 +12,7 @@ export const usePelayananTable = defineStore('pelayanan_table', {
     loading: false,
     params: {
       q: '',
-      status: '',
+      flag: '',
       page: 1,
       per_page: 100,
       order_by: 'created_at',
@@ -20,7 +20,8 @@ export const usePelayananTable = defineStore('pelayanan_table', {
     },
     columns: [],
     columnHide: [
-      'id']
+      'id'],
+    routeName: null
   }),
 
   getters: {
@@ -30,6 +31,14 @@ export const usePelayananTable = defineStore('pelayanan_table', {
   },
 
   actions: {
+    setRouteName(val) {
+      this.routeName = val
+      if (val === 'admin.pokja') {
+        this.params.flag = '1' // ini untuk flag pokja
+      } else {
+        this.params.flag = null
+      }
+    },
     setSearch (val) {
       this.params.q = val
       this.getDataTable()
@@ -64,7 +73,7 @@ export const usePelayananTable = defineStore('pelayanan_table', {
       this.params.page = 1
       this.getDataTable()
     },
-    async getDataTable () {
+    async getDataTable() {
       try {
         this.loading = true
         const params = { params: this.params }

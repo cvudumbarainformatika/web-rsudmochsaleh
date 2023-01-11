@@ -1,15 +1,10 @@
-<!-- eslint-disable vue/no-deprecated-v-on-native-modifier -->
+
 <template>
   <div
     class="bg-transparent text-white"
     :class="fixed?'fixed-top':'relative'"
     style="z-index:10"
   >
-    <!-- <transition
-      appear
-      enter-active-class="animated fadeIn"
-      leave-active-class="animated fadeOut"
-    > -->
     <div
       class="header-one transparent"
     >
@@ -125,7 +120,7 @@
               @mouseout="menuOver = false"
             >
               <!-- <template v-if="menu.name==='pelayanan'"> -->
-              <q-menu
+              <!-- <q-menu
                 v-if="menu.name==='pelayanan'"
                 v-model="menuPelayanan"
                 fit
@@ -135,8 +130,9 @@
                 <q-list
                   style="min-width: 100px"
                   dense
-                  @mouseover.native="listOver = true"
-                  @mouseout.native="listOver = false"
+                  separator
+                  @mouseover="listOver = true"
+                  @mouseout="listOver = false"
                 >
                   <q-item
                     v-for="(dropdownPelayanan, n) in storePelayanan.items"
@@ -146,18 +142,59 @@
                     :to="{ name: 'pelayanan' }"
                     @click="storePelayanan.setTab(dropdownPelayanan.nama)"
                   >
-                    <q-item-section>{{ dropdownPelayanan.nama }}</q-item-section>
-                  </q-item>
-                  <q-separator />
-                  <!-- <q-item
-                    v-close-popup
+                    <q-item-section
+                      @mouseover="checkItem(dropdownPelayanan)"
+                    >
+                      {{ dropdownPelayanan.nama }}
+                    </q-item-section>
+                    <q-item-section
+                      v-if="dropdownPelayanan.submenu.length>0"
+                      side
+                    >
+                      <q-icon name="keyboard_arrow_right" />
+                    </q-item-section>
+
+                     SUBMENU
+
+              <q-menu
+                v-model="submenu"
+                anchor="top end"
+                self="top start"
+                transition-show="flip-right"
+                transition-hide="flip-left"
+              >
+                <q-list
+                  separator
+                  @mouseover="() => {
+                    listSubmenu = true
+                  }"
+                  @mouseout="listSubmenu = false"
+                >
+                  <q-item
+                    v-for="(sub, index) in dropdownPelayanan.submenu"
+                    :key="index"
+                    dense
                     clickable
                   >
-                    <q-item-section>Help &amp; Pelayanan</q-item-section>
-                  </q-item> -->
+                    <q-item-section>{{ sub.nama }}</q-item-section>
+                  </q-item>
                 </q-list>
               </q-menu>
-              <q-menu
+              </q-item>
+              <q-separator />
+              </q-list>
+              </q-menu>  -->
+              <dropdown-menu
+                v-if="menu.name==='pelayanan'"
+                v-model="menuPelayanan"
+                :items="storePelayanan.items"
+                :submenu-open="submenu"
+                @on-mouse-over-list="listOver =true"
+                @on-mouse-out-list="listOver =false"
+                @on-mouse-over-item="(val)=>checkItem(val)"
+              />
+
+              <!-- <q-menu
                 v-if="menu.name==='profil'"
                 v-model="menuProfil"
                 fit
@@ -167,8 +204,8 @@
                 <q-list
                   dense
                   style="min-width: 100px"
-                  @mouseover.native="listOver = true"
-                  @mouseout.native="listOver = false"
+                  @mouseover="listOver = true"
+                  @mouseout="listOver = false"
                 >
                   <q-item
                     v-for="(dopdownProfil, n) in storeProfil.items"
@@ -181,12 +218,6 @@
                     <q-item-section>{{ dopdownProfil.nama }}</q-item-section>
                   </q-item>
                   <q-separator />
-                  <!-- <q-item
-                    v-close-popup
-                    clickable
-                  >
-                    <q-item-section>Help &amp; Profil</q-item-section>
-                  </q-item> -->
                 </q-list>
               </q-menu>
               <q-menu
@@ -198,8 +229,8 @@
               >
                 <q-list
                   style="min-width: 100px"
-                  @mouseover.native="listOver = true"
-                  @mouseout.native="listOver = false"
+                  @mouseover="listOver = true"
+                  @mouseout="listOver = false"
                 >
                   <q-item
                     v-for="(dropdownPpid, n) in storePpid.items"
@@ -212,14 +243,8 @@
                     <q-item-section>{{ dropdownPpid.nama }}</q-item-section>
                   </q-item>
                   <q-separator />
-                  <!-- <q-item
-                    v-close-popup
-                    clickable
-                  >
-                    <q-item-section>Help &amp; Profil</q-item-section>
-                  </q-item> -->
                 </q-list>
-              </q-menu>
+              </q-menu> -->
             </q-btn>
           </template>
         </div>
@@ -257,6 +282,22 @@
         :items="storePelayanan.items"
       />
     </div>
+    <div
+      v-show="route.name==='ppid' && store.visible"
+    >
+      <TabPpid
+        v-model="storePpid.tab"
+        :items="storePpid.items"
+      />
+    </div>
+    <div
+      v-show="route.name==='profil' && store.visible"
+    >
+      <TabProfil
+        v-model="storeProfil.tab"
+        :items="storeProfil.items"
+      />
+    </div>
 
     <!-- drawer for mobile -->
     <div
@@ -278,9 +319,13 @@ import { useAppStore } from 'src/stores/app'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import TabPelayanan from 'src/pages/Web/v1/Pelayanan/TabPelayanan.vue'
+import TabPpid from 'src/pages/Web/v1/Ppid/TabPpid.vue'
+import TabProfil from 'src/pages/Web/v1/Profil/TabProfil.vue'
 import { usePelayananWeb } from 'src/stores/web/pelayanan'
 import { useProfilWeb } from 'src/stores/web/profil'
 import { usePpidWeb } from 'src/stores/web/ppid'
+
+import DropdownMenu from './DropdownMenu.vue'
 
 import mobileDrawer from './mobileDrawer.vue'
 
@@ -331,9 +376,8 @@ const logo = computed(() => {
 })
 
 const checkMenu = (val) => {
-  // const non = (val === 'berita' || val === 'beranda' || val === 'buku-tamu')
+  // if (menuOver.value || listOver.value || submenu.value) {
   if (menuOver.value || listOver.value) {
-    // debounce(menuOpen.value = val, 500)
     if (val === 'pelayanan') {
       menuPelayanan.value = true
       menuProfil.value = false
@@ -348,25 +392,48 @@ const checkMenu = (val) => {
       menuProfil.value = false
     }
   } else {
-    // debounce(menuOpen.value = null, 500)
     menuPelayanan.value = false
     menuProfil.value = false
     menuPpid.value = false
   }
 }
 
+const submenu = ref(false)
+// const listSubmenu = ref(false)
+
+function checkItem(item) {
+  console.log('checkItem', item)
+  if (item.submenu.length > 0) {
+    submenu.value = true
+  } else {
+    submenu.value = false
+  }
+}
+
+// const checkSubmenu = () => {
+//   if (listOver.value || listSubmenu.value) {
+//     submenu.value = true
+//   } else {
+//     submenu.value = false
+//   }
+//   console.log('checkSubmenu...', listSubmenu.value)
+// }
+
 // debounce(checkMenu, 500)
-const debouncedFilter = debounce(checkMenu, 300)
+const debouncedFilter = debounce(checkMenu, 100)
+// const debouncedSub = debounce(checkSubmenu, 100)
 
 watch(() => menuOver.value, debouncedFilter)
 watch(() => listOver.value, debouncedFilter)
+// watch(() => listSubmenu.value, debouncedSub)
 
 const menus = ref([
   { name: 'beranda', url: 'beranda', title: 'Beranda', active: false },
   { name: 'berita', url: 'berita/all', title: 'Berita', active: false },
   { name: 'pelayanan', url: 'pelayanan', title: 'Pelayanan', active: false },
   { name: 'profil', url: 'profil', title: 'Profil', active: false },
-  { name: 'PPID', url: 'ppid', title: 'PPID', active: false },
+  { name: 'ppid', url: 'ppid', title: 'PPID', active: false },
+  { name: 'pokja', url: 'pokja', title: 'Pokja Akreditasi', active: false },
   { name: 'buku-tamu', url: 'buku-tamu', title: 'Buku Tamu', active: false }
   // { name: 'galeri', url: '/galeri', title: 'Galeri', active: false },
   // { name: 'profil', url: '/profil', title: 'Profil', active: false }

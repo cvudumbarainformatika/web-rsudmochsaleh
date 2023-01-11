@@ -7,7 +7,7 @@
     >
       <q-item-label header>
         <div class="row items-center justify-between">
-          <div>Table Data Pelayanan</div>
+          <div>Table Data {{ getNama() }}</div>
           <!-- <div>
             <q-select
               v-model="sel"
@@ -58,22 +58,23 @@
       >
         <q-item-section
           avatar
-          class="col-2"
+          class="col-1"
         >
           <q-img
             :ratio="16/9"
             :src="getImage(item.thumbnail)"
           />
         </q-item-section>
+        <q-item-section
+          avatar
+          class="col-1"
+        >
+          <app-lottie :url="item.animation" />
+        </q-item-section>
 
-        <q-item-section top>
+        <q-item-section>
           <q-item-label lines="1">
             <span class="text-weight-bold f-16">{{ item.nama }}</span>
-          </q-item-label>
-          <q-item-label
-            lines="2"
-          >
-            <div v-html="item.content" />
           </q-item-label>
         </q-item-section>
 
@@ -135,13 +136,14 @@ import { useQuasar } from 'quasar'
 import { pathImg } from 'src/boot/axios'
 import { usePelayananForm } from 'src/stores/admin/pelayanan/form'
 import { usePelayananTable } from 'src/stores/admin/pelayanan/table'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 // import { ref } from 'vue'
 
 const $q = useQuasar()
 const store = usePelayananTable()
 const form = usePelayananForm()
 const router = useRouter()
+const route = useRoute()
 
 // const sel = ref('')
 // const filters = ref([
@@ -149,7 +151,7 @@ const router = useRouter()
 //   { status: 1, label: 'Draft' },
 //   { status: 2, label: 'Publish' }
 // ])
-
+store.setRouteName(route.name)
 store.getDataTable()
 
 function getImage(image) {
@@ -188,9 +190,20 @@ function deleteData(item) {
 //   return item.map(x => x.nama).join(', ')
 // }
 
+function getNama() {
+  if (route.name === 'admin.pokja' || route.name === 'form.pokja') {
+    return 'Pokja Akreditasi'
+  } else {
+    return 'Pelayanan'
+  }
+}
+
 function handleSubmenu(item) {
-  // console.log('item :', item)
-  router.push('/admin/pelayanan/submenu/' + item.id)
+  if (route.name === 'admin.pokja' || route.name === 'form.pokja') {
+    router.push('/admin/pokja/submenu/' + item.id)
+  } else {
+    router.push('/admin/pelayanan/submenu/' + item.id)
+  }
 }
 
 </script>

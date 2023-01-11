@@ -3,10 +3,14 @@
     <q-list
       bordered
       separator
-      class="rounded-borders q-mb-xl"
+      class="rounded-borders q-mb-xl bg-grey-2"
+      style="min-height:300px"
     >
-      <q-item-label header>
-        <div class="row items-center justify-between">
+      <q-item-label
+        header
+        class="bg-white"
+      >
+        <div class="row items-center justify-between ">
           <div v-if="!form.formPage">
             Table Submenu Pelayanan
           </div>
@@ -54,7 +58,9 @@
             />
             <div>Data belum ada</div>
           </div>
-          <div v-else>
+          <div
+            v-else
+          >
             <content-table
               :items="store.items"
               @on-delete="(val)=> deleteData(val)"
@@ -73,6 +79,9 @@
         </div>
       </transition>
     </q-list>
+    <q-card-section
+      class="bg-white"
+    />
   </q-card>
 </template>
 

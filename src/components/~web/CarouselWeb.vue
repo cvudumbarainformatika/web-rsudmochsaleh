@@ -68,7 +68,7 @@ function getImage(img) {
   if (store.carousels.length > 0) {
     return pathImg + img
   }
-  return img
+  return new URL('../../assets/carousel/' + img, import.meta.url).href
 }
 </script>
 

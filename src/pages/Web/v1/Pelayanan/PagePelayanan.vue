@@ -1,9 +1,9 @@
 <template>
   <q-page>
-    <TabPelayanan
+    <!-- <TabPelayanan
       v-model="store.tab"
       :items="store.items"
-    />
+    /> -->
 
     <!-- <q-separator /> -->
 
@@ -12,6 +12,7 @@
       animated
       vertical
       swipeable
+      class="q-pt-lg q-mt-lg"
     >
       <q-tab-panel name="all">
         <div class="text-h6 text-weight-bold">
@@ -60,6 +61,7 @@
           </div>
         </div>
       </q-tab-panel>
+      <!-- </q-tab-panels> -->
     </q-tab-panels>
   </q-page>
 </template>
@@ -69,7 +71,7 @@ import { usePelayananWeb } from 'src/stores/web/pelayanan'
 import { onMounted } from 'vue'
 import { pathImg } from 'src/boot/axios'
 import ListBigPelayanan from './ListBigPelayanan.vue'
-import TabPelayanan from './TabPelayanan.vue'
+// import TabPelayanan from './TabPelayanan.vue'
 // import TabPelayanan from './TabPelayanan.vue'
 // const tab = ref('all')
 const store = usePelayananWeb()

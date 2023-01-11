@@ -1,10 +1,12 @@
 <template>
   <q-tabs
     align="left"
-    class="q-mb-lg text-black border__tab"
+    class="q-mb-lg text-white bg-primary full-width container-padding"
     inline-label
-    indicator-color="secondary"
-    active-color="secondary"
+    indicator-color="white"
+    active-color="white"
+    active-bg-color="secondary"
+    dense
   >
     <q-tab
       no-caps

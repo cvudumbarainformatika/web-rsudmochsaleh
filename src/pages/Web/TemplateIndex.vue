@@ -46,7 +46,7 @@
         <q-btn
           fab
           icon="keyboard_arrow_up"
-          color="primary"
+          color="secondary"
           glossy
           @click="scrollToElement()"
         />

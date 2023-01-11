@@ -1,9 +1,9 @@
 <template>
   <q-page>
-    <TabPpid
+    <!-- <TabPpid
       v-model="store.tab"
       :items="store.items"
-    />
+    /> -->
 
     <!-- <q-separator /> -->
 
@@ -12,6 +12,7 @@
       animated
       vertical
       swipeable
+      class="q-pt-lg q-mt-lg"
     >
       <q-tab-panel name="all">
         <div class="text-h6 text-weight-bold">
@@ -96,7 +97,7 @@ import { usePpidWeb } from 'src/stores/web/ppid'
 import { onMounted } from 'vue'
 import { pathImg } from 'src/boot/axios'
 import ListBigPpid from './ListBigPpid.vue'
-import TabPpid from './TabPpid.vue'
+// import TabPpid from './TabPpid.vue'
 // import TabPpid from './TabPpid.vue'
 // const tab = ref('all')
 const store = usePpidWeb()

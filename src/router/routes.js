@@ -43,6 +43,23 @@ const routes = [
         ]
       },
       {
+        path: '/admin/pokja',
+        component: () => import('pages/Admin/Pelayanan/IndexPage.vue'),
+        children: [
+          { path: '', name: 'admin.pokja', component: () => import('src/pages/Admin/Pelayanan/TablePage.vue') },
+          {
+            path: '/admin/pokja/submenu/:id?',
+            name: 'submenu.pokja',
+            component: () => import('src/pages/Admin/Pelayanan/Submenu/IndexPage.vue')
+          },
+          {
+            path: '/admin/pokja/form/:id?',
+            name: 'form.pokja',
+            component: () => import('pages/Admin/Pelayanan/FormPage.vue')
+          }
+        ]
+      },
+      {
         path: '/admin/ppid',
         component: () => import('pages/Admin/Ppid/IndexPage.vue'),
         children: [

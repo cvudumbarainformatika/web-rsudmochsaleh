@@ -3,12 +3,12 @@
     <div class="row items-center justify-between title-page q-mb-md">
       <div>
         <div class="text-h6">
-          Pelayanan
+          {{ getNama() }}
         </div>
         <div class="f-14">
-          <span v-if="!route.params.id">Manage Data Pelayanan</span>
-          <span v-else-if="route.params.id === 'add'">Form Data Pelayanan</span>
-          <span v-else>Submenu Pelayanan</span>
+          <span v-if="!route.params.id">Manage Data {{ getNama() }}</span>
+          <span v-else-if="route.params.id === 'add'">Form Data {{ getNama() }}</span>
+          <span v-else>Submenu {{ getNama() }}</span>
         </div>
       </div>
       <div>
@@ -28,7 +28,7 @@
           color="primary"
           icon="add"
           size="sm"
-          @click="form.addForm"
+          @click="form.addForm(route.name)"
         />
       </div>
     </div>
@@ -39,7 +39,10 @@
           name="fade"
           mode="out-in"
         >
-          <component :is="Component" />
+          <component
+            :is="Component"
+            :key="route.name"
+          />
         </transition>
       </router-view>
     </div>
@@ -55,6 +58,13 @@ const router = useRouter()
 console.log(router)
 function prev() {
   router.go(-1)
+}
+function getNama() {
+  if (route.name === 'admin.pokja' || route.name === 'form.pokja') {
+    return 'Pokja Akreditasi'
+  } else {
+    return 'Pelayanan'
+  }
 }
 </script>
 

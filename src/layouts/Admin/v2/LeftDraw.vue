@@ -93,7 +93,8 @@ const menus = ref([
   { route: 'admin.berita', path: '/admin/berita', label: 'Manage Berita', icon: 'newspaper' },
   { route: 'admin.pelayanan', path: '/admin/pelayanan', label: 'Manage Pelayanan', icon: 'medical_services' },
   { route: 'admin.profil', path: '/admin/profil', label: 'Manage Profil', icon: 'extension' },
-  { route: 'admin.ppid', path: '/admin/ppid', label: 'Manage Ppid', icon: 'badge' },
+  { route: 'admin.ppid', path: '/admin/ppid', label: 'Manage Ppid', icon: 'dataset' },
+  { route: 'admin.pokja', path: '/admin/pokja', label: 'Manage Pokja Akreditasi', icon: 'dynamic_form' },
   { route: 'admin.gallery_animasi', path: '/admin/gallery_animasi', label: 'Gallery Animasi', icon: 'badge' },
   { route: 'admin.user', path: '/admin/user', label: 'Manage User', icon: 'people' }
 ])

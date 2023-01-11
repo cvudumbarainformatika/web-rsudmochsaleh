@@ -1,9 +1,9 @@
 <template>
   <q-page>
-    <TabProfil
+    <!-- <TabProfil
       v-model="store.tab"
       :items="store.items"
-    />
+    /> -->
 
     <!-- <q-separator /> -->
 
@@ -12,6 +12,7 @@
       animated
       vertical
       swipeable
+      class="q-pt-lg q-mt-lg"
     >
       <q-tab-panel name="all">
         <div class="text-h6 text-weight-bold">
@@ -90,7 +91,7 @@ import { useProfilWeb } from 'src/stores/web/profil'
 import { onMounted } from 'vue'
 import { pathImg } from 'src/boot/axios'
 import ListBigProfil from './ListBigProfil.vue'
-import TabProfil from './TabProfil.vue'
+// import TabProfil from './TabProfil.vue'
 // import TabProfil from './TabProfil.vue'
 // const tab = ref('all')
 const store = useProfilWeb()

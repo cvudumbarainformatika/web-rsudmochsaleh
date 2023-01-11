@@ -10,7 +10,8 @@ export const usePelayananForm = defineStore('pelayanan_form', {
       slug: null,
       content: null,
       thumbnail: null,
-      animation: null
+      animation: null,
+      flag: null
     },
 
     // selectedCategories: [],
@@ -24,12 +25,12 @@ export const usePelayananForm = defineStore('pelayanan_form', {
     setSlug (val) {
       this.form.slug = val
     },
-    // setKategori(val) {
-    //   this.form.kategori = val
-    // },
+    setAnimation(val) {
+      this.form.animation = val
+    },
     resetFORM () {
       this.form = {}
-      const columns = ['nama', 'slug', 'content', 'thumbnail', 'animation']
+      const columns = ['nama', 'slug', 'content', 'thumbnail', 'animation', 'flag']
       for (let i = 0; i < columns.length; i++) {
         this.setForm(columns[i], null)
       }
@@ -42,9 +43,14 @@ export const usePelayananForm = defineStore('pelayanan_form', {
       this.form[name] = val
     },
 
-    addForm() {
+    addForm(rute) {
+      console.log(rute)
       this.resetFORM()
-      routerInstance.push('/admin/pelayanan/form/add')
+      if (rute === 'admin.pokja') {
+        routerInstance.push('/admin/pokja/form/add')
+      } else {
+        routerInstance.push('/admin/pelayanan/form/add')
+      }
     },
 
     editForm(item) {
@@ -54,6 +60,8 @@ export const usePelayananForm = defineStore('pelayanan_form', {
       this.setForm('slug', item.slug)
       this.setForm('content', item.content)
       this.setForm('thumbnail', item.thumbnail)
+      this.setForm('animation', item.animation)
+      this.setForm('flag', item.flag)
 
       // this.selectedCategories = item.categories.map(x => x.id)
       this.edited = true

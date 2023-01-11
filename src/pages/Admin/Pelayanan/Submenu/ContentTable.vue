@@ -3,17 +3,16 @@
     bordered
     separator
     class="rounded-borders q-mb-xl"
-    style="min-height:300px"
   >
     <q-item
       v-for="(item, n) in items"
       :key="n"
-      class="q-py-sm"
+      class="q-py-sm bg-white"
       tag="String"
     >
       <q-item-section
         avatar
-        class="col-2"
+        class="col-1"
       >
         <q-img
           :ratio="16/9"
@@ -21,15 +20,15 @@
         />
       </q-item-section>
 
-      <q-item-section top>
+      <q-item-section>
         <q-item-label lines="1">
           <span class="text-weight-bold f-16">{{ item.nama }}</span>
         </q-item-label>
-        <q-item-label
+        <!-- <q-item-label
           lines="2"
         >
           <div v-html="item.content" />
-        </q-item-label>
+        </q-item-label> -->
       </q-item-section>
 
       <q-item-section

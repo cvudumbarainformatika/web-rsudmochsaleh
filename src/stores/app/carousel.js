@@ -13,10 +13,7 @@ export const useCarouselApp = defineStore('carousel', {
     },
     carousels: [],
     tmpCarousels: [
-      { id: 1, image: 'https://cdn.quasar.dev/img/mountains.jpg', title: 'Gambar 1', desc: 'desc' },
-      { id: 2, image: 'https://cdn.quasar.dev/img/parallax1.jpg', title: 'Gambar 2', desc: 'desc' },
-      { id: 3, image: 'https://cdn.quasar.dev/img/parallax2.jpg', title: 'Gambar 3', desc: 'desc' },
-      { id: 4, image: 'https://cdn.quasar.dev/img/quasar.jpg', title: 'Gambar 4', desc: 'desc' }
+      { id: 1, image: 'rsud-carousel.jpg', title: 'Gambar 1', desc: 'desc' }
     ],
     titleOn: false,
     loading: false,

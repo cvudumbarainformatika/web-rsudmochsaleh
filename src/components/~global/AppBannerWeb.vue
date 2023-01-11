@@ -64,7 +64,7 @@ const store = useAppStore()
 const image = computed(() => {
   if (imgTemp.value === null) {
     if (store.banner === null) {
-      return 'https://cdn.quasar.dev/img/parallax1.jpg'
+      return new URL('../../assets/images/rsud-carousel.jpg', import.meta.url).href
     } else {
       return pathImg + store.banner
     }
