@@ -97,7 +97,7 @@
               dense
               round
               icon="edit"
-              @click="form.editForm(item)"
+              @click="form.editForm(item, route.name)"
             />
             <q-btn
               unelevated

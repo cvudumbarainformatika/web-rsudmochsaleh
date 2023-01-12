@@ -69,7 +69,8 @@ export const useSubmenuForm = defineStore('submenu_form', {
 
       // this.selectedCategories = item.categories.map(x => x.id)
       this.edited = true
-      routerInstance.push('/admin/pelayanan/submenu/' + item.pelayanan_id)
+      this.formPage = true
+      // routerInstance.push('/admin/pelayanan/submenu/' + item.pelayanan_id)
       // console.log(this.selectedCategories)
     },
     async saveData(payload) {

@@ -53,7 +53,8 @@ export const usePelayananForm = defineStore('pelayanan_form', {
       }
     },
 
-    editForm(item) {
+    editForm(item, rute) {
+      // console.log('edit form', rute)
       this.resetFORM()
       this.setForm('id', item.id)
       this.setForm('nama', item.nama)
@@ -65,8 +66,13 @@ export const usePelayananForm = defineStore('pelayanan_form', {
 
       // this.selectedCategories = item.categories.map(x => x.id)
       this.edited = true
-      routerInstance.push('/admin/pelayanan/form/add')
+      // routerInstance.push('/admin/pelayanan/form/add')
       // console.log(this.selectedCategories)
+      if (rute === 'admin.pokja') {
+        routerInstance.push('/admin/pokja/form/add')
+      } else {
+        routerInstance.push('/admin/pelayanan/form/add')
+      }
     },
     async saveData(payload) {
       this.loading = true

@@ -62,8 +62,10 @@
             v-else
           >
             <content-table
+              :key="store.items"
               :items="store.items"
               @on-delete="(val)=> deleteData(val)"
+              @on-edit="(val)=>form.editForm(val)"
             />
           </div>
         </div>
@@ -90,7 +92,7 @@ import { useSubmenuTable } from 'src/stores/admin/submenu/table'
 import { useSubmenuForm } from 'src/stores/admin/submenu/form'
 import FormPage from './FormPage.vue'
 import ContentTable from './ContentTable.vue'
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
 
@@ -112,7 +114,7 @@ function deleteData(item) {
     persistent: true,
     html: true
   }).onOk(() => {
-    store.deletesData(item.id)
+    store.deletesData(item)
   }).onCancel(() => {
     // console.log('Cancel')
   }).onDismiss(() => {
@@ -128,4 +130,12 @@ const getNama = () => {
     return 'Pelayanan'
   }
 }
+
+// watch(store.items, () => {
+//   console.log('watch')
+// })
+
+watch(() => store.items, (obj) => {
+  console.log('watch...', obj)
+})
 </script>

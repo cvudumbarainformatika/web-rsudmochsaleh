@@ -50,7 +50,7 @@
             dense
             round
             icon="edit"
-            @click="form.editForm(item)"
+            @click="emits('onEdit',item)"
           />
         </div>
       </q-item-section>
@@ -68,7 +68,7 @@ defineProps({
   }
 })
 
-const emits = defineEmits(['onDelete'])
+const emits = defineEmits(['onDelete', 'onEdit'])
 
 function getImage(image) {
   if (image === null || image === '') {

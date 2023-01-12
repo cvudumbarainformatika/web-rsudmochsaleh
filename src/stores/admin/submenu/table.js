@@ -53,12 +53,13 @@ export const useSubmenuTable = defineStore('submenu_table', {
       }
     },
     async deletesData (payload) {
-      const params = { id: payload }
+      const params = { id: payload.id }
       try {
         await api.post('/v1/submenu/destroy', params).then(resp => {
           notifSuccess(resp)
           // this.getDataTable()
           const index = this.items.indexOf(payload)
+          console.log('deletes store..', index)
           if (index > -1) { // only splice array when item is found
             this.items.splice(index, 1) // 2nd parameter means remove one item only
           }
