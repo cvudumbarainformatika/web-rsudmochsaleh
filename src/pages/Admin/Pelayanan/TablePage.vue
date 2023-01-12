@@ -104,11 +104,11 @@
               size="sm"
               dense
               round
-              color="secondary"
+              :color="`${item.submenu.length>0?'secondary':'dark'}`"
               icon="arrow_forward"
               @click="handleSubmenu(item)"
             >
-              <q-tooltip class="bg-primary">
+              <q-tooltip :class="item.submenu.length > 0 ?'bg-secondary':'bg-dark'">
                 Tambah Submenu
               </q-tooltip>
             </q-btn>

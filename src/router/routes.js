@@ -139,7 +139,11 @@ const routes = [
           {
             path: '/pelayanan/:page?',
             name: 'pelayanan',
-            component: () => import(/* webpackChunkName: "page-pelayanan" */ 'src/pages/Web/v1/Pelayanan/PagePelayanan.vue')
+            component: () => import('src/pages/Web/v1/Pelayanan/PagePelayanan.vue')
+          },
+          {
+            path: '/pelayanan/submenu/:page?',
+            component: () => import('src/pages/Web/v1/Pelayanan/SubPelayanan.vue')
           }
         ]
       },

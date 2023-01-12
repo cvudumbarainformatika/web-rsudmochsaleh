@@ -6,7 +6,7 @@
     /> -->
 
     <!-- <q-separator /> -->
-
+    <!-- <div v-show="route.params.page===''"> -->
     <q-tab-panels
       v-model="store.tab"
       animated
@@ -15,14 +15,7 @@
       class="q-pt-lg q-mt-lg"
     >
       <q-tab-panel name="all">
-        <div class="text-h6 text-weight-bold">
-          <div
-            class="bg-primary text-white q-py-sm q-px-md sotel"
-            style="max-width:40%"
-          >
-            Pelayanan
-          </div>
-        </div>
+        <app-text-judul judul="Pelayanan" />
         <q-separator />
         <div class="content">
           <ListBigPelayanan
@@ -36,14 +29,9 @@
         :key="n"
         :name="item.nama"
       >
-        <div class="text-h6 text-weight-bold">
-          <div
-            class="bg-primary text-white q-py-sm q-px-md sotel"
-            style="max-width:40%"
-          >
-            {{ item.nama }}
-          </div>
-        </div>
+        <!-- <div v-if="item.submenu.length===0"> -->
+
+        <app-text-judul :judul="item.nama" />
         <q-separator />
         <div class="content">
           <div v-if="item.thumbnail">
@@ -53,39 +41,126 @@
               />
             </div>
           </div>
-          <div class="q-mb-xl">
+          <div
+            v-if="item.content.length > 10"
+            class="q-mb-xl"
+          >
             <app-editor
               v-model="item.content"
               :edited="false"
             />
           </div>
         </div>
+
+        <!-- INI JIKA ADA SUB MENU -->
+        <div v-if="item.submenu.length > 0">
+          <!-- {{ item.submenu }} -->
+          <div
+            class="row justify-center q-col-gutter-lg relative-position q-my-lg items-strech content-strech"
+          >
+            <div
+              v-for="(sub, i) in item.submenu"
+              :key="i"
+              class="col-12 col-md-3 col-sm-4 col-lg-3"
+            >
+              <q-card
+                flat
+                bordered
+                class="cursor-pointer"
+                @click="goTo(sub, item)"
+              >
+                <div
+                  class="bg-grey-2"
+                >
+                  <app-lottie-web
+                    ref="anim"
+                    :url="sub.animation"
+                    :height="250"
+                  />
+                </div>
+                <q-separator />
+                <div>
+                  <div class="f-18 text-center q-pa-sm q-mt-sm">
+                    {{ sub.nama }}
+                    <div class="text-grey f-10">
+                      @{{ item.slug }}
+                    </div>
+                  </div>
+                  <div class="text-right q-pa-xs">
+                    <q-btn
+                      flat
+                      round
+                      size="sm"
+                      color="primary"
+                      icon="forward"
+                    >
+                      <q-tooltip>Selengkapnya</q-tooltip>
+                    </q-btn>
+                  </div>
+                </div>
+              </q-card>
+            </div>
+          </div>
+        </div>
       </q-tab-panel>
-      <!-- </q-tab-panels> -->
     </q-tab-panels>
+    <!-- </div> -->
+    <div class="q-mb-xl" />
   </q-page>
 </template>
 
 <script setup>
 import { usePelayananWeb } from 'src/stores/web/pelayanan'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { pathImg } from 'src/boot/axios'
 import ListBigPelayanan from './ListBigPelayanan.vue'
+import { useRoute, useRouter } from 'vue-router'
+// import SubPelayanan from './SubPelayanan.vue'
 // import TabPelayanan from './TabPelayanan.vue'
 // import TabPelayanan from './TabPelayanan.vue'
 // const tab = ref('all')
 const store = usePelayananWeb()
+const anim = ref(null)
+const router = useRouter()
+const route = useRoute()
 
+const itemX = ref(null)
+const submenu = ref(null)
+
+console.log('pelayanan route', route)
 onMounted(() => {
   store.getData()
+  clickList('all')
 })
 
 function clickList(val) {
   console.log(val)
+  router.push('/pelayanan')
   store.setTab(val)
+  submenu.value = null
+  itemX.value = null
 }
 
-console.log('pelayanan', store.tab)
+function goTo(val, item) {
+  // console.log('sub', val)
+  // console.log('item', item)
+  // submenu.value = val
+  // itemX.value = item
+  router.push('/pelayanan/submenu/' + val.slug)
+}
+
+console.log('ref', anim)
+
+// watch(route, (obj) => {
+//   console.log('change', obj)
+//   if (obj.params.page === '') {
+//     router.push('/pelayanan')
+//     store.setTab('all')
+//     submenu.value = null
+//     itemX.value = null
+//   }
+// })
+// console.log('pelayanan', store.tab)
 </script>
 
 <style lang="scss" scoped>

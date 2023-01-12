@@ -113,10 +113,7 @@
               :to="`/${menu.url}`"
               class="menu__item"
               :class="route.name===menu.name? 'active' : '' "
-              @mouseover="() => {
-                menuOver = true
-                checkMenu(menu.name)
-              }"
+              @mouseover="checkMenu(menu.name)"
               @mouseout="menuOver = false"
             >
               <!-- <template v-if="menu.name==='pelayanan'"> -->
@@ -184,38 +181,64 @@
               <q-separator />
               </q-list>
               </q-menu>  -->
-              <dropdown-menu
-                v-if="menu.name==='pelayanan'"
-                v-model="menuPelayanan"
-                :items="storePelayanan.items"
-                :submenu-open="submenu"
-                @on-mouse-over-list="listOver =true"
-                @on-mouse-out-list="listOver =false"
-                @on-mouse-over-item="(val, i)=>checkItem(val, i)"
-              >
-                <template #submenu="{row}">
-                  <q-menu
-                    v-model="submenu"
-                    anchor="top end"
-                    self="top start"
-                    transition-show="flip-right"
-                    transition-hide="flip-left"
-                  >
-                    <q-list
-                      separator
-                    >
-                      <q-item
-                        v-for="(sub, index) in row"
-                        :key="index"
-                        dense
-                        clickable
-                      >
-                        <q-item-section>{{ sub.nama }}</q-item-section>
-                      </q-item>
-                    </q-list>
-                  </q-menu>
-                </template>
-              </dropdown-menu>
+              <template v-if="menu.name==='pelayanan'">
+                <dropdown-menu
+
+                  v-model="menuPelayanan"
+                  :items="storePelayanan.items"
+                  :submenu="submenu"
+                  :sub-item-to-open="subItem"
+                  to="pelayanan"
+                  @on-mouse-over-list="listOver =true"
+                  @on-mouse-out-list="listOver =false"
+                  @on-mouse-over-item="(val)=>checkItem(val)"
+                  @on-mouse-over-list-submenu="listSubmenu = true"
+                  @on-mouse-out-list-submenu="listSubmenu = false"
+                  @on-click-menu="(val)=>storePelayanan.setTab(val.nama)"
+                />
+              </template>
+              <template v-else-if="menu.name==='profil'">
+                <dropdown-menu
+                  v-model="menuProfil"
+                  :items="storeProfil.items"
+                  :submenu="submenu"
+                  :sub-item-to-open="subItem"
+                  to="profil"
+                  @on-mouse-over-list="listOver =true"
+                  @on-mouse-out-list="listOver =false"
+                  @on-mouse-over-item="(val)=>checkItem(val)"
+                  @on-mouse-over-list-submenu="listSubmenu = true"
+                  @on-mouse-out-list-submenu="listSubmenu = false"
+                />
+              </template>
+              <template v-else-if="menu.name==='ppid'">
+                <dropdown-menu
+                  v-model="menuPpid"
+                  :items="storePpid.items"
+                  :submenu="submenu"
+                  :sub-item-to-open="subItem"
+                  to="ppid"
+                  @on-mouse-over-list="listOver =true"
+                  @on-mouse-out-list="listOver =false"
+                  @on-mouse-over-item="(val)=>checkItem(val)"
+                  @on-mouse-over-list-submenu="listSubmenu = true"
+                  @on-mouse-out-list-submenu="listSubmenu = false"
+                />
+              </template>
+              <template v-else-if="menu.name==='pokja'">
+                <dropdown-menu
+                  v-model="menuPokja"
+                  :items="storePokja.items"
+                  :submenu="submenu"
+                  :sub-item-to-open="subItem"
+                  to="pokja"
+                  @on-mouse-over-list="listOver =true"
+                  @on-mouse-out-list="listOver =false"
+                  @on-mouse-over-item="(val)=>checkItem(val)"
+                  @on-mouse-over-list-submenu="listSubmenu = true"
+                  @on-mouse-out-list-submenu="listSubmenu = false"
+                />
+              </template>
 
               <!-- <q-menu
                 v-if="menu.name==='profil'"
@@ -347,6 +370,7 @@ import TabProfil from 'src/pages/Web/v1/Profil/TabProfil.vue'
 import { usePelayananWeb } from 'src/stores/web/pelayanan'
 import { useProfilWeb } from 'src/stores/web/profil'
 import { usePpidWeb } from 'src/stores/web/ppid'
+import { usePokjaWeb } from 'src/stores/web/pokja'
 
 import DropdownMenu from './DropdownMenu.vue'
 
@@ -367,27 +391,35 @@ const store = useAppStore()
 const storePelayanan = usePelayananWeb()
 const storeProfil = useProfilWeb()
 const storePpid = usePpidWeb()
+const storePokja = usePokjaWeb()
 const route = useRoute()
 const $q = useQuasar()
 // const beranda = computed(() => route.name === 'beranda')
 const berita = computed(() => route.name === 'berita')
 const pelayanan = computed(() => route.name === 'pelayanan')
-const menuOver = ref(false)
-const listOver = ref(false)
+
 const menuPelayanan = ref(false)
 const menuProfil = ref(false)
 const menuPpid = ref(false)
+const menuPokja = ref(false)
 
 const mobile = ref($q.platform.is.mobile)
+
+const menuOver = ref(false)
+const listOver = ref(false)
+const listSubmenu = ref(false)
+const submenu = ref(false)
+const subItem = ref(null)
 // const targetEl = ref(null)
 
 store.getAppHeader()
 storePelayanan.getData()
 storeProfil.getData()
 storePpid.getData()
+storePokja.getData()
 
 console.log('route from headerWeb', route)
-console.log('header Web..', storePelayanan.items)
+console.log('header Web..', storePokja.items)
 console.log('header Web q..', $q.platform)
 
 const logo = computed(() => {
@@ -399,58 +431,73 @@ const logo = computed(() => {
 })
 
 const checkMenu = (val) => {
+  console.log('checkMenu...', val)
+  menuOver.value = true
   // if (menuOver.value || listOver.value || submenu.value) {
-  if (menuOver.value || listOver.value) {
+  if (menuOver.value || listOver.value || submenu.value) {
     if (val === 'pelayanan') {
       menuPelayanan.value = true
       menuProfil.value = false
       menuPpid.value = false
+      menuPokja.value = false
     } else if (val === 'profil') {
       menuProfil.value = true
       menuPelayanan.value = false
       menuPpid.value = false
-    } else if (val === 'PPID') {
+      menuPokja.value = false
+    } else if (val === 'ppid') {
       menuPpid.value = true
       menuPelayanan.value = false
       menuProfil.value = false
+      menuPokja.value = false
+    } else if (val === 'pokja') {
+      menuPpid.value = false
+      menuPelayanan.value = false
+      menuProfil.value = false
+      menuPokja.value = true
     }
   } else {
     menuPelayanan.value = false
     menuProfil.value = false
     menuPpid.value = false
+    menuPokja.value = false
   }
 }
 
-const submenu = ref(false)
-const subIndex = ref(0)
 // const listSubmenu = ref(false)
 
-function checkItem(item, i) {
-  console.log('checkItem', i)
-  if (item.submenu.length > 0) {
-    submenu.value = true
-    subIndex.value = i
+function checkItem(item) {
+  // console.log('checkItem', item)
+  if (item.submenu) {
+    if (item.submenu.length > 0) {
+      submenu.value = true
+      subItem.value = item
+    } else {
+      submenu.value = false
+      subItem.value = null
+    }
   } else {
     submenu.value = false
-    subIndex.value = i
+    subItem.value = null
   }
 }
 
-// const checkSubmenu = () => {
-//   if (listOver.value || listSubmenu.value) {
-//     submenu.value = true
-//   } else {
-//     submenu.value = false
-//   }
-//   console.log('checkSubmenu...', listSubmenu.value)
-// }
+const checkSubmenu = () => {
+  if (listSubmenu.value || submenu.value) {
+    submenu.value = true
+  } else {
+    submenu.value = false
+  }
+  console.log('checkSubmenu...', submenu.value)
+}
 
 // debounce(checkMenu, 500)
 const debouncedFilter = debounce(checkMenu, 100)
-// const debouncedSub = debounce(checkSubmenu, 100)
+const debouncedSub = debounce(checkSubmenu, 100)
 
 watch(() => menuOver.value, debouncedFilter)
 watch(() => listOver.value, debouncedFilter)
+watch(() => listSubmenu.value, debouncedSub)
 // watch(() => listSubmenu.value, debouncedSub)
 
 const menus = ref([

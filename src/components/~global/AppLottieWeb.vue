@@ -4,6 +4,7 @@
     <Vue3Lottie
       ref="anim"
       :animationLink="getJson()"
+      :height="height"
     />
   </div>
 </template>
@@ -19,6 +20,10 @@ const props = defineProps({
   url: {
     type: String,
     default: null
+  },
+  height: {
+    type: Number,
+    default: 200
   }
 })
 

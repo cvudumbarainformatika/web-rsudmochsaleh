@@ -58,7 +58,7 @@
               </q-card>
               <app-input
                 v-model="store.form.nama"
-                label="Nama Pelayanan"
+                :label="`Nama ${getNama()}`"
                 class="q-mb-sm"
                 @change="setSlug"
               />
@@ -71,7 +71,7 @@
               <div class="q-py-md">
                 <app-btn
                   class="full-width"
-                  label="Simpan Pelayanan"
+                  :label="`Simpan ${getNama()}`"
                   :loading="store.loading"
                 />
                 <!-- <app-btn
@@ -181,5 +181,13 @@ function onSave() {
       router.push('/admin/pelayanan')
     }
   })
+}
+
+const getNama = () => {
+  if (route.name === 'admin.pokja' || route.name === 'form.pokja') {
+    return 'Pokja'
+  } else {
+    return 'Pelayanan'
+  }
 }
 </script>

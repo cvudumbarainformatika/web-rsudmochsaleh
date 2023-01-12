@@ -12,10 +12,10 @@
       >
         <div class="row items-center justify-between ">
           <div v-if="!form.formPage">
-            Table Submenu Pelayanan
+            Table Submenu {{ getNama() }}
           </div>
           <div v-else>
-            Form Submenu Pelayanan
+            Form Submenu {{ getNama() }}
           </div>
           <div>
             <q-btn
@@ -118,5 +118,14 @@ function deleteData(item) {
   }).onDismiss(() => {
     // console.log('I am triggered on both OK and Cancel')
   })
+}
+
+console.log('submenu route', route)
+const getNama = () => {
+  if (route.name === 'submenu.pokja') {
+    return 'Pokja'
+  } else {
+    return 'Pelayanan'
+  }
 }
 </script>

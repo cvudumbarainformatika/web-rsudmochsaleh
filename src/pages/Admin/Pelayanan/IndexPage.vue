@@ -60,7 +60,7 @@ function prev() {
   router.go(-1)
 }
 function getNama() {
-  if (route.name === 'admin.pokja' || route.name === 'form.pokja') {
+  if (route.name === 'admin.pokja' || route.name === 'form.pokja' || route.name === 'submenu.pokja') {
     return 'Pokja Akreditasi'
   } else {
     return 'Pelayanan'

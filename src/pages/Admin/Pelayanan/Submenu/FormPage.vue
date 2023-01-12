@@ -59,7 +59,7 @@
               </q-card>
               <app-input
                 v-model="store.form.nama"
-                label="Nama Submenu Pelayanan"
+                :label="`Nama Submenu ${getNama()}`"
                 class="q-mb-sm"
                 @change="setSlug"
               />
@@ -72,7 +72,7 @@
               <div class="q-py-md">
                 <app-btn
                   class="full-width"
-                  label="Simpan Pelayanan"
+                  :label="`Simpan ${getNama()}`"
                   :loading="store.loading"
                 />
               </div>
@@ -172,5 +172,13 @@ function onSave() {
     store.getTable(route.params.id)
     store.setFormPage(false)
   })
+}
+
+const getNama = () => {
+  if (route.name === 'submenu.pokja') {
+    return 'Pokja'
+  } else {
+    return 'Pelayanan'
+  }
 }
 </script>

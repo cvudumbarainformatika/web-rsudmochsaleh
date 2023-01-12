@@ -7,62 +7,52 @@
     >
       Belum Ada Content
     </div>
-    <q-list
-      v-else
-      bordered
-      separator
-      class="rounded-borders"
+    <div
+      class="row justify-center q-col-gutter-lg relative-position q-my-lg items-strech"
     >
-      <q-item-label header />
-
-      <q-item
-        v-for="(item, n) in items"
-        :key="n"
-        class="q-py-md"
+      <div
+        v-for="(item, i) in items"
+        :key="i"
+        class="col-12 col-md-3 col-sm-4 col-lg-3"
       >
-        <q-item-section
-          avatar
-          top
+        <q-card
+          flat
+          bordered
+          class="cursor-pointer"
+          @click="emits('click',item.nama)"
         >
-          <q-icon
-            name="medical_services"
-            color="black"
-            size="34px"
-          />
-        </q-item-section>
-
-        <q-item-section
-          top
-          class="col-2 gt-sm"
-        >
-          <q-item-label class="q-mt-sm">
-            {{ item.nama }}
-          </q-item-label>
-        </q-item-section>
-
-        <q-item-section top>
-          <q-item-label lines="2">
-            <div v-html="item.content" />
-          </q-item-label>
-          <q-item-label
-            caption
-            lines="1"
-          >
-            @{{ item.slug }}
-          </q-item-label>
-          <q-item-label
-            lines="1"
-            class="q-mt-xs text-body2 text-weight-bold text-primary text-uppercase"
-          >
-            <span
-              class="cursor-pointer"
-              @click="emits('click',item.nama)"
-            >Selengkapnya</span>
-          </q-item-label>
-        </q-item-section>
-      </q-item>
-    </q-list>
+          <div class="bg-grey-2">
+            <app-lottie-web
+              :url="item.animation"
+              :height="250"
+            />
+          </div>
+          <q-separator />
+          <div>
+            <div class="f-18 text-center q-pa-sm q-mt-sm">
+              {{ item.nama }}
+              <div class="text-grey f-10">
+                @{{ item.slug }}
+              </div>
+            </div>
+            <div class="text-right q-pa-xs">
+              <q-btn
+                flat
+                round
+                color="primary"
+                icon="forward"
+                size="sm"
+                @click="emits('click',item.nama)"
+              >
+                <q-tooltip>Selengkapnya</q-tooltip>
+              </q-btn>
+            </div>
+          </div>
+        </q-card>
+      </div>
+    </div>
   </div>
+  <!-- </div> -->
 </template>
 
 <script setup>

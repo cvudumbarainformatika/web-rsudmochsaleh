@@ -4,8 +4,8 @@ import { getLocalToken } from 'src/modules/storage'
 import { notifErr } from 'src/modules/utils'
 import { setCssVar } from 'quasar'
 
-// const SERV = 'http://localhost/api.webrsudmochsaleh/public'// rumah
-const SERV = 'http://localhost/api.webrsudmohsaleh/public'// kantor
+const SERV = 'http://localhost/api.webrsudmochsaleh/public'// rumah
+// const SERV = 'http://localhost/api.webrsudmohsaleh/public'// kantor
 // const SERV = 'https://rsudmochsaleh.my.id'
 const SERVER = SERV + '/api'
 
