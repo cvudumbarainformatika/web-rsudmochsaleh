@@ -2,29 +2,34 @@
 import { defineStore } from 'pinia'
 import { api } from 'src/boot/axios'
 
-export const usePelayananWeb = defineStore('pelayanan_web', {
+export const useSubmenuWeb = defineStore('submenu_web', {
   state: () => ({
-    items: [],
-    tab: 'all',
-    sub: 'sub',
+    item: null,
     loading: false
   }),
   getters: {
+    getSubmenu: (state) => {
+      const index = state.item
+      const arr = index === null ? []
+        : index.pelayanan.submenu.length > 0 ? index.pelayanan.submenu : []
+      if (arr.length > 0) {
+        const filterObj = arr.filter(item => item.id !== index.id)
+        return filterObj
+      }
+      return []
+    }
   },
   actions: {
     setTab(val) {
       this.tab = val
     },
-    setSub(val) {
-      this.sub = val
-    },
-    async getData(rute) {
+    async getData(slug) {
       this.loading = true
-      const params = { params: { flag: rute === 'pelayanan' ? null : '1' } }
+      const params = { params: { slug: slug } }
       try {
-        await api.get('/v1/pelayanan/web_content', params).then((resp) => {
-          console.log('pelayanan web ', resp)
-          this.items = resp.data
+        await api.get('/v1/submenu/web_content', params).then((resp) => {
+          console.log('submenu web ', resp)
+          this.item = resp.data
           this.loading = false
         })
       } catch (error) {

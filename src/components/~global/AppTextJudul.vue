@@ -5,8 +5,8 @@
     >
       {{ judul }}
     </div>
-    <div class="text-grey">
-      <span class="text-secondary"> {{ route.name }} </span>    UOBK RSUD MOHAMAD SALEH
+    <div class="text-grey q-pt-sm">
+      <span class="text-secondary"> {{ route.name }} </span>  UOBK RSUD MOHAMAD SALEH
     </div>
   </div>
 </template>

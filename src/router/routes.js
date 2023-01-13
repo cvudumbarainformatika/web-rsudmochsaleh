@@ -143,7 +143,23 @@ const routes = [
           },
           {
             path: '/pelayanan/submenu/:page?',
-            component: () => import('src/pages/Web/v1/Pelayanan/SubPelayanan.vue')
+            component: () => import('src/pages/Web/v1/Pelayanan/PageSubmenu.vue')
+          }
+        ]
+      },
+      {
+        path: '/pokja',
+        component: () => import('pages/Web/TemplateIndex.vue'),
+        children: [
+          { path: '', redirect: '/pokja/all' },
+          {
+            path: '/pokja/:page?',
+            name: 'pokja',
+            component: () => import('src/pages/Web/v1/Pelayanan/PagePelayanan.vue')
+          },
+          {
+            path: '/pokja/submenu/:page?',
+            component: () => import('src/pages/Web/v1/Pelayanan/PageSubmenu.vue')
           }
         ]
       },
@@ -155,7 +171,7 @@ const routes = [
           {
             path: '/ppid/:page?',
             name: 'ppid',
-            component: () => import(/* webpackChunkName: "page-ppid" */ 'src/pages/Web/v1/Ppid/PagePpid.vue')
+            component: () => import('src/pages/Web/v1/Ppid/PagePpid.vue')
           }
         ]
       },
@@ -163,17 +179,11 @@ const routes = [
         path: '/profil',
         component: () => import('pages/Web/TemplateIndex.vue'),
         children: [
-          {
-            path: '',
-            redirect: to => ({
-              name: 'profil',
-              params: { page: 'rsud' }
-            })
-          },
+          { path: '', redirect: '/profil/all' },
           {
             path: '/profil/:page',
             name: 'profil',
-            component: () => import(/* webpackChunkName: "index-profil" */ 'src/pages/Web/v1/Profil/IndexProfil.vue')
+            component: () => import('src/pages/Web/v1/Profil/PageProfil.vue')
           }
         ]
       },

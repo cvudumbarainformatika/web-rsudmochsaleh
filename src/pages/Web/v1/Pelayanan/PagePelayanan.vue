@@ -1,5 +1,6 @@
 <template>
   <q-page>
+    <app-loading-new v-if="store.loading" />
     <!-- <TabPelayanan
       v-model="store.tab"
       :items="store.items"
@@ -8,6 +9,7 @@
     <!-- <q-separator /> -->
     <!-- <div v-show="route.params.page===''"> -->
     <q-tab-panels
+      v-else
       v-model="store.tab"
       animated
       vertical
@@ -15,7 +17,7 @@
       class="q-pt-lg q-mt-lg"
     >
       <q-tab-panel name="all">
-        <app-text-judul judul="Pelayanan" />
+        <app-text-judul :judul="route.name==='pelayanan'?'Pelayanan':'Pokja Akreditasi'" />
         <q-separator />
         <div class="content">
           <ListBigPelayanan
@@ -115,52 +117,33 @@ import { onMounted, ref } from 'vue'
 import { pathImg } from 'src/boot/axios'
 import ListBigPelayanan from './ListBigPelayanan.vue'
 import { useRoute, useRouter } from 'vue-router'
-// import SubPelayanan from './SubPelayanan.vue'
-// import TabPelayanan from './TabPelayanan.vue'
-// import TabPelayanan from './TabPelayanan.vue'
-// const tab = ref('all')
+
 const store = usePelayananWeb()
 const anim = ref(null)
 const router = useRouter()
 const route = useRoute()
 
-const itemX = ref(null)
-const submenu = ref(null)
-
 console.log('pelayanan route', route)
 onMounted(() => {
-  store.getData()
-  clickList('all')
+  store.getData(route.name)
 })
 
 function clickList(val) {
   console.log(val)
-  router.push('/pelayanan')
+  if (route.name === 'pelayanan') {
+    router.push('/pelayanan')
+  } else {
+    router.push('/pokja')
+  }
+
   store.setTab(val)
-  submenu.value = null
-  itemX.value = null
 }
 
 function goTo(val, item) {
-  // console.log('sub', val)
-  // console.log('item', item)
-  // submenu.value = val
-  // itemX.value = item
   router.push('/pelayanan/submenu/' + val.slug)
 }
 
 console.log('ref', anim)
-
-// watch(route, (obj) => {
-//   console.log('change', obj)
-//   if (obj.params.page === '') {
-//     router.push('/pelayanan')
-//     store.setTab('all')
-//     submenu.value = null
-//     itemX.value = null
-//   }
-// })
-// console.log('pelayanan', store.tab)
 </script>
 
 <style lang="scss" scoped>

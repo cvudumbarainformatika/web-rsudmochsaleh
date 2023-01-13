@@ -6,23 +6,19 @@
       id="top"
       class="fixed-top"
     />
-    <!-- <q-scroll-area
-      class="absolute-top fit"
-      @scroll="onScroll"
-    > -->
     <!-- banner -->
     <app-banner-web />
-    <!-- tab router header -->
-    <!-- <keep-alive> -->
     <div>
       <app-tab-header v-if="route.name==='berita'" />
     </div>
-    <!-- </keep-alive> -->
     <div
       style="min-height:400px"
       class="container-padding"
     >
-      <router-view v-slot="{ Component }">
+      <router-view
+        v-slot="{ Component }"
+        :key="route.fullPath"
+      >
         <transition
           name="fade"
           mode="out-in"

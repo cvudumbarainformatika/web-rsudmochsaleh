@@ -54,8 +54,10 @@
             <q-item
               v-for="(sub, index) in item.submenu"
               :key="index"
+              v-close-popup
               dense
               clickable
+              @click="emits('onClickSubmenu',sub)"
             >
               <q-item-section>{{ sub.nama }}</q-item-section>
             </q-item>
@@ -105,7 +107,7 @@ const submenuOpen = toRef(props, 'submenu') // react to prop
 //   console.log('oooo')
 // }
 
-const emits = defineEmits(['onMouseOverItem', 'onMouseOverList', 'onMouseOutList', 'onMouseOutListSubmenu', 'onMouseOverListSubmenu', 'updateSubMenu', 'onClickMenu'])
+const emits = defineEmits(['onMouseOverItem', 'onMouseOverList', 'onMouseOutList', 'onMouseOutListSubmenu', 'onMouseOverListSubmenu', 'updateSubMenu', 'onClickMenu', 'onClickSubmenu'])
 // const itemListOver = ref(false)
 
 watch(submenuOpen, (value) => {

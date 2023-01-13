@@ -1,5 +1,6 @@
 <template>
   <q-page>
+    <app-loading-new v-if="store.loading" />
     <!-- <TabProfil
       v-model="store.tab"
       :items="store.items"
@@ -8,6 +9,7 @@
     <!-- <q-separator /> -->
 
     <q-tab-panels
+      v-else
       v-model="store.tab"
       animated
       vertical
@@ -15,14 +17,7 @@
       class="q-pt-lg q-mt-lg"
     >
       <q-tab-panel name="all">
-        <div class="text-h6 text-weight-bold">
-          <div
-            class="bg-primary text-white q-py-sm q-px-md sotel"
-            style="max-width:40%"
-          >
-            Profil
-          </div>
-        </div>
+        <app-text-judul judul="Profil" />
         <q-separator />
         <div class="content">
           <ListBigProfil
@@ -36,37 +31,9 @@
         :key="n"
         :name="item.nama"
       >
-        <div class="text-h6 text-weight-bold">
-          <div
-            class="bg-primary text-white q-py-sm q-px-md sotel"
-            style="max-width:40%"
-          >
-            {{ item.nama }}
-          </div>
-        </div>
+        <app-text-judul judul="Profil" />
         <q-separator />
         <div class="content">
-          <!-- <div
-            v-if="item.thumbnail"
-            class="row q-col-gutter-lg"
-          >
-            <div class="col-md-7 col-lg-7 col-xl-7 col-xs-12 col-sm-12">
-              <app-editor
-                v-model="item.content"
-                :edited="false"
-              />
-            </div>
-            <div class="col-md-5 col-lg-5 col-xl-5 col-xs-12 col-sm-12">
-              <div class="q-py-md">
-                <q-img
-                  :ratio="1"
-                  :src="pathImg + item.thumbnail"
-                  img-class="my-pict-style"
-                  class="my-pict-style"
-                />
-              </div>
-            </div>
-          </div> -->
           <div v-if="item.thumbnail">
             <div class="q-py-md">
               <q-img

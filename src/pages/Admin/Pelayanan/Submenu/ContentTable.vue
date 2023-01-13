@@ -19,6 +19,12 @@
           :src="getImage(item.thumbnail)"
         />
       </q-item-section>
+      <q-item-section
+        avatar
+        class="col-1"
+      >
+        <app-lottie :url="item.animation" />
+      </q-item-section>
 
       <q-item-section>
         <q-item-label lines="1">

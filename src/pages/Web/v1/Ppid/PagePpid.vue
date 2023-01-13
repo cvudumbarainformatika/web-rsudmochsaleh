@@ -15,14 +15,7 @@
       class="q-pt-lg q-mt-lg"
     >
       <q-tab-panel name="all">
-        <div class="text-h6 text-weight-bold">
-          <div
-            class="bg-primary text-white q-py-sm q-px-md sotel"
-            style="max-width:40%"
-          >
-            Ppid
-          </div>
-        </div>
+        <app-text-judul judul="Ppid" />
         <q-separator />
         <div class="content">
           <ListBigPpid
@@ -36,14 +29,7 @@
         :key="n"
         :name="item.nama"
       >
-        <div class="text-h6 text-weight-bold">
-          <div
-            class="bg-primary text-white q-py-sm q-px-md sotel"
-            style="max-width:40%"
-          >
-            {{ item.nama }}
-          </div>
-        </div>
+        <app-text-judul :judul="item.nama" />
         <q-separator />
         <div class="content">
           <!-- <div
