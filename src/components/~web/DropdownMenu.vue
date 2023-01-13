@@ -23,6 +23,7 @@
         <!-- @click="storePelayanan.setTab(item.nama)" -->
         <q-item-section
           @mouseover="emits('onMouseOverItem', item)"
+          @mouseout="emits('onMouseOutItem', item)"
         >
           <div class="row justify-between">
             <div>{{ item.nama }}</div>
@@ -107,7 +108,7 @@ const submenuOpen = toRef(props, 'submenu') // react to prop
 //   console.log('oooo')
 // }
 
-const emits = defineEmits(['onMouseOverItem', 'onMouseOverList', 'onMouseOutList', 'onMouseOutListSubmenu', 'onMouseOverListSubmenu', 'updateSubMenu', 'onClickMenu', 'onClickSubmenu'])
+const emits = defineEmits(['onMouseOverItem', 'onMouseOverList', 'onMouseOutList', 'onMouseOutItem', 'onMouseOutListSubmenu', 'onMouseOverListSubmenu', 'updateSubMenu', 'onClickMenu', 'onClickSubmenu'])
 // const itemListOver = ref(false)
 
 watch(submenuOpen, (value) => {

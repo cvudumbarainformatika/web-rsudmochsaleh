@@ -276,10 +276,10 @@ const subItem = ref(null)
 // const targetEl = ref(null)
 
 store.getAppHeader()
-storePelayanan.getData()
+storePelayanan.getData('pelayanan')
 storeProfil.getData()
 storePpid.getData()
-storePokja.getData()
+storePokja.getData('1')
 
 console.log('route from headerWeb', route)
 console.log('header Web..', storePokja.items)
@@ -294,8 +294,14 @@ const logo = computed(() => {
 })
 
 const checkMenu = (val) => {
-  console.log('checkMenu...', val)
-  menuOver.value = true
+  if (val === 'berita' || val === 'buku-tamu') {
+    menuOver.value = false
+  } else {
+    menuOver.value = true
+  }
+
+  // menuOver.value = true
+
   // if (menuOver.value || listOver.value || submenu.value) {
   if (menuOver.value || listOver.value || submenu.value) {
     if (val === 'pelayanan') {
@@ -324,7 +330,14 @@ const checkMenu = (val) => {
     menuProfil.value = false
     menuPpid.value = false
     menuPokja.value = false
+    submenu.value = false
+    listOver.value = false
+    listSubmenu.value = false
+    menuOver.value = false
   }
+  console.log('checkMenuOver...', menuOver.value)
+  console.log('listOver...', listOver.value)
+  console.log('submenu...', submenu.value)
 }
 
 // const listSubmenu = ref(false)
@@ -346,7 +359,7 @@ function checkItem(item) {
 }
 
 const checkSubmenu = () => {
-  if (listSubmenu.value || submenu.value) {
+  if (listSubmenu.value) {
     submenu.value = true
   } else {
     submenu.value = false

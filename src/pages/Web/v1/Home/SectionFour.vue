@@ -176,7 +176,7 @@
           v-if="items.length"
           rounded
           label="Selengkapnya"
-          to="/berita/all"
+          @click="router.push('/berita/all')"
         />
         <q-skeleton
           v-else
@@ -191,6 +191,9 @@
 <script setup>
 import { useBeritaWeb } from 'src/stores/web/berita'
 import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const storeBerita = useBeritaWeb()
 const items = computed(() => {
