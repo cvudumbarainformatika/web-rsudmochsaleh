@@ -10,7 +10,7 @@
       <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 col-xl-9">
         <div class="content">
           <div v-if="store.item">
-            <div class="q-py-md">
+            <div class="q-py-md q-px-lg">
               <q-img
                 :src="pathImg + store.item.thumbnail"
               />

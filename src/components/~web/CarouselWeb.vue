@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg-primary">
     <q-carousel
       v-if="!store.loading"
       v-model="slide"
@@ -7,7 +7,7 @@
       arrows
       infinite
       :autoplay="true"
-      :style="`height:${height}px`"
+      :style="`height:${height}px;`"
       swipeable
       navigation
     >

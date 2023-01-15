@@ -5,10 +5,129 @@
     :class="fixed?'fixed-top':'relative'"
     style="z-index:10"
   >
-    <transition
+    <Transition
       appear
-      enter-active-class="animated animate__fadeInDown"
-      leave-active-class="animated animate__fadeOutUp"
+      enter-active-class="animate__animated animate__slideInDown animate__slower"
+    >
+      <div
+        v-if="store.visible"
+        class="bg-primary"
+      >
+        <q-bar
+          class="container-padding"
+          style="height:60px"
+        >
+          <div class="logo-web text-center q-pa-xs bg-primary overflow-hidden deskt-only">
+            <q-img
+              :src="logo"
+              :ratio="1"
+              fit="cover"
+            />
+          </div>
+          <q-space />
+
+          <div
+            v-if="fixed"
+            class="menu__header deskt-only on-right q-py-sm"
+          >
+            <template
+              v-for="(menu, i) in menus"
+              :key="i"
+            >
+              <q-btn
+                :id="menu.name"
+                flat
+                no-caps
+                color="white"
+                :label="menu.title"
+                :to="`/${menu.url}`"
+                class="menu__item"
+                :class="route.name===menu.name? 'active' : '' "
+                @mouseover="checkMenu(menu.name)"
+                @mouseout="menuOver = false"
+              >
+                <template v-if="menu.name==='pelayanan'">
+                  <dropdown-menu
+                    v-model="menuPelayanan"
+                    :items="storePelayanan.items"
+                    :submenu="submenu"
+                    :sub-item-to-open="subItem"
+                    to="pelayanan"
+                    @on-mouse-over-list="listOver =true"
+                    @on-mouse-out-list="listOver =false"
+                    @on-mouse-over-item="(val)=>checkItem(val)"
+                    @on-mouse-over-list-submenu="listSubmenu = true"
+                    @on-mouse-out-list-submenu="listSubmenu = false"
+                    @on-click-menu="(val)=>storePelayanan.setTab(val.nama)"
+                    @on-click-submenu="(val) => router.push('/pelayanan/submenu/'+ val.slug)"
+                  />
+                </template>
+                <template v-else-if="menu.name==='profil'">
+                  <dropdown-menu
+                    v-model="menuProfil"
+                    :items="storeProfil.items"
+                    :submenu="submenu"
+                    :sub-item-to-open="subItem"
+                    to="profil"
+                    @on-mouse-over-list="listOver =true"
+                    @on-mouse-out-list="listOver =false"
+                    @on-mouse-over-item="(val)=>checkItem(val)"
+                    @on-mouse-over-list-submenu="listSubmenu = true"
+                    @on-mouse-out-list-submenu="listSubmenu = false"
+                    @on-click-menu="(val)=>gotoProfile(val)"
+                  />
+                </template>
+                <template v-else-if="menu.name==='ppid'">
+                  <dropdown-menu
+                    v-model="menuPpid"
+                    :items="storePpid.items"
+                    :submenu="submenu"
+                    :sub-item-to-open="subItem"
+                    to="ppid"
+                    @on-mouse-over-list="listOver =true"
+                    @on-mouse-out-list="listOver =false"
+                    @on-mouse-over-item="(val)=>checkItem(val)"
+                    @on-mouse-over-list-submenu="listSubmenu = true"
+                    @on-mouse-out-list-submenu="listSubmenu = false"
+                    @on-click-menu="(val)=>gotoPpid(val)"
+                  />
+                </template>
+                <template v-else-if="menu.name==='pokja'">
+                  <dropdown-menu
+                    v-model="menuPokja"
+                    :items="storePokja.items"
+                    :submenu="submenu"
+                    :sub-item-to-open="subItem"
+                    to="pokja"
+                    @on-mouse-over-list="listOver =true"
+                    @on-mouse-out-list="listOver =false"
+                    @on-mouse-over-item="(val)=>checkItem(val)"
+                    @on-mouse-over-list-submenu="listSubmenu = true"
+                    @on-mouse-out-list-submenu="listSubmenu = false"
+                    @on-click-submenu="(val) => router.push('/pokja/submenu/'+ val.slug)"
+                  />
+                </template>
+              </q-btn>
+            </template>
+          </div>
+          <div
+            class="mobile-only on-right"
+          >
+            <q-btn
+              flat
+              round
+              :color="`${store.visible?'white':'primary'}`"
+              icon="menu"
+              @click="drawer = !drawer"
+            />
+          </div>
+        </q-bar>
+      </div>
+    </Transition>
+
+    <transition-group
+      appear
+      enter-active-class="animate__animated animate__slideInDown animate__slower"
     >
       <div
         v-if="!store.visible"
@@ -57,151 +176,163 @@
           />
         </q-bar>
       </div>
-    </transition>
-    <div
-      :class="store.visible?'bg-primary':'transparent'"
-    >
-      <q-bar
-        class="container-padding"
-        style="height:60px"
+      <!-- </transition> -->
+
+      <!-- <transition
+      appear
+      enter-active-class="animated animate__fadeInDown"
+      leave-active-class="animated animate__fadeOutUp"
+    > -->
+      <div
+        v-if="!store.visible"
+        class="transparent"
       >
-        <div class="logo-web text-center q-pa-xs bg-primary overflow-hidden deskt-only">
-          <!-- <q-skeleton
+        <q-bar
+          class="container-padding"
+          style="height:60px"
+        >
+          <div class="logo-web text-center q-pa-xs bg-primary overflow-hidden deskt-only">
+            <!-- <q-skeleton
             v-if="store.loading"
             type="QAvatar"
             style="height: 45px; margin-top:5px; margin-bottom: 10px;"
           /> -->
-          <q-img
-            :src="logo"
-            :ratio="1"
-            fit="cover"
-          />
-        </div>
-        <div class="title-website q-ml-sm deskt-only">
+            <q-img
+              :src="logo"
+              :ratio="1"
+              fit="cover"
+            />
+          </div>
+          <!-- <div class="title-website q-ml-sm deskt-only">
           <div :class="`f-14 text-weight-bold ${store.visible? 'text-white':'text-primary'}`">
             {{ store.header.title }}
           </div>
           <div :class="`f-8 text-weight-light ${store.visible? 'text-white':'text-black'}`">
             {{ store.header.desc }}
           </div>
-        </div>
-        <q-space />
+        </div> -->
+          <q-space />
 
-        <div
-          v-if="fixed"
-          class="menu__header deskt-only on-right q-py-sm"
-        >
-          <template
-            v-for="(menu, i) in menus"
-            :key="i"
+          <div
+            v-if="fixed"
+            class="menu__header deskt-only on-right q-py-sm"
+          >
+            <template
+              v-for="(menu, i) in menus"
+              :key="i"
+            >
+              <q-btn
+                :id="menu.name"
+                flat
+                no-caps
+                color="white"
+                :label="menu.title"
+                :to="`/${menu.url}`"
+                class="menu__item"
+                :class="route.name===menu.name? 'active' : '' "
+                @mouseover="checkMenu(menu.name)"
+                @mouseout="menuOver = false"
+              >
+                <template v-if="menu.name==='pelayanan'">
+                  <dropdown-menu
+                    v-model="menuPelayanan"
+                    :items="storePelayanan.items"
+                    :submenu="submenu"
+                    :sub-item-to-open="subItem"
+                    to="pelayanan"
+                    @on-mouse-over-list="listOver =true"
+                    @on-mouse-out-list="listOver =false"
+                    @on-mouse-over-item="(val)=>checkItem(val)"
+                    @on-mouse-over-list-submenu="listSubmenu = true"
+                    @on-mouse-out-list-submenu="listSubmenu = false"
+                    @on-click-menu="(val)=>storePelayanan.setTab(val.nama)"
+                    @on-click-submenu="(val) => router.push('/pelayanan/submenu/'+ val.slug)"
+                  />
+                </template>
+                <template v-else-if="menu.name==='profil'">
+                  <dropdown-menu
+                    v-model="menuProfil"
+                    :items="storeProfil.items"
+                    :submenu="submenu"
+                    :sub-item-to-open="subItem"
+                    to="profil"
+                    @on-mouse-over-list="listOver =true"
+                    @on-mouse-out-list="listOver =false"
+                    @on-mouse-over-item="(val)=>checkItem(val)"
+                    @on-mouse-over-list-submenu="listSubmenu = true"
+                    @on-mouse-out-list-submenu="listSubmenu = false"
+                    @on-click-menu="(val)=>gotoProfile(val)"
+                  />
+                </template>
+                <template v-else-if="menu.name==='ppid'">
+                  <dropdown-menu
+                    v-model="menuPpid"
+                    :items="storePpid.items"
+                    :submenu="submenu"
+                    :sub-item-to-open="subItem"
+                    to="ppid"
+                    @on-mouse-over-list="listOver =true"
+                    @on-mouse-out-list="listOver =false"
+                    @on-mouse-over-item="(val)=>checkItem(val)"
+                    @on-mouse-over-list-submenu="listSubmenu = true"
+                    @on-mouse-out-list-submenu="listSubmenu = false"
+                    @on-click-menu="(val)=>gotoPpid(val)"
+                  />
+                </template>
+                <template v-else-if="menu.name==='pokja'">
+                  <dropdown-menu
+                    v-model="menuPokja"
+                    :items="storePokja.items"
+                    :submenu="submenu"
+                    :sub-item-to-open="subItem"
+                    to="pokja"
+                    @on-mouse-over-list="listOver =true"
+                    @on-mouse-out-list="listOver =false"
+                    @on-mouse-over-item="(val)=>checkItem(val)"
+                    @on-mouse-over-list-submenu="listSubmenu = true"
+                    @on-mouse-out-list-submenu="listSubmenu = false"
+                    @on-click-submenu="(val) => router.push('/pokja/submenu/'+ val.slug)"
+                  />
+                </template>
+              </q-btn>
+            </template>
+          </div>
+          <div
+            class="mobile-only on-right"
           >
             <q-btn
-              :id="menu.name"
               flat
-              no-caps
-              color="white"
-              :label="menu.title"
-              :to="`/${menu.url}`"
-              class="menu__item"
-              :class="route.name===menu.name? 'active' : '' "
-              @mouseover="checkMenu(menu.name)"
-              @mouseout="menuOver = false"
-            >
-              <template v-if="menu.name==='pelayanan'">
-                <dropdown-menu
-                  v-model="menuPelayanan"
-                  :items="storePelayanan.items"
-                  :submenu="submenu"
-                  :sub-item-to-open="subItem"
-                  to="pelayanan"
-                  @on-mouse-over-list="listOver =true"
-                  @on-mouse-out-list="listOver =false"
-                  @on-mouse-over-item="(val)=>checkItem(val)"
-                  @on-mouse-over-list-submenu="listSubmenu = true"
-                  @on-mouse-out-list-submenu="listSubmenu = false"
-                  @on-click-menu="(val)=>storePelayanan.setTab(val.nama)"
-                  @on-click-submenu="(val) => router.push('/pelayanan/submenu/'+ val.slug)"
-                />
-              </template>
-              <template v-else-if="menu.name==='profil'">
-                <dropdown-menu
-                  v-model="menuProfil"
-                  :items="storeProfil.items"
-                  :submenu="submenu"
-                  :sub-item-to-open="subItem"
-                  to="profil"
-                  @on-mouse-over-list="listOver =true"
-                  @on-mouse-out-list="listOver =false"
-                  @on-mouse-over-item="(val)=>checkItem(val)"
-                  @on-mouse-over-list-submenu="listSubmenu = true"
-                  @on-mouse-out-list-submenu="listSubmenu = false"
-                  @on-click-menu="(val)=>gotoProfile(val)"
-                />
-              </template>
-              <template v-else-if="menu.name==='ppid'">
-                <dropdown-menu
-                  v-model="menuPpid"
-                  :items="storePpid.items"
-                  :submenu="submenu"
-                  :sub-item-to-open="subItem"
-                  to="ppid"
-                  @on-mouse-over-list="listOver =true"
-                  @on-mouse-out-list="listOver =false"
-                  @on-mouse-over-item="(val)=>checkItem(val)"
-                  @on-mouse-over-list-submenu="listSubmenu = true"
-                  @on-mouse-out-list-submenu="listSubmenu = false"
-                  @on-click-menu="(val)=>gotoPpid(val)"
-                />
-              </template>
-              <template v-else-if="menu.name==='pokja'">
-                <dropdown-menu
-                  v-model="menuPokja"
-                  :items="storePokja.items"
-                  :submenu="submenu"
-                  :sub-item-to-open="subItem"
-                  to="pokja"
-                  @on-mouse-over-list="listOver =true"
-                  @on-mouse-out-list="listOver =false"
-                  @on-mouse-over-item="(val)=>checkItem(val)"
-                  @on-mouse-over-list-submenu="listSubmenu = true"
-                  @on-mouse-out-list-submenu="listSubmenu = false"
-                />
-              </template>
-            </q-btn>
-          </template>
-        </div>
-        <div
-          class="mobile-only on-right"
-        >
-          <q-btn
-            flat
-            round
-            :color="`${store.visible?'white':'primary'}`"
-            icon="menu"
-            @click="drawer = !drawer"
-          />
-        </div>
-      </q-bar>
-    </div>
+              round
+              :color="`${store.visible?'white':'primary'}`"
+              icon="menu"
+              @click="drawer = !drawer"
+            />
+          </div>
+        </q-bar>
+      </div>
+    </transition-group>
 
     <transition
       appear
-      enter-active-class="animated animate__fadeInUp"
-      leave-active-class="animated fadeOut"
+      enter-active-class="animate__animated animate__slideInLeft animated__slower"
+      leave-active-class="animate__animated animate__fadeOut"
     >
-      <app-tab-header v-if="route.name==='berita' && store.visible" />
+      <app-tab-header
+        v-if="route.name==='berita' && store.btnScrollTop"
+        style="z-index:0"
+      />
       <TabPelayanan
-        v-else-if="route.name==='pelayanan' && store.visible"
+        v-else-if="route.name==='pelayanan' && store.btnScrollTop"
         v-model="storePelayanan.tab"
         :items="storePelayanan.items"
       />
       <TabProfil
-        v-else-if="route.name==='profil' && store.visible"
+        v-else-if="route.name==='profil' && store.btnScrollTop"
         v-model="storeProfil.tab"
         :items="storeProfil.items"
       />
       <TabPpid
-        v-else-if="route.name==='ppid' && store.visible"
+        v-else-if="route.name==='ppid' && store.btnScrollTop"
         v-model="storePpid.tab"
         :items="storePpid.items"
       />
@@ -294,8 +425,15 @@ const logo = computed(() => {
 })
 
 const checkMenu = (val) => {
-  if (val === 'berita' || val === 'buku-tamu') {
+  if (val === 'berita' || val === 'buku-tamu' || val === 'beranda') {
     menuOver.value = false
+    menuPelayanan.value = false
+    menuProfil.value = false
+    menuPpid.value = false
+    menuPokja.value = false
+    submenu.value = false
+    listOver.value = false
+    listSubmenu.value = false
   } else {
     menuOver.value = true
   }
@@ -335,9 +473,9 @@ const checkMenu = (val) => {
     listSubmenu.value = false
     menuOver.value = false
   }
-  console.log('checkMenuOver...', menuOver.value)
-  console.log('listOver...', listOver.value)
-  console.log('submenu...', submenu.value)
+  // console.log('checkMenuOver...', menuOver.value)
+  // console.log('listOver...', listOver.value)
+  // console.log('submenu...', submenu.value)
 }
 
 // const listSubmenu = ref(false)
@@ -368,8 +506,8 @@ const checkSubmenu = () => {
 }
 
 // debounce(checkMenu, 500)
-const debouncedFilter = debounce(checkMenu, 100)
-const debouncedSub = debounce(checkSubmenu, 100)
+const debouncedFilter = debounce(checkMenu, 300)
+const debouncedSub = debounce(checkSubmenu, 300)
 
 watch(() => menuOver.value, debouncedFilter)
 watch(() => listOver.value, debouncedFilter)
@@ -401,6 +539,22 @@ function gotoPpid(i) {
 //   console.log('header Web..', storePelayanan.items)
 // })
 
+// console.log(store.visible)
+const prim = computed(() => {
+  let pri = '#F2E3C6'
+  if (store.themes.length > 0) {
+    pri = store.themes[0].value
+  }
+  return pri
+})
+const second = computed(() => {
+  let sec = '#06b8b8'
+  if (store.themes.length > 0) {
+    sec = store.themes[1].value
+  }
+  return sec
+})
+
 </script>
 
 <style lang="scss" scoped>
@@ -412,8 +566,8 @@ function gotoPpid(i) {
 
 .menu__item {
   position: relative;
-  margin-right: 3px;
-  font-size: 12px;
+  margin-right: 10px;
+  font-size: 14px;
   padding: 5px 10px;
   color:#fff;
   text-decoration: none;
@@ -422,8 +576,8 @@ function gotoPpid(i) {
     content: "";
     position: absolute;
     border-radius: 10px;
-    background-color: $secondary;
-    top: 25px;
+    background-color: v-bind(prim);
+    top: 30px;
     /* bottom: -3px; */
     left: 10px;
     width: 0px;
@@ -433,18 +587,22 @@ function gotoPpid(i) {
   }
   &:hover {
       &::before {
-        width: 20px;
+        width: 30px;
         opacity: 1
       }
     }
 }
+
+.q-item.q-router-link--active, .q-item--active {
+    color: white;
+}
 a.router-link-active {
-  background-color: $secondary;
+  background-color: v-bind(second);
   border-radius: 5px;
   transition: all 0.3s ease;
 }
 a.active {
-  background-color: $secondary;
+  background-color: v-bind(second);
   border-radius: 5px;
   transition: all 0.3s ease;
 }

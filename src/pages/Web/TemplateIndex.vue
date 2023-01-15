@@ -73,7 +73,7 @@ const store = useAppStore()
 const onScroll = (position) => {
   // const moveToY = position.verticalPosition
   // console.log('onScroll', position)
-  if (position > 150) {
+  if (position > 75) {
     store.changeVisible(true)
   } else {
     store.changeVisible(false)

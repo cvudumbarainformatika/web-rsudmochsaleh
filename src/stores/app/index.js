@@ -43,6 +43,7 @@ export const useAppStore = defineStore('app', {
     leftDrawerOpen: true,
     rightDrawerOpen: false,
     visible: false,
+    visibleNyusul: false,
     btnScrollTop: false
 
   }),
@@ -57,6 +58,22 @@ export const useAppStore = defineStore('app', {
   actions: {
     changeVisible(x) {
       this.visible = x
+      setTimeout(() => {
+        this.visibleNyusul = x
+      }, 300)
+      // if (x) {
+      //   this.visible = x
+      //   setTimeout(() => {
+      //     this.visibleNyusul = x
+      //   }, 300)
+      // }
+      // this.visibleNyusul = false
+      // setTimeout(() => {
+      //   this.visible = false
+      // }, 300)
+
+      // this.visibleNyusul = x
+      // this.visible = x
     },
     setBtnScrollTop(x) {
       this.btnScrollTop = x

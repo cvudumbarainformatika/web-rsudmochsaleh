@@ -1,9 +1,10 @@
 <template>
   <q-menu
-    v-if="items.length>0"
+    v-if="items.length > 0"
     fit
     transition-show="jump-down"
     transition-hide="jump-up"
+    class="bg-primary text-white"
   >
     <q-list
       style="min-width: 100px"
@@ -12,12 +13,17 @@
       @mouseover="emits('onMouseOverList')"
       @mouseout="emits('onMouseOutList')"
     >
+      <q-linear-progress
+        :value="1"
+        color="secondary"
+      />
       <q-item
         v-for="(item, n) in items"
         :key="n"
         v-close-popup
         clickable
         :to="{ name: to }"
+        active-class="bg-primary text-white"
         @click="emits('onClickMenu', item)"
       >
         <!-- @click="storePelayanan.setTab(item.nama)" -->
@@ -30,6 +36,7 @@
             <div v-if="item.submenu">
               <div
                 v-if="item.submenu.length > 0"
+                class="text-right on-right"
               >
                 <q-icon
                   name="keyboard_arrow_right"
@@ -42,13 +49,16 @@
         <q-menu
           v-if="subItemToOpen === item"
           v-model="submenuA"
+          fit
           anchor="top end"
           self="top start"
           transition-show="flip-right"
           transition-hide="flip-left"
+          class="bg-primary text-white"
         >
           <q-list
             separator
+            style="min-width: 100px"
             @mouseover="emits('onMouseOverListSubmenu')"
             @mouseout="emits('onMouseOutListSubmenu')"
           >
