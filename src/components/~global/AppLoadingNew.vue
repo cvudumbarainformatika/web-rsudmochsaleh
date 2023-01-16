@@ -1,28 +1,34 @@
 <template>
-  <div
-    class="fullscreen z-top"
+  <transition
+    appear
+    enter-active-class="animate__animated animate__fadeIn"
+    leave-active-class="animate__animated animate__fadeOut"
   >
-    <div class="flex column flex-center items-center absolute-center z-top">
-      <LottieAnimation
-        ref="anim"
-        :animation-data="pulse"
-        :loop="true"
-        :auto-play="true"
-        :speed="2"
-        @loop-complete="loopComplete"
-        @complete="complete"
-        @enter-frame="enterFrame"
-      />
+    <div
+      class="fullscreen z-top"
+    >
+      <div class="flex column flex-center items-center absolute-center z-top">
+        <LottieAnimation
+          ref="anim"
+          :animation-data="pulse"
+          :loop="true"
+          :auto-play="true"
+          :speed="2"
+          @loop-complete="loopComplete"
+          @complete="complete"
+          @enter-frame="enterFrame"
+        />
       <!-- <div
         class="text-weight-bolder absolute-center text-white"
       >
         Harap Tunggu ...
       </div> -->
-    </div>
-    <div class="bg-white loadingOp full-width full-height" />
+      </div>
+      <div class="bg-white full-width full-height" />
     <!-- <div class="light-dimmed" /> -->
     <!-- <div class="bg-primary" /> -->
-  </div>
+    </div>
+  </transition>
 </template>
 
 <script>

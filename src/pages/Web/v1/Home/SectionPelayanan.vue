@@ -66,7 +66,7 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const store = usePelayananWeb()
-const items = computed(() => store.items)
+const items = computed(() => store.menus)
 const subitems = computed(() => {
   const thumb = []
   const arr = items.value
@@ -82,6 +82,8 @@ const subitems = computed(() => {
   }
   return thumb
 })
+
+store.getMenu()
 
 console.log('items pelayanan: ', items.value)
 console.log('splide pelayanan: ', subitems.value)
