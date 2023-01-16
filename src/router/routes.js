@@ -44,18 +44,18 @@ const routes = [
       },
       {
         path: '/admin/pokja',
-        component: () => import('pages/Admin/Pelayanan/IndexPage.vue'),
+        component: () => import('pages/Admin/Pokja/IndexPage.vue'),
         children: [
-          { path: '', name: 'admin.pokja', component: () => import('src/pages/Admin/Pelayanan/TablePage.vue') },
+          { path: '', name: 'admin.pokja', component: () => import('src/pages/Admin/Pokja/TablePage.vue') },
           {
             path: '/admin/pokja/submenu/:id?',
             name: 'submenu.pokja',
-            component: () => import('src/pages/Admin/Pelayanan/Submenu/IndexPage.vue')
+            component: () => import('src/pages/Admin/Pokja/Submenu/IndexPage.vue')
           },
           {
             path: '/admin/pokja/form/:id?',
             name: 'form.pokja',
-            component: () => import('pages/Admin/Pelayanan/FormPage.vue')
+            component: () => import('pages/Admin/Pokja/FormPage.vue')
           }
         ]
       },

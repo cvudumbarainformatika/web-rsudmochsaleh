@@ -49,7 +49,7 @@
                 <template v-if="menu.name==='pelayanan'">
                   <dropdown-menu
                     v-model="menuPelayanan"
-                    :items="storePelayanan.items"
+                    :items="storePelayanan.menus"
                     :submenu="submenu"
                     :sub-item-to-open="subItem"
                     to="pelayanan"
@@ -95,7 +95,7 @@
                 <template v-else-if="menu.name==='pokja'">
                   <dropdown-menu
                     v-model="menuPokja"
-                    :items="storePokja.items"
+                    :items="storePokja.menus"
                     :submenu="submenu"
                     :sub-item-to-open="subItem"
                     to="pokja"
@@ -104,6 +104,7 @@
                     @on-mouse-over-item="(val)=>checkItem(val)"
                     @on-mouse-over-list-submenu="listSubmenu = true"
                     @on-mouse-out-list-submenu="listSubmenu = false"
+                    @on-click-menu="(val)=>gotoPokja(val)"
                     @on-click-submenu="(val) => router.push('/pokja/submenu/'+ val.slug)"
                   />
                 </template>
@@ -236,7 +237,7 @@
                 <template v-if="menu.name==='pelayanan'">
                   <dropdown-menu
                     v-model="menuPelayanan"
-                    :items="storePelayanan.items"
+                    :items="storePelayanan.menus"
                     :submenu="submenu"
                     :sub-item-to-open="subItem"
                     to="pelayanan"
@@ -282,7 +283,7 @@
                 <template v-else-if="menu.name==='pokja'">
                   <dropdown-menu
                     v-model="menuPokja"
-                    :items="storePokja.items"
+                    :items="storePokja.menus"
                     :submenu="submenu"
                     :sub-item-to-open="subItem"
                     to="pokja"
@@ -291,6 +292,7 @@
                     @on-mouse-over-item="(val)=>checkItem(val)"
                     @on-mouse-over-list-submenu="listSubmenu = true"
                     @on-mouse-out-list-submenu="listSubmenu = false"
+                    @on-click-menu="(val)=>gotoPokja(val)"
                     @on-click-submenu="(val) => router.push('/pokja/submenu/'+ val.slug)"
                   />
                 </template>
@@ -324,7 +326,7 @@
       <TabPelayanan
         v-else-if="route.name==='pelayanan' && store.btnScrollTop"
         v-model="storePelayanan.tab"
-        :items="storePelayanan.items"
+        :items="storePelayanan.menus"
       />
       <TabProfil
         v-else-if="route.name==='profil' && store.btnScrollTop"
@@ -335,6 +337,11 @@
         v-else-if="route.name==='ppid' && store.btnScrollTop"
         v-model="storePpid.tab"
         :items="storePpid.items"
+      />
+      <TabPokja
+        v-else-if="route.name==='pokja' && store.btnScrollTop"
+        v-model="storePokja.tab"
+        :items="storePokja.menus"
       />
     </transition>
 
@@ -360,6 +367,7 @@ import { useRoute, useRouter } from 'vue-router'
 import TabPelayanan from 'src/pages/Web/v1/Pelayanan/TabPelayanan.vue'
 import TabPpid from 'src/pages/Web/v1/Ppid/TabPpid.vue'
 import TabProfil from 'src/pages/Web/v1/Profil/TabProfil.vue'
+import TabPokja from 'src/pages/Web/v1/Pokja/TabPokja.vue'
 import { usePelayananWeb } from 'src/stores/web/pelayanan'
 import { useProfilWeb } from 'src/stores/web/profil'
 import { usePpidWeb } from 'src/stores/web/ppid'
@@ -407,10 +415,10 @@ const subItem = ref(null)
 // const targetEl = ref(null)
 
 store.getAppHeader()
-storePelayanan.getData('pelayanan')
+storePelayanan.getMenu()
 storeProfil.getData()
 storePpid.getData()
-storePokja.getData('1')
+storePokja.getMenu()
 
 console.log('route from headerWeb', route)
 console.log('header Web..', storePokja.items)
@@ -533,6 +541,11 @@ function gotoProfile(i) {
 function gotoPpid(i) {
   router.push('/ppid')
   storePpid.setTab(i.nama)
+}
+function gotoPokja(i) {
+  console.log('tab pokja...', i)
+  router.push('/pokja')
+  storePokja.setTab(i.nama)
 }
 
 // onMounted(() => {
