@@ -155,11 +155,11 @@ const routes = [
           {
             path: '/pokja/:page?',
             name: 'pokja',
-            component: () => import('src/pages/Web/v1/Pelayanan/PagePelayanan.vue')
+            component: () => import('src/pages/Web/v1/Pokja/PagePelayanan.vue')
           },
           {
             path: '/pokja/submenu/:page?',
-            component: () => import('src/pages/Web/v1/Pelayanan/PageSubmenu.vue')
+            component: () => import('src/pages/Web/v1/Pokja/PageSubmenu.vue')
           }
         ]
       },
