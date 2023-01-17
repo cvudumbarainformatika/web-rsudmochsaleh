@@ -163,9 +163,15 @@
                   class="q-ml-none"
                 >
                   <img
+                    v-if="slide.image !== null"
                     :src="pathImg+slide.image"
                     class="rounded-borders"
                   >
+                  <app-lottie-web
+                    v-else
+                    :url="slide.animation"
+                    :height="100"
+                  />
                 </q-item-section>
 
                 <q-item-section>
@@ -206,7 +212,7 @@
       position="right"
     >
       <q-card
-        style="width: 360px"
+        style="width: 400px"
         class="full-height"
       >
         <q-card-section class="bg-grey-3">
@@ -234,6 +240,37 @@
               accept="image/*"
               class="q-mb-md"
             />
+            <q-card
+              flat
+              bordered
+              class="full-width q-mb-md"
+            >
+              <div class="bg-grey-2">
+                <app-lottie
+                  :key="store.form.animation"
+                  :url="store.form.animation"
+                />
+              </div>
+              <q-card-actions align="between">
+                <div class="text-left q-ml-sm">
+                  <app-input
+                    v-model="store.form.animation"
+                    :label="store.form.animation?'':'Belum Ada Animasi'"
+                    class="q-mb-sm"
+                    disable
+                  />
+                </div>
+                <q-btn
+                  flat
+                  round
+                  color="primary"
+                  icon="photo_library"
+                  @click="openGallery = !openGallery"
+                >
+                  <q-tooltip>Cari Animasi</q-tooltip>
+                </q-btn>
+              </q-card-actions>
+            </q-card>
             <app-input
               v-model="store.form.title"
               valid
@@ -248,7 +285,7 @@
             />
 
             <q-separator class="q-mb-md" />
-            <div class="text-right">
+            <div class="row q-col-gutter-sm items-center justify-between q-pa-sm">
               <app-btn
                 type="btn"
                 label="Close"
@@ -265,16 +302,28 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+
+    <app-gallery-animasi
+      v-model="openGallery"
+      @on-close="openGallery = !openGallery"
+      @on-add="lottie.setModal(true)"
+      @on-copy="(val) => {
+        store.setAnimation(val)
+        openGallery = !openGallery
+      }"
+    />
   </div>
 </template>
 
 <script setup>
 import { pathImg } from 'src/boot/axios'
 import { useCarouselApp } from 'src/stores/app/carousel'
+import { useLottieForm } from 'src/stores/admin/lottie/form'
 import { computed, ref } from 'vue'
 import { notifErrVue } from '../../../modules/utils'
 
 const store = useCarouselApp()
+const lottie = useLottieForm()
 const slides = computed(() => store.items)
 const dialog = ref(false)
 const fileRef = ref(null)
@@ -292,6 +341,8 @@ const previewImage = computed(() => {
   return URL.createObjectURL(imgUrl)
 })
 const options = ref([4, 8])
+
+const openGallery = ref(false)
 
 store.manageData()
 
@@ -322,18 +373,23 @@ function onSubmit() {
     if (tempImg.value !== null) {
       formData.append('image', tempImg.value)
     }
+    if (store.form.animation !== null) {
+      formData.append('animation', store.form.animation)
+    }
     // update
     formData.append('id', tempId.value)
-    // formData.append('title', store.form.title)
-    // formData.append('desc', store.form.desc)
-    // store.saveData(formData)
   }
   // save
-  if (tempId.value === null) {
-    if (tempImg.value === null) {
-      return notifErrVue('Belum Ada Gambar yang dipilih')
+  if (tempId.value === null || store.form.animation === null) {
+    if (tempImg.value === null && store.form.animation === null) {
+      return notifErrVue('Belum Ada Gambar atau animasi yang dipilih')
     }
-    formData.append('image', tempImg.value)
+    if (tempImg.value !== null) {
+      formData.append('image', tempImg.value)
+    }
+    if (store.form.animation !== null) {
+      formData.append('animation', store.form.animation)
+    }
   }
   formData.append('title', store.form.title)
   formData.append('desc', store.form.desc)

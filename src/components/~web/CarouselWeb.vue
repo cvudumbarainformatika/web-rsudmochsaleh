@@ -10,6 +10,7 @@
       :style="`height:${height}px;`"
       swipeable
       navigation
+      transition-duration="2000"
     >
       <!-- transition-prev="slide-right"
     transition-next="slide-left" -->
@@ -17,8 +18,19 @@
         v-for="(img, i) in slides"
         :key="i"
         :name="i"
-        :img-src="getImage(img.image)"
       >
+        <!-- :img-src="getImage(img.image)" -->
+        <q-img
+          v-if="img.image"
+          :src="getImage(img.image)"
+          :style="`width: 100%; height: ${height-20}px;`"
+          fit="cover"
+        />
+        <app-lottie-web
+          v-else
+          :url="img.animation"
+          :height="height - 20"
+        />
         <div
           v-show="img.title!=='null'"
           class="absolute-bottom custom-caption"

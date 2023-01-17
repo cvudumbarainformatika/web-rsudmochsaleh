@@ -20,6 +20,8 @@ export const useCarouselApp = defineStore('carousel', {
 
     form: {
       image: null,
+      animation: null,
+      gift: null,
       title: null,
       desc: null
     }
@@ -33,6 +35,9 @@ export const useCarouselApp = defineStore('carousel', {
     }
   },
   actions: {
+    setAnimation(payload) {
+      this.form.animation = payload
+    },
     setPage (payload) {
       console.log('setPage', payload)
       this.params.page = payload
@@ -72,12 +77,16 @@ export const useCarouselApp = defineStore('carousel', {
 
     addData() {
       this.form.image = null
+      this.form.animation = null
+      this.form.gift = null
       this.form.title = null
       this.form.desc = null
     },
 
     editItem(payload) {
       this.form.image = payload.image
+      this.form.animation = payload.animation
+      this.form.gift = payload.gift
       this.form.title = payload.title
       this.form.desc = payload.desc
     },
