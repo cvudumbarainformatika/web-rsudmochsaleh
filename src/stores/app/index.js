@@ -7,7 +7,7 @@ export const useAppStore = defineStore('app', {
     logo: null,
     banner: null,
     header: {
-      phone: '0812-3766-0656',
+      phone: '(0335) 433119,421118',
       link_fb: 'https://facebook.com',
       link_instagram: 'https://instagram.com',
       link_youtube: 'https://instagram.com',

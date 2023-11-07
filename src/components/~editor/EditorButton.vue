@@ -173,6 +173,18 @@
         tooltip="upload doc word"
         @click="emits('onAddYoutube')"
       />
+      <menu-bar-btn
+        icon="share"
+        tooltip="Buat Link"
+        :active="editor.isActive('link')"
+        @click="setLink"
+      />
+      <menu-bar-btn
+        icon="link_off"
+        tooltip="Remove Link"
+        :disabled="!editor.isActive('link')"
+        @click="editor.chain().focus().unsetLink().run()"
+      />
 
       <!-- <button @click="editor.chain().focus().setHardBreak().run()">
         hard break
@@ -313,6 +325,34 @@ function handleClickHeading(val) {
 
 function dialogGallery() {
   dialogImage.value = true
+}
+
+function setLink() {
+  const previousUrl = props.editor.getAttributes('link').href
+  const url = window.prompt('URL', previousUrl)
+
+  // cancelled
+  if (url === null) {
+    return
+  }
+
+  // empty
+  if (url === '') {
+    props.editor
+      .chain()
+      .focus()
+      .extendMarkRange('link')
+      .unsetLink()
+      .run()
+  }
+
+  // update link
+  props.editor
+    .chain()
+    .focus()
+    .extendMarkRange('link')
+    .setLink({ href: url })
+    .run()
 }
 
 </script>

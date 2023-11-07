@@ -5,6 +5,7 @@
     :label="label"
     :flat="!active"
     :color="active?'primary':'grey-9'"
+    :disable="disabled"
     unelevated
     @click="emits('click')"
   >
@@ -33,6 +34,10 @@
 const emits = defineEmits(['click'])
 defineProps({
   active: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
     type: Boolean,
     default: false
   },

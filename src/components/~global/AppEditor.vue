@@ -39,6 +39,7 @@ import { Color } from '@tiptap/extension-color'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import TextAlign from '@tiptap/extension-text-align'
+import Link from '@tiptap/extension-link'
 import Youtube from '@tiptap/extension-youtube'
 import CustomImage from '../~editor/extensions/custom-image'
 import { onBeforeUnmount, ref, watch } from 'vue'
@@ -83,6 +84,16 @@ const editor = useEditor({
       inline: true,
       HTMLAttributes: {
         class: 'custom-image'
+      }
+    }),
+    Link.configure({
+      openOnClick: false,
+      HTMLAttributes: {
+        // Change rel to different value
+        // Allow search engines to follow links(remove nofollow)
+        rel: 'noopener noreferrer',
+        // Remove target entirely so links open in current tab
+        target: null
       }
     }),
     BubbleMenu
