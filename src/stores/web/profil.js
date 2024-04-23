@@ -35,22 +35,22 @@ export const useProfilWeb = defineStore('profil_web', {
       this.loading = true
       try {
         await api.get('/v1/profil/web_content').then((resp) => {
-          console.log('profil web ', resp)
+          // console.log('profil web ', resp)
           this.items = resp.data
           this.loading = false
         })
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         this.loading = false
       }
       // const resp = await api.get('/v1/profil/data_beranda')
-      // console.log(resp)
+      // // console.log(resp)
     }
     // async getContent(payload) {
     //   this.loading = true
     //   try {
     //     await api.get(`/v1/profil/web_content?q=${payload.q}`).then((resp) => {
-    //       console.log('profil content ', resp)
+    //       // console.log('profil content ', resp)
     //       this.content = resp.data.content
     //       this.judul = resp.data.judul
     //       this.slug = resp.data.slug
@@ -66,11 +66,11 @@ export const useProfilWeb = defineStore('profil_web', {
     //       })
     //     })
     //   } catch (error) {
-    //     console.log(error)
+    //     // console.log(error)
     //     this.loading = false
     //   }
     //   // const resp = await api.get('/v1/profil/data_beranda')
-    //   // console.log(resp)
+    //   // // console.log(resp)
     // }
 
   }

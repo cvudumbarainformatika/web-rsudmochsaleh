@@ -53,10 +53,11 @@ const interceptRequest = (config) => {
 api.interceptors.request.use(interceptRequest, interceptReqErrors)
 
 const pathImg = SERV + '/storage/'
+const pathFotoSimrs = 'http://36.89.103.114:4542/simpeg/foto/'
 
 const getApp = async () => {
   await api.get('/v1/header').then((resp) => {
-    console.log('boot app', resp)
+    // console.log('boot app', resp)
     const themes = resp.data.themes
     for (let i = 0; i < themes.length; i++) {
       setCssVar(themes[i].name, themes[i].value)
@@ -70,6 +71,7 @@ export default boot(({ app }) => {
   app.config.globalProperties.$api = api
   app.config.globalProperties.$api2 = api2
   app.config.globalProperties.$pathImg = pathImg
+  app.config.globalProperties.$pathFotoSimrs = pathFotoSimrs
   getApp()
 })
 
@@ -79,4 +81,4 @@ const setToken = (token) => {
 }
 const deleteToken = () => delete api.defaults.headers.common.Authorization
 
-export { axios, api, pathImg, setToken, deleteToken, SERVER, SERV, api2 }
+export { axios, api, pathImg, setToken, deleteToken, SERVER, SERV, api2, pathFotoSimrs }

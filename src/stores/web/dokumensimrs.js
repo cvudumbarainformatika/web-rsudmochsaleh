@@ -16,7 +16,7 @@ export const useDokumenSimrsWeb = defineStore('dokumen_simrs_web', {
       const payload = { noreg }
       try {
         await api2.post('/api/v4/ceknoreg/rajal', payload).then((resp) => {
-          console.log('pelayanan web ', resp)
+          // console.log('pelayanan web ', resp)
           if (resp.status === 200) {
             this.data = resp.data
             this.loading = false
@@ -24,7 +24,7 @@ export const useDokumenSimrsWeb = defineStore('dokumen_simrs_web', {
           this.loading = false
         })
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         this.loading = false
         this.isError = true
         this.data = null

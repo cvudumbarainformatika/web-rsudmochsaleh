@@ -66,12 +66,12 @@ export const useBeritaWeb = defineStore('berita_web', {
     changeParams(hal, cat) {
       this.params.page = hal
       this.params.category = cat
-      // console.log('chamnge params', this.params)
+      // // console.log('chamnge params', this.params)
       this.getDataPagin(cat, 'loadMore')
     },
     async getDataPagin(payload, loadmore) {
       const more = !((!loadmore || loadmore === 'undefined' || loadmore === null || loadmore === undefined))
-      console.log('more', more)
+      // console.log('more', more)
       more ? this.loadingMore = true : this.loading = true
       if (!more) {
         this.params.page = 1
@@ -80,7 +80,7 @@ export const useBeritaWeb = defineStore('berita_web', {
       try {
         const params = { params: this.params }
         await api.get('/v1/berita/berita_paginate', params).then((resp) => {
-          console.log('berita beranda paginate', resp)
+          // // console.log('berita beranda paginate', resp)
           this.beritas = resp.data.data
           this.meta = resp.data
           this.isContent = false
@@ -88,7 +88,7 @@ export const useBeritaWeb = defineStore('berita_web', {
           this.loadingMore = false
         })
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         this.loading = false
         this.loadingMore = false
       }
@@ -97,32 +97,32 @@ export const useBeritaWeb = defineStore('berita_web', {
       this.loading = true
       try {
         await api.get(`/v1/berita/data_beranda?category=${params}`).then((resp) => {
-          console.log('berita beranda ', resp)
+          // console.log('berita beranda ', resp)
           this.beranda = resp.data
           this.isContent = false
           this.loading = false
         })
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         this.loading = false
       }
     },
     async getPopulars() {
       try {
         await api.get('/v1/berita/web_popular').then((resp) => {
-          console.log('berita populer ', resp)
+          // console.log('berita populer ', resp)
           this.populars = resp.data
         })
       } catch (error) {
-        console.log(error)
+        // console.log(error)
       }
     },
     async getContent(payload) {
       this.loading = true
-      console.log('get content ...', payload)
+      // console.log('get content ...', payload)
       try {
         await api.get(`/v1/berita/web_content?q=${payload.q}`).then((resp) => {
-          console.log('berita content ', resp)
+          // console.log('berita content ', resp)
           this.content = resp.data.content
           this.judul = resp.data.judul
           this.slug = resp.data.slug
@@ -139,11 +139,11 @@ export const useBeritaWeb = defineStore('berita_web', {
           })
         })
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         this.loading = false
       }
       // const resp = await api.get('/v1/berita/data_beranda')
-      // console.log(resp)
+      // // console.log(resp)
     }
 
   }

@@ -35,22 +35,22 @@ export const usePpidWeb = defineStore('ppid_web', {
       this.loading = true
       try {
         await api.get('/v1/ppid/web_content').then((resp) => {
-          console.log('ppid web ', resp)
+          // console.log('ppid web ', resp)
           this.items = resp.data
           this.loading = false
         })
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         this.loading = false
       }
       // const resp = await api.get('/v1/ppid/data_beranda')
-      // console.log(resp)
+      // // console.log(resp)
     }
     // async getContent(payload) {
     //   this.loading = true
     //   try {
     //     await api.get(`/v1/ppid/web_content?q=${payload.q}`).then((resp) => {
-    //       console.log('ppid content ', resp)
+    //       // console.log('ppid content ', resp)
     //       this.content = resp.data.content
     //       this.judul = resp.data.judul
     //       this.slug = resp.data.slug
@@ -66,11 +66,11 @@ export const usePpidWeb = defineStore('ppid_web', {
     //       })
     //     })
     //   } catch (error) {
-    //     console.log(error)
+    //     // console.log(error)
     //     this.loading = false
     //   }
     //   // const resp = await api.get('/v1/ppid/data_beranda')
-    //   // console.log(resp)
+    //   // // console.log(resp)
     // }
 
   }
