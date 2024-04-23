@@ -49,6 +49,7 @@
         :src="getImage()"
         alt="Simrs Picture"
         width="200px"
+        referrerpolicy="unsafe-url"
       >
         <template #error>
           <div
