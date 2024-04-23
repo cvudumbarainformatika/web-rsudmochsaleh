@@ -199,6 +199,21 @@ const routes = [
           }
         ]
       }
+
+    ]
+  },
+
+  {
+    path: '/dokumen-simrs',
+    component: () => import('layouts/DokumenSimrs/LayoutComp.vue'),
+    meta: { requireAuth: false },
+    children: [
+      { path: '', redirect: '/dokumen-simrs/legalitas/public' },
+      {
+        path: '/dokumen-simrs/legalitas/:noreg?',
+        name: 'legalitas-dokumen-simrs',
+        component: () => import(/* webpackChunkName: "page-dokumen-simrs" */ 'src/pages/Web/v1/Legalitas/IndexPage.vue')
+      }
     ]
   },
 

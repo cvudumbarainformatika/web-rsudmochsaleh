@@ -8,6 +8,7 @@
       <menu-bar-btn
         icon="undo"
         tooltip="kembali -1 langkah"
+
         @click="editor.chain().focus().undo().run()"
       />
       <menu-bar-btn

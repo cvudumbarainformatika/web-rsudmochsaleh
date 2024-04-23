@@ -10,7 +10,9 @@ const SERV = 'https://rsudmochsaleh.my.id'
 const SERVER = SERV + '/api'
 
 const api = axios.create({ baseURL: SERVER })
+const api2 = axios.create({ baseURL: 'https://xenter.my.id' })
 api.defaults.headers.get.Accepts = 'application/json'
+api2.defaults.headers.get.Accepts = 'application/json'
 
 api.defaults.headers.common.Authorization = `Bearer ${getLocalToken()}`
 
@@ -41,6 +43,7 @@ const interceptResponse = (res) => {
   }
 }
 api.interceptors.response.use(interceptResponse, interceptResErrors)
+api2.interceptors.response.use(interceptResponse, interceptResErrors)
 
 /* Request Interceptors */
 const interceptReqErrors = err => Promise.reject(err)
@@ -65,6 +68,7 @@ export default boot(({ app }) => {
   app.config.globalProperties.$axios = axios
   app.config.globalProperties.$SERV = SERVER
   app.config.globalProperties.$api = api
+  app.config.globalProperties.$api2 = api2
   app.config.globalProperties.$pathImg = pathImg
   getApp()
 })
@@ -75,4 +79,4 @@ const setToken = (token) => {
 }
 const deleteToken = () => delete api.defaults.headers.common.Authorization
 
-export { axios, api, pathImg, setToken, deleteToken, SERVER, SERV }
+export { axios, api, pathImg, setToken, deleteToken, SERVER, SERV, api2 }
