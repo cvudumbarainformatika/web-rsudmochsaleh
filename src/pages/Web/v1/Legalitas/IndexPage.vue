@@ -28,9 +28,15 @@
       </div>
       <div
         v-if="!store.isError"
-        class="text-subtitle text-weight-bold q-mb-lg"
+        class="text-subtitle text-weight-bold"
       >
         KOTA PROBOLINGGO
+      </div>
+      <div
+        v-if="!store.isError"
+        class="text-subtitle q-mb-lg"
+      >
+        NOREG {{ store.data?.petugas?.rs1 ?? '-' }}
       </div>
       <div
         v-if="!store.isError"
