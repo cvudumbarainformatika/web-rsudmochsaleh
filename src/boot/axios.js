@@ -11,6 +11,7 @@ const SERVER = SERV + '/api'
 
 const api = axios.create({ baseURL: SERVER })
 const api2 = axios.create({ baseURL: 'https://xenter.my.id' })
+// const api2 = axios.create({ baseURL: 'http://36.89.103.117:3555' })
 api.defaults.headers.get.Accepts = 'application/json'
 api2.defaults.headers.get.Accepts = 'application/json'
 

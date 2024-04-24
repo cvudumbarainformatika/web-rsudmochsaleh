@@ -67,9 +67,9 @@
       <div class="text-subtitle">
         ID {{ store.data?.petugas?.pegawai?.nip ?? store.data?.petugas?.pegawai?.nik ?? '-' }}
       </div>
-      <div class="text-subtitle">
+      <!-- <div class="text-subtitle">
         {{ store.data?.petugas?.rs3 ?? '-' }}
-      </div>
+      </div> -->
     </div>
   </q-page>
 </template>
@@ -79,6 +79,7 @@ import { useAppStore } from 'src/stores/app'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useDokumenSimrsWeb } from 'src/stores/web/dokumensimrs'
+// eslint-disable-next-line no-unused-vars
 import { pathFotoSimrs } from 'src/boot/axios'
 
 const route = useRoute()
@@ -93,7 +94,8 @@ onMounted(() => {
 })
 
 function getImage() {
-  return pathFotoSimrs + store.data?.petugas?.pegawai?.nip + '/' + store.data?.petugas?.pegawai?.foto
+  // return pathFotoSimrs + store.data?.petugas?.pegawai?.nip + '/' + store.data?.petugas?.pegawai?.foto
+  return store.data?.petugas?.pegawai?.foto_pegawai
 }
 
 </script>
