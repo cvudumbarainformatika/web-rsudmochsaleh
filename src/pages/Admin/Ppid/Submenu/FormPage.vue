@@ -10,7 +10,7 @@
               <app-editor v-model="store.form.content" />
             </div>
             <div class="col-md-4 col-lg-4 col-xl-4 col-xs-12">
-              <!-- {{ store.form.pelayanan_id }} -->
+              <!-- {{ store.form.ppid_id }} -->
               <q-card
                 flat
                 bordered
@@ -108,13 +108,14 @@ import { pathImg } from 'src/boot/axios'
 import { sanitizeTitle } from 'src/modules/shared'
 import { notifErrVue } from 'src/modules/utils'
 import { useRoute } from 'vue-router'
-import { useSubmenuForm } from 'src/stores/admin/submenu/form'
+// import { useSubmenuForm } from 'src/stores/admin/submenu/form'
 import { useLottieForm } from 'src/stores/admin/lottie/form'
 import FormUpload from '../../Lottie/FormUpload.vue'
+import { useSubmenuPpidForm } from 'src/stores/admin/submmenuppid/form'
 
 // const router = useRouter()
 const route = useRoute()
-const store = useSubmenuForm()
+const store = useSubmenuPpidForm()
 const lottie = useLottieForm()
 const tempImg = ref(null)
 const fileRef = ref(null)
@@ -165,7 +166,7 @@ function onSave() {
   formData.append('slug', store.form.slug)
   formData.append('content', store.form.content)
   formData.append('animation', store.form.animation)
-  formData.append('pelayanan_id', store.form.pelayanan_id)
+  formData.append('ppid_id', store.form.ppid_id)
 
   store.saveData(formData).then(() => {
     tempImg.value = null

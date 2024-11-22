@@ -15,7 +15,7 @@
               class="q-py-md q-px-lg"
             >
               <q-img
-                :src="pathImg + store.item.thumbnail"
+                :src="pathImg + store?.item?.thumbnail"
               />
             </div>
           </div>
@@ -83,12 +83,13 @@
 </template>
 <script setup>
 
-import { useSubmenuWeb } from 'src/stores/web/submenu'
+// import { useSubmenuWeb } from 'src/stores/web/submenu'
 import { onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { pathImg } from 'src/boot/axios'
+import { useSubmenuPpidWeb } from 'src/stores/web/submenuppid'
 
-const store = useSubmenuWeb()
+const store = useSubmenuPpidWeb()
 const route = useRoute()
 const router = useRouter()
 
@@ -106,7 +107,7 @@ onMounted(() => {
 })
 
 function goTo(val) {
-  router.push('/pelayanan/submenu/' + val.slug)
+  router.push('/ppid/submenu/' + val.slug)
 }
 
 </script>

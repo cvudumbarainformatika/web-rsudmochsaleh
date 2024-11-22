@@ -90,6 +90,7 @@
                     @on-mouse-over-list-submenu="listSubmenu = true"
                     @on-mouse-out-list-submenu="listSubmenu = false"
                     @on-click-menu="(val)=>gotoPpid(val)"
+                    @on-click-submenu="(val) => router.push('/ppid/submenu/'+ val.slug)"
                   />
                 </template>
                 <template v-else-if="menu.name==='pokja'">
@@ -278,6 +279,7 @@
                     @on-mouse-over-list-submenu="listSubmenu = true"
                     @on-mouse-out-list-submenu="listSubmenu = false"
                     @on-click-menu="(val)=>gotoPpid(val)"
+                    @on-click-submenu="(val) => router.push('/ppid/submenu/'+ val.slug)"
                   />
                 </template>
                 <template v-else-if="menu.name==='pokja'">
@@ -362,7 +364,7 @@
 <script setup>
 import { pathImg } from 'src/boot/axios'
 import { useAppStore } from 'src/stores/app'
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TabPelayanan from 'src/pages/Web/v1/Pelayanan/TabPelayanan.vue'
 import TabPpid from 'src/pages/Web/v1/Ppid/TabPpid.vue'
@@ -414,11 +416,15 @@ const submenu = ref(false)
 const subItem = ref(null)
 // const targetEl = ref(null)
 
-store.getAppHeader()
-storePelayanan.getMenu()
-storeProfil.getData()
-storePpid.getData()
-storePokja.getMenu()
+onMounted(() => {
+  Promise.all([
+    store.getAppHeader(),
+    storePelayanan.getMenu(),
+    storeProfil.getData(),
+    storePpid.getData(),
+    storePokja.getMenu()
+  ])
+})
 
 console.log('route from headerWeb', route)
 console.log('header Web..', storePokja.items)

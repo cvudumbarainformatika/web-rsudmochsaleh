@@ -24,7 +24,7 @@ export const usePelayananWeb = defineStore('pelayanan_web', {
       const params = { params: { flag: rute === 'pelayanan' ? null : '1' } }
       try {
         await api.get('/v1/pelayanan/web_content', params).then((resp) => {
-          // console.log('pelayanan web ', resp)
+          console.log('pelayanan web ', resp)
           this.items = resp.data
           this.loading = false
         })
@@ -38,7 +38,7 @@ export const usePelayananWeb = defineStore('pelayanan_web', {
       const params = { params: { flag: null } }
       try {
         await api.get('/v1/pelayanan/web_content', params).then((resp) => {
-          // console.log('pelayanan web ', resp)
+          console.log('pelayanan web menu', resp)
           this.menus = resp.data
           this.loading = false
         })

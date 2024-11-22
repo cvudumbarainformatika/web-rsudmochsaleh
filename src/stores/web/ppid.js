@@ -5,6 +5,7 @@ import { api } from 'src/boot/axios'
 export const usePpidWeb = defineStore('ppid_web', {
   state: () => ({
     items: [],
+    menus: [],
     tab: 'all',
     loading: false
   }),
@@ -35,7 +36,7 @@ export const usePpidWeb = defineStore('ppid_web', {
       this.loading = true
       try {
         await api.get('/v1/ppid/web_content').then((resp) => {
-          // console.log('ppid web ', resp)
+          console.log('ppid web ', resp)
           this.items = resp.data
           this.loading = false
         })
@@ -46,6 +47,20 @@ export const usePpidWeb = defineStore('ppid_web', {
       // const resp = await api.get('/v1/ppid/data_beranda')
       // // console.log(resp)
     }
+    // async getMenu() {
+    //   this.loading = true
+    //   const params = { params: { flag: null } }
+    //   try {
+    //     await api.get('/v1/ppid/web_content', params).then((resp) => {
+    //       // console.log('pelayanan web ', resp)
+    //       this.menus = resp.data
+    //       this.loading = false
+    //     })
+    //   } catch (error) {
+    //     // console.log(error)
+    //     this.loading = false
+    //   }
+    // }
     // async getContent(payload) {
     //   this.loading = true
     //   try {

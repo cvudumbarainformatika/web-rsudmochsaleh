@@ -177,6 +177,10 @@ const routes = [
             path: '/ppid/:page?',
             name: 'ppid',
             component: () => import('src/pages/Web/v1/Ppid/PagePpid.vue')
+          },
+          {
+            path: '/ppid/submenu/:page?',
+            component: () => import('src/pages/Web/v1/Ppid/PageSubmenu.vue')
           }
         ]
       },
