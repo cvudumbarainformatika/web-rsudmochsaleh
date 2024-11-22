@@ -101,6 +101,19 @@
               icon="edit"
               @click="form.editForm(item)"
             />
+            <q-btn
+              unelevated
+              size="sm"
+              dense
+              round
+              :color="`${item?.submenu?.length>0?'secondary':'dark'}`"
+              icon="arrow_forward"
+              @click="handleSubmenu(item)"
+            >
+              <q-tooltip :class="item?.submenu?.length > 0 ?'bg-secondary':'bg-dark'">
+                Tambah Submenu
+              </q-tooltip>
+            </q-btn>
           </div>
         </q-item-section>
       </q-item>
@@ -125,11 +138,13 @@ import { useQuasar } from 'quasar'
 import { pathImg } from 'src/boot/axios'
 import { usePpidForm } from 'src/stores/admin/ppid/form'
 import { usePpidTable } from 'src/stores/admin/ppid/table'
+import { useRouter } from 'vue-router'
 // import { ref } from 'vue'
 
 const $q = useQuasar()
 const store = usePpidTable()
 const form = usePpidForm()
+const router = useRouter()
 
 // const sel = ref('')
 // const filters = ref([
@@ -175,6 +190,16 @@ function deleteData(item) {
 // function getCategories(item) {
 //   return item.map(x => x.nama).join(', ')
 // }
+
+function handleSubmenu(item) {
+  // if (route.name === 'admin.pokja' || route.name === 'form.pokja') {
+  //   router.push('/admin/pokja/submenu/' + item.id)
+  // } else {
+  //   router.push('/admin/pelayanan/submenu/' + item.id)
+  // }
+
+  router.push('/admin/ppid/submenu/' + item.id)
+}
 
 </script>
 

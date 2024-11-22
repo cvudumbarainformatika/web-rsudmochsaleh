@@ -67,6 +67,11 @@ const routes = [
           {
             path: '/admin/ppid/form/:id?',
             component: () => import('pages/Admin/Ppid/FormPage.vue')
+          },
+          {
+            path: '/admin/ppid/submenu/:id?',
+            name: 'submenu.ppid',
+            component: () => import('pages/Admin/Ppid/Submenu/IndexPage.vue')
           }
         ]
       },

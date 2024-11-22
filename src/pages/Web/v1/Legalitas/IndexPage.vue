@@ -42,7 +42,7 @@
         v-if="!store.isError"
         class="text-subtitle q-mb-md"
       >
-        ditandatangani secara Electronik oleh
+        sebagai pengganti tanda tangan yang Sah oleh
       </div>
       <q-img
         v-if="!store.isError"
