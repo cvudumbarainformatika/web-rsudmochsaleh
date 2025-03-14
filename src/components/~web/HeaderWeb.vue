@@ -1,4 +1,3 @@
-
 <template>
   <div
     class="bg-transparent text-white"
@@ -7,7 +6,7 @@
   >
     <Transition
       appear
-      enter-active-class="animate__animated animate__slideInDown animate__slower"
+      enter-active-class="animate__animated animate__fadeInDown animate__faster"
     >
       <div
         v-if="store.visible"
@@ -129,7 +128,7 @@
 
     <transition-group
       appear
-      enter-active-class="animate__animated animate__slideInDown animate__slower"
+      enter-active-class="animate__animated animate__fadeIn animate__faster"
     >
       <div
         v-if="!store.visible"
@@ -318,8 +317,8 @@
 
     <transition
       appear
-      enter-active-class="animate__animated animate__slideInLeft animated__slower"
-      leave-active-class="animate__animated animate__fadeOut"
+      enter-active-class="animate__animated animate__fadeIn animate__faster"
+      leave-active-class="animate__animated animate__fadeOut animate__faster"
     >
       <app-tab-header
         v-if="route.name==='berita' && store.btnScrollTop"

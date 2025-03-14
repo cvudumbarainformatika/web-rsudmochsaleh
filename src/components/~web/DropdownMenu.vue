@@ -89,6 +89,10 @@
 import { toRef, ref, watch } from 'vue'
 // import { toRef, watch } from 'vue'
 const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    default: false
+  },
   items: {
     type: Array,
     default: () => []
@@ -118,7 +122,7 @@ const submenuOpen = toRef(props, 'submenu') // react to prop
 //   console.log('oooo')
 // }
 
-const emits = defineEmits(['onMouseOverItem', 'onMouseOverList', 'onMouseOutList', 'onMouseOutItem', 'onMouseOutListSubmenu', 'onMouseOverListSubmenu', 'updateSubMenu', 'onClickMenu', 'onClickSubmenu'])
+const emits = defineEmits(['update:modelValue', 'onMouseOverItem', 'onMouseOverList', 'onMouseOutList', 'onMouseOutItem', 'onMouseOutListSubmenu', 'onMouseOverListSubmenu', 'onClickMenu', 'onClickSubmenu'])
 // const itemListOver = ref(false)
 
 watch(submenuOpen, (value) => {

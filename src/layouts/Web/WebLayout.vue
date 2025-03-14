@@ -1,42 +1,41 @@
 <template>
   <q-layout view="lHh Lpr lFf">
+    <!-- Header selalu full width untuk background -->
     <header-web />
+
+    <!-- Main content dengan max-width yang lebih besar -->
     <q-page-container>
-      <router-view />
+      <div
+        class="
+          mx-auto
+          w-full
+          px-4
+          sm:max-w-[640px]
+          md:max-w-[768px]
+          lg:max-w-[1024px]
+          xl:max-w-[1280px]
+          2xl:max-w-[1536px]
+        "
+      >
+        <router-view />
+      </div>
     </q-page-container>
 
+    <!-- Footer juga full width untuk background -->
     <app-footer />
   </q-layout>
 </template>
 
 <script setup>
-import HeaderWeb from 'src/components/~web/HeaderWeb.vue'
-// import { useAppStore } from 'src/stores/app'
-// import { computed } from 'vue'
+import { defineAsyncComponent } from 'vue'
 
-// const store = useAppStore()
-// const prim = computed(() => {
-//   let pri = '#423a8e'
-//   if (store.themes.length > 0) {
-//     pri = store.themes[0].value
-//   }
-//   return pri
-// })
-// const second = computed(() => {
-//   let sec = '#06b8b8'
-//   if (store.themes.length > 0) {
-//     sec = store.themes[1].value
-//   }
-//   return sec
-// })
+const HeaderWeb = defineAsyncComponent(() => import('src/components/~web/HeaderWeb.vue'))
+const AppFooter = defineAsyncComponent(() => import('src/components/~global/AppFooter.vue'))
 </script>
 
-<!-- <style lang="scss" scoped>
-.bgr-atas {
-  position: relative;
-  top: 0;
+<style>
+.q-layout {
+  min-height: 100vh;
   width: 100%;
-  height: 500px;
-  background-color: v-bind(prim);
 }
-</style> -->
+</style>
