@@ -1,22 +1,10 @@
 /* eslint-env node */
 
-/*
- * This file runs in a Node context (it's NOT transpiled by Babel), so use only
- * the ES6 features that are supported by your Node version. https://node.green/
- */
+import { configure } from 'quasar/wrappers'
 
-// Configuration for your app
-// https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
-
-const { configure } = require('quasar/wrappers')
-
-module.exports = configure(function (/* ctx */) {
+export default configure(function (/* ctx */) {
   return {
     eslint: {
-      // fix: true,
-      // include = [],
-      // exclude = [],
-      // rawOptions = {},
       warnings: true,
       errors: true
     },
@@ -28,8 +16,10 @@ module.exports = configure(function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli/boot-files
     boot: [
-
-      'axios', 'global-components', 'router', 'main'
+      'axios',
+      'global-components',
+      'router',
+      'main' // pastikan main.js ada di sini
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -54,8 +44,8 @@ module.exports = configure(function (/* ctx */) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       target: {
-        browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
-        node: 'node16'
+        browser: ['es2022', 'edge118', 'firefox115', 'chrome115', 'safari16'],
+        node: 'node22'
       },
 
       vueRouterMode: 'history' // available values: 'hash', 'history'
@@ -84,7 +74,7 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
-      // https: true
+      port: 9001,
       open: true // opens browser window automatically
     },
 

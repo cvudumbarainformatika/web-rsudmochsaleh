@@ -85,16 +85,12 @@
 </template>
 
 <script setup>
+import { QIcon, QInput, QSkeleton, QSeparator, QBtn, QCardActions, QCard, QPagination } from 'quasar'
 import { Vue3Lottie } from 'vue3-lottie'
-import 'vue3-lottie/dist/style.css'
-// import { useLottieForm } from 'src/stores/admin/lottie/form'
 import { useLottieTable } from 'src/stores/admin/lottie/table'
 import { computed, onMounted } from 'vue'
-// import FormUploadVue from './FormUpload.vue'
 import { pathImg } from 'src/boot/axios'
-// import { copyToClipboard } from 'quasar'
 
-// const form = useLottieForm()
 const store = useLottieTable()
 const emits = defineEmits(['onCopy'])
 

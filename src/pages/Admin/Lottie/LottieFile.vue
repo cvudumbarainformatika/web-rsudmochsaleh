@@ -9,8 +9,7 @@
 </template>
 <script setup>
 import { Vue3Lottie } from 'vue3-lottie'
-import 'vue3-lottie/dist/style.css'
-
+// hapus import CSS karena tidak diperlukan
 // import { toRef } from 'vue'
 // import { pathImg } from 'src/boot/axios'
 defineProps({
