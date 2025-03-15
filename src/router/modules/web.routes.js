@@ -77,6 +77,22 @@ export default {
       ]
     },
     {
+      path: '/pengaduan',
+      component: () => import('pages/Web/TemplateIndex.vue'),
+      children: [
+        { path: '', redirect: '/pengaduan/all' },
+        {
+          path: '/pengaduan/:page?',
+          name: 'pengaduan',
+          component: () => import('src/pages/Web/v1/Pengaduan/PagePelayanan.vue')
+        },
+        {
+          path: '/pengaduan/submenu/:page?',
+          component: () => import('src/pages/Web/v1/Pengaduan/PageSubmenu.vue')
+        }
+      ]
+    },
+    {
       path: '/profil',
       component: () => import('pages/Web/TemplateIndex.vue'),
       children: [

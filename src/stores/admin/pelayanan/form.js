@@ -44,10 +44,12 @@ export const usePelayananForm = defineStore('pelayanan_form', {
     },
 
     addForm(rute) {
-      console.log(rute)
+      console.log('add form', rute)
       this.resetFORM()
       if (rute === 'admin.pokja') {
         routerInstance.push('/admin/pokja/form/add')
+      } else if (rute === 'admin.pengaduan') {
+        routerInstance.push('/admin/pengaduan/form/add')
       } else {
         routerInstance.push('/admin/pelayanan/form/add')
       }
@@ -70,6 +72,8 @@ export const usePelayananForm = defineStore('pelayanan_form', {
       // console.log(this.selectedCategories)
       if (rute === 'admin.pokja') {
         routerInstance.push('/admin/pokja/form/add')
+      } else if (rute === 'admin.pengaduan') {
+        routerInstance.push('/admin/pengaduan/form/add')
       } else {
         routerInstance.push('/admin/pelayanan/form/add')
       }

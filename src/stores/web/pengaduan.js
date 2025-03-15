@@ -19,7 +19,7 @@ export const usePengaduanWeb = defineStore('pengaduan_web', {
       const params = { params: { flag: '2' } }
       try {
         await api.get('/v1/pelayanan/web_content', params).then((resp) => {
-          // console.log('pokja web ', resp)
+          console.log('pengaduan web ', resp)
           this.items = resp.data
           this.loading = false
         })
@@ -33,7 +33,7 @@ export const usePengaduanWeb = defineStore('pengaduan_web', {
       const params = { params: { flag: '2' } }
       try {
         await api.get('/v1/pelayanan/web_content', params).then((resp) => {
-          // console.log('pokja web ', resp)
+          console.log('pengaduan header ', resp)
           this.menus = resp.data
           this.loading = false
         })

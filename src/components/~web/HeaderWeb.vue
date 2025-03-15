@@ -4,7 +4,7 @@
     :class="fixed?'fixed-top':'relative'"
     style="z-index:10"
   >
-    <Transition
+    <!-- <Transition
       appear
       enter-active-class="animate__animated animate__fadeInDown animate__faster"
     >
@@ -108,6 +108,22 @@
                     @on-click-submenu="(val) => router.push('/pokja/submenu/'+ val.slug)"
                   />
                 </template>
+                <template v-else-if="menu.name==='pengaduan'">
+                  <dropdown-menu
+                    v-model="menuPengaduan"
+                    :items="storePengaduan.menus"
+                    :submenu="submenu"
+                    :sub-item-to-open="subItem"
+                    to="pengaduan"
+                    @on-mouse-over-list="listOver =true"
+                    @on-mouse-out-list="listOver =false"
+                    @on-mouse-over-item="(val)=>checkItem(val)"
+                    @on-mouse-over-list-submenu="listSubmenu = true"
+                    @on-mouse-out-list-submenu="listSubmenu = false"
+                    @on-click-menu="(val)=>gotoPengaduan(val)"
+                    @on-click-submenu="(val) => router.push('/pengaduan/submenu/'+ val.slug)"
+                  />
+                </template>
               </q-btn>
             </template>
           </div>
@@ -124,9 +140,9 @@
           </div>
         </q-bar>
       </div>
-    </Transition>
+    </Transition> -->
 
-    <transition-group
+    <!-- <transition-group
       appear
       enter-active-class="animate__animated animate__fadeIn animate__faster"
     >
@@ -177,13 +193,6 @@
           />
         </q-bar>
       </div>
-      <!-- </transition> -->
-
-      <!-- <transition
-      appear
-      enter-active-class="animated animate__fadeInDown"
-      leave-active-class="animated animate__fadeOutUp"
-    > -->
       <div
         v-if="!store.visible"
         class="transparent"
@@ -193,25 +202,12 @@
           style="height:60px"
         >
           <div class="logo-web text-center q-pa-xs bg-primary overflow-hidden deskt-only">
-            <!-- <q-skeleton
-            v-if="store.loading"
-            type="QAvatar"
-            style="height: 45px; margin-top:5px; margin-bottom: 10px;"
-          /> -->
             <q-img
               :src="logo"
               :ratio="1"
               fit="cover"
             />
           </div>
-          <!-- <div class="title-website q-ml-sm deskt-only">
-          <div :class="`f-14 text-weight-bold ${store.visible? 'text-white':'text-primary'}`">
-            {{ store.header.title }}
-          </div>
-          <div :class="`f-8 text-weight-light ${store.visible? 'text-white':'text-black'}`">
-            {{ store.header.desc }}
-          </div>
-        </div> -->
           <q-space />
 
           <div
@@ -297,6 +293,22 @@
                     @on-click-submenu="(val) => router.push('/pokja/submenu/'+ val.slug)"
                   />
                 </template>
+                <template v-else-if="menu.name==='pengaduan'">
+                  <dropdown-menu
+                    v-model="menuPengaduan"
+                    :items="storePengaduan.menus"
+                    :submenu="submenu"
+                    :sub-item-to-open="subItem"
+                    to="pengaduan"
+                    @on-mouse-over-list="listOver =true"
+                    @on-mouse-out-list="listOver =false"
+                    @on-mouse-over-item="(val)=>checkItem(val)"
+                    @on-mouse-over-list-submenu="listSubmenu = true"
+                    @on-mouse-out-list-submenu="listSubmenu = false"
+                    @on-click-menu="(val)=>gotoPengaduan(val)"
+                    @on-click-submenu="(val) => router.push('/pengaduan/submenu/'+ val.slug)"
+                  />
+                </template>
               </q-btn>
             </template>
           </div>
@@ -313,7 +325,7 @@
           </div>
         </q-bar>
       </div>
-    </transition-group>
+    </transition-group> -->
 
     <transition
       appear
@@ -373,7 +385,9 @@ import { usePelayananWeb } from 'src/stores/web/pelayanan'
 import { useProfilWeb } from 'src/stores/web/profil'
 import { usePpidWeb } from 'src/stores/web/ppid'
 import { usePokjaWeb } from 'src/stores/web/pokja'
+import { usePengaduanWeb } from 'src/stores/web/pengaduan'
 
+// eslint-disable-next-line no-unused-vars
 import DropdownMenu from './DropdownMenu.vue'
 
 import mobileDrawer from './mobileDrawer.vue'
@@ -394,7 +408,9 @@ const storePelayanan = usePelayananWeb()
 const storeProfil = useProfilWeb()
 const storePpid = usePpidWeb()
 const storePokja = usePokjaWeb()
+const storePengaduan = usePengaduanWeb()
 const route = useRoute()
+// eslint-disable-next-line no-unused-vars
 const router = useRouter()
 const $q = useQuasar()
 // const beranda = computed(() => route.name === 'beranda')
@@ -405,6 +421,7 @@ const menuPelayanan = ref(false)
 const menuProfil = ref(false)
 const menuPpid = ref(false)
 const menuPokja = ref(false)
+const menuPengaduan = ref(false)
 
 const mobile = ref($q.platform.is.mobile)
 
@@ -421,13 +438,14 @@ onMounted(() => {
     storePelayanan.getMenu(),
     storeProfil.getData(),
     storePpid.getData(),
-    storePokja.getMenu()
+    storePokja.getMenu(),
+    storePengaduan.getMenu()
   ])
 })
 
-console.log('route from headerWeb', route)
-console.log('header Web..', storePokja.items)
-console.log('header Web q..', $q.platform)
+// console.log('route from headerWeb', route)
+// console.log('header Web..', storePokja.items)
+// console.log('header Web q..', $q.platform)
 
 const logo = computed(() => {
   if (store.logo === null) {
@@ -444,6 +462,7 @@ const checkMenu = (val) => {
     menuProfil.value = false
     menuPpid.value = false
     menuPokja.value = false
+    menuPengaduan.value = false
     submenu.value = false
     listOver.value = false
     listSubmenu.value = false
@@ -460,39 +479,53 @@ const checkMenu = (val) => {
       menuProfil.value = false
       menuPpid.value = false
       menuPokja.value = false
+      menuPengaduan.value = false
     } else if (val === 'profil') {
       menuProfil.value = true
       menuPelayanan.value = false
       menuPpid.value = false
       menuPokja.value = false
+      menuPengaduan.value = false
     } else if (val === 'ppid') {
       menuPpid.value = true
       menuPelayanan.value = false
       menuProfil.value = false
       menuPokja.value = false
+      menuPengaduan.value = false
     } else if (val === 'pokja') {
       menuPpid.value = false
       menuPelayanan.value = false
       menuProfil.value = false
       menuPokja.value = true
+      menuPengaduan.value = false
+    } else if (val === 'pengaduan') {
+      console.log('pengaduan')
+
+      menuPengaduan.value = true
+      menuPpid.value = false
+      menuPelayanan.value = false
+      menuProfil.value = false
+      menuPokja.value = false
     }
   } else {
     menuPelayanan.value = false
     menuProfil.value = false
     menuPpid.value = false
     menuPokja.value = false
+    menuPengaduan.value = false
     submenu.value = false
     listOver.value = false
     listSubmenu.value = false
     menuOver.value = false
   }
-  // console.log('checkMenuOver...', menuOver.value)
-  // console.log('listOver...', listOver.value)
-  // console.log('submenu...', submenu.value)
+  console.log('checkMenuOver...', menuOver.value, val)
+  console.log('listOver...', listOver.value)
+  console.log('submenu...', submenu.value)
 }
 
 // const listSubmenu = ref(false)
 
+// eslint-disable-next-line no-unused-vars
 function checkItem(item) {
   // console.log('checkItem', item)
   if (item.submenu) {
@@ -534,24 +567,30 @@ const menus = ref([
   { name: 'profil', url: 'profil', title: 'Profil', active: false },
   { name: 'ppid', url: 'ppid', title: 'PPID', active: false },
   { name: 'pokja', url: 'pokja', title: 'Pokja Akreditasi', active: false },
+  { name: 'pengaduan', url: 'pengaduan', title: 'Pengaduan', active: false },
   { name: 'buku-tamu', url: 'buku-tamu', title: 'Buku Tamu', active: false }
   // { name: 'galeri', url: '/galeri', title: 'Galeri', active: false },
   // { name: 'profil', url: '/profil', title: 'Profil', active: false }
 ])
 
-function gotoProfile(i) {
-  router.push('/profil')
-  storeProfil.setTab(i.nama)
-}
-function gotoPpid(i) {
-  router.push('/ppid')
-  storePpid.setTab(i.nama)
-}
-function gotoPokja(i) {
-  console.log('tab pokja...', i)
-  router.push('/pokja')
-  storePokja.setTab(i.nama)
-}
+// function gotoProfile(i) {
+//   router.push('/profil')
+//   storeProfil.setTab(i.nama)
+// }
+// function gotoPpid(i) {
+//   router.push('/ppid')
+//   storePpid.setTab(i.nama)
+// }
+// function gotoPokja(i) {
+//   console.log('tab pokja...', i)
+//   router.push('/pokja')
+//   storePokja.setTab(i.nama)
+// }
+// function gotoPengaduan(i) {
+//   console.log('tab pengaduan...', i)
+//   router.push('/pengaduan')
+//   storePokja.setTab(i.nama)
+// }
 
 // onMounted(() => {
 //   console.log('header Web..', storePelayanan.items)

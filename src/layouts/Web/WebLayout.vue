@@ -4,8 +4,9 @@
     <header-web />
 
     <!-- Main content dengan max-width yang lebih besar -->
-    <q-page-container>
+    <q-page-container v-scroll="onScroll">
       <div
+        id="top"
         class="
           mx-auto
           w-full
@@ -19,6 +20,26 @@
       >
         <router-view />
       </div>
+      <transition
+        appear
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+      >
+        <q-page-sticky
+          v-if="store.btnScrollTop"
+          position="bottom-right"
+          :offset="[30, 30]"
+          style="z-index: 100;"
+        >
+          <q-btn
+            fab
+            icon="keyboard_arrow_up"
+            color="primary"
+            glossy
+            @click="scrollToElement()"
+          />
+        </q-page-sticky>
+      </transition>
     </q-page-container>
 
     <!-- Footer juga full width untuk background -->
@@ -27,10 +48,44 @@
 </template>
 
 <script setup>
+import { useAppStore } from 'src/stores/app'
 import { defineAsyncComponent } from 'vue'
+import { scroll } from 'quasar'
+// import { computed } from 'vue'
+const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const HeaderWeb = defineAsyncComponent(() => import('src/components/~web/HeaderWeb.vue'))
 const AppFooter = defineAsyncComponent(() => import('src/components/~global/AppFooter.vue'))
+
+const store = useAppStore()
+
+const onScroll = (info) => {
+  // console.log('onScroll layout', info)
+
+  const moveToY = info
+  if (moveToY > 75) {
+    store.changeVisible(true)
+  } else {
+    store.changeVisible(false)
+  }
+
+  if (moveToY > 200) {
+    store.setBtnScrollTop(true)
+  } else {
+    store.setBtnScrollTop(false)
+  }
+
+  // console.log(info)
+}
+
+const scrollToElement = () => {
+  const el = document.getElementById('top')
+  const target = getScrollTarget(el)
+  const offset = el.offsetTop
+  const duration = 500
+  setVerticalScrollPosition(target, offset, duration)
+}
+
 </script>
 
 <style>

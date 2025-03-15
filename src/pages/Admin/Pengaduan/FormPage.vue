@@ -165,6 +165,8 @@ function onSave() {
   }
   if (route.name === 'form.pokja') {
     formData.append('flag', '1')
+  } else if (route.name === 'form.pengaduan') {
+    formData.append('flag', '2')
   }
 
   formData.append('nama', store.form.nama)
@@ -175,8 +177,8 @@ function onSave() {
   store.saveData(formData).then(() => {
     tempImg.value = null
     store.resetFORM()
-    if (route.name === 'admin.pokja' || route.name === 'form.pokja') {
-      router.push('/admin/pokja')
+    if (route.name === 'admin.pengaduan' || route.name === 'form.pengaduan') {
+      router.push('/admin/pengaduan')
     } else {
       router.push('/admin/pelayanan')
     }
