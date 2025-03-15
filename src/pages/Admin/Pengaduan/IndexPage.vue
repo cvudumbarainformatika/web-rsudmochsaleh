@@ -55,13 +55,13 @@ import { useRoute, useRouter } from 'vue-router'
 const form = usePelayananForm()
 const route = useRoute()
 const router = useRouter()
-// console.log(router)
+console.log(router)
 function prev() {
   router.go(-1)
 }
 function getNama() {
-  if (route.name === 'admin.pokja' || route.name === 'form.pokja' || route.name === 'submenu.pokja') {
-    return 'Pokja Akreditasi'
+  if (route.name === 'admin.pengaduan' || route.name === 'form.pengaduan' || route.name === 'submenu.pengaduan') {
+    return 'Pengaduan'
   } else {
     return 'Pelayanan'
   }

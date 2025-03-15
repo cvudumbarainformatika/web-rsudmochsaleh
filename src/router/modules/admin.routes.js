@@ -59,6 +59,23 @@ export default {
       ]
     },
     {
+      path: '/admin/pengaduan',
+      component: () => import('pages/Admin/Pengaduan/IndexPage.vue'),
+      children: [
+        { path: '', name: 'admin.pengaduan', component: () => import('src/pages/Admin/Pengaduan/TablePage.vue') },
+        {
+          path: '/admin/pengaduan/submenu/:id?',
+          name: 'submenu.pengaduan',
+          component: () => import('src/pages/Admin/Pengaduan/Submenu/IndexPage.vue')
+        },
+        {
+          path: '/admin/pengaduan/form/:id?',
+          name: 'form.pengaduan',
+          component: () => import('pages/Admin/Pengaduan/FormPage.vue')
+        }
+      ]
+    },
+    {
       path: '/admin/ppid',
       component: () => import('pages/Admin/Ppid/IndexPage.vue'),
       children: [

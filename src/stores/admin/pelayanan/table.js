@@ -35,6 +35,8 @@ export const usePelayananTable = defineStore('pelayanan_table', {
       this.routeName = val
       if (val === 'admin.pokja') {
         this.params.flag = '1' // ini untuk flag pokja
+      } else if (val === 'admin.pengaduan') {
+        this.params.flag = '2' // ini untuk flag pengaduan
       } else {
         this.params.flag = null
       }
