@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <!-- Header selalu full width untuk background -->
-    <header-web />
+    <header-web :fixed="store.visible" />
 
     <!-- Main content dengan max-width yang lebih besar -->
     <q-page-container v-scroll="onScroll">
@@ -54,7 +54,7 @@ import { scroll } from 'quasar'
 // import { computed } from 'vue'
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
-const HeaderWeb = defineAsyncComponent(() => import('src/components/~web/HeaderWeb.vue'))
+const HeaderWeb = defineAsyncComponent(() => import('src/components/~web/components/FuturisticHeader.vue'))
 const AppFooter = defineAsyncComponent(() => import('src/components/~global/AppFooter.vue'))
 
 const store = useAppStore()

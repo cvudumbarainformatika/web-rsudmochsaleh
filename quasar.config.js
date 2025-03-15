@@ -2,7 +2,7 @@
 
 import { configure } from 'quasar/wrappers'
 import { 
-  presetUno, 
+  presetWind,  // Ganti presetUno dengan presetWind
   presetAttributify, 
   presetIcons,
   presetTypography,
@@ -96,7 +96,7 @@ export default configure(function () {
       vitePlugins: [
         ['unocss/vite', {
           presets: [
-            presetUno(),
+            presetWind(), // Gunakan presetWind sebagai pengganti presetUno
             presetAttributify({
               prefix: 'un-',
               prefixedOnly: true // Hanya aktifkan class dengan prefix un-
@@ -112,15 +112,18 @@ export default configure(function () {
             transformerDirectives()
           ],
           shortcuts: {
-            // Custom shortcuts Anda
+            // Custom shortcuts untuk header futuristik
+            'nav-link': 'px-4 py-2 rounded-lg text-gray-300 hover:text-cyan-400 hover:bg-gray-700/50 transition-all duration-200 ease-in-out',
+            'dropdown-item': 'block px-4 py-2 text-sm text-gray-300 hover:text-cyan-400 hover:bg-gray-700/50',
             'btn': 'py-2 px-4 font-semibold rounded-lg shadow-md',
             'btn-primary': 'text-white bg-blue-500 hover:bg-blue-700',
-            // Tambahkan shortcuts lain sesuai kebutuhan
           },
           safelist: [
             'btn',
-            'btn-primary'
-            // Tambahkan class yang perlu di-safelist
+            'btn-primary',
+            'animate-slide-down',
+            'animate-slide-right',
+            'rotate-180'
           ]
         }],
         [viteCompression, {
