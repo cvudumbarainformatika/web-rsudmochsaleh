@@ -9,6 +9,7 @@ import {
   transformerVariantGroup,
   transformerDirectives 
 } from 'unocss'
+import viteCompression from 'vite-plugin-compression'
 
 export default configure(function () {
   return {
@@ -55,8 +56,14 @@ export default configure(function () {
         browser: ['es2022', 'edge118', 'firefox115', 'chrome115', 'safari16'],
         node: 'node22'
       },
-      minify: true,
-      // Optimize images
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+          pure_funcs: ['console.log', 'console.info', 'console.debug']
+        }
+      },
       rollupOptions: {
         output: {
           manualChunks: {
@@ -116,7 +123,7 @@ export default configure(function () {
             // Tambahkan class yang perlu di-safelist
           ]
         }],
-        ['vite-plugin-compression', {
+        [viteCompression, {
           algorithm: 'brotli',
           ext: '.br'
         }]
