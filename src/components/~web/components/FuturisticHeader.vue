@@ -241,7 +241,6 @@ const router = useRouter()
 const activeDropdown = ref(null)
 const activeSubmenu = ref(null)
 const mobileMenuOpen = ref(false)
-const hoveredItem = ref(null)
 const hoveredSubmenu = ref(null)
 const closeTimeout = ref(null)
 const isHoveringDropdown = ref(false)
@@ -268,21 +267,9 @@ const closeDropdown = (index) => {
   }
 }
 
-// eslint-disable-next-line no-unused-vars
-const openDropdown = (index) => {
-  activeDropdown.value = index
-}
-
 const toggleDropdown = (index) => {
   activeDropdown.value = activeDropdown.value === index ? null : index
 }
-
-// const handleItemHover = (index, item) => {
-//   hoveredItem.value = index
-//   if (!item.submenu) {
-//     hoveredSubmenu.value = null
-//   }
-// }
 
 // eslint-disable-next-line no-unused-vars
 const handleSubmenuHover = (subIndex) => {
@@ -340,12 +327,6 @@ const handleDropdownMouseLeave = (index) => {
 watch(hoveredSubmenu, (newVal) => {
   console.log('hoveredSubmenu changed to:', newVal)
 })
-
-// eslint-disable-next-line no-unused-vars
-const handleMouseLeave = () => {
-  hoveredItem.value = null
-  hoveredSubmenu.value = null
-}
 
 const menuItems = [
   { label: 'Beranda', href: '/' },
