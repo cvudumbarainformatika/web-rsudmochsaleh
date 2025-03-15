@@ -53,7 +53,7 @@
                 class="absolute top-full left-0 w-56 transform-gpu z-50 overflow-visible"
               >
                 <q-card
-                  class="bg-white shadow-xl"
+                  class="bg-white shadow-xl animate-slide-down"
                   style="border-radius: 12px;"
                 >
                   <q-list padding>
@@ -803,12 +803,6 @@ a.active {
 /* Reset opacity jika sebelumnya ada */
 .opacity-0 {
   opacity: 1 !important;
-}
-
-/* Pastikan container dropdown memiliki ruang yang cukup */
-.dropdown-content {
-  min-height: 100px;
-  position: relative;
 }
 
 /* Tambahkan debug style untuk membantu visualisasi (bisa dihapus nanti) */
