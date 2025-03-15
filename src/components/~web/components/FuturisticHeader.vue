@@ -93,13 +93,14 @@
                       <div
                         v-if="subItem.submenu"
                         class="relative group overflow-visible dropdown-wrapper"
-                        @mouseenter="handleSubmenuHover(subIndex)"
-                        @mouseleave="handleSubmenuLeave"
                       >
+                        <!-- Parent Item -->
                         <q-item
                           v-ripple
                           clickable
                           class="menu-item rounded-lg transition-all duration-300"
+                          @mouseenter="handleParentItemEnter(subIndex)"
+                          @mouseleave="handleParentItemLeave"
                         >
                           <q-item-section side>
                             <div class="circle-icon" />
@@ -123,8 +124,8 @@
 
                         <!-- Submenu -->
                         <div
+                          v-show="hoveredSubmenu === subIndex"
                           class="absolute left-full top-0 w-56 z-50 rounded-xl submenu-container"
-                          :class="{'submenu-visible': hoveredSubmenu === subIndex}"
                           style="margin-left: 1px; margin-top: -8px;"
                         >
                           <q-card
@@ -244,7 +245,7 @@ const hoveredItem = ref(null)
 const hoveredSubmenu = ref(null)
 const closeTimeout = ref(null)
 const isHoveringDropdown = ref(false)
-const isHoveringSubmenu = ref(false)
+const isHoveringParentItem = ref(false)
 
 const navigateTo = (href) => {
   if (href.startsWith('/')) {
@@ -260,7 +261,7 @@ const navigateTo = (href) => {
 const closeDropdown = (index) => {
   console.log('Attempting to close dropdown:', index)
   // Hanya tutup jika tidak ada yang di-hover
-  if (!isHoveringDropdown.value && !isHoveringSubmenu.value) {
+  if (!isHoveringDropdown.value && !isHoveringParentItem.value) {
     console.log('Closing dropdown:', index)
     activeDropdown.value = null
     hoveredSubmenu.value = null
@@ -283,23 +284,28 @@ const toggleDropdown = (index) => {
 //   }
 // }
 
+// eslint-disable-next-line no-unused-vars
 const handleSubmenuHover = (subIndex) => {
-  console.log('Submenu hover:', subIndex)
-  isHoveringSubmenu.value = true
-  hoveredSubmenu.value = subIndex
-  // Prevent dropdown from closing
+  isHoveringParentItem.value = true
+  if (!isHoveringParentItem.value) {
+    hoveredSubmenu.value = subIndex
+  }
   if (closeTimeout.value) {
     clearTimeout(closeTimeout.value)
     closeTimeout.value = null
   }
 }
 
-const handleSubmenuLeave = () => {
-  console.log('Submenu leave')
-  isHoveringSubmenu.value = false
-  // Add small delay before closing submenu
+const handleParentItemEnter = (subIndex) => {
+  hoveredSubmenu.value = subIndex
+  isHoveringParentItem.value = true
+}
+
+const handleParentItemLeave = () => {
+  isHoveringParentItem.value = false
+  // Hanya tutup jika mouse sudah tidak di area submenu
   setTimeout(() => {
-    if (!isHoveringSubmenu.value) {
+    if (!isHoveringParentItem.value) {
       hoveredSubmenu.value = null
     }
   }, 100)
@@ -324,7 +330,7 @@ const handleDropdownMouseLeave = (index) => {
   }
 
   closeTimeout.value = setTimeout(() => {
-    if (!isHoveringSubmenu.value) {
+    if (!isHoveringParentItem.value) {
       closeDropdown(index)
     }
   }, 300)
@@ -724,13 +730,14 @@ a.active {
 
 /* Tambahkan atau update CSS berikut */
 .submenu-container {
-  pointer-events: auto;
-  min-width: 200px;
+  pointer-events: none;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.2s ease, visibility 0.2s ease;
 
-  &.submenu-visible {
+  &:hover,
+  &[v-show]:not([v-show="false"]) {
+    pointer-events: auto;
     opacity: 1;
     visibility: visible;
   }
@@ -776,8 +783,13 @@ a.active {
 
 /* Tambahkan style untuk dropdown wrapper */
 .dropdown-wrapper {
-  position: relative !important;
-  overflow: visible !important;
+  &:hover {
+    .submenu-container {
+      pointer-events: auto;
+      opacity: 1;
+      visibility: visible;
+    }
+  }
 }
 
 /* Update style untuk q-card dalam submenu */
