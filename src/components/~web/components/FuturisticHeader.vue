@@ -123,13 +123,13 @@
 
                         <!-- Submenu -->
                         <div
-                          class="absolute left-full top-0 w-56 z-50 submenu-container"
+                          class="absolute left-full top-0 w-56 z-50 rounded-xl submenu-container"
                           :class="{'submenu-visible': hoveredSubmenu === subIndex}"
                           style="margin-left: 1px; margin-top: -8px;"
                         >
                           <q-card
-                            class="bg-white shadow-xl dropdown-content"
-                            style="border-radius: 12px;"
+                            class="bg-white shadow-xl rounded-xl overflow-hidden"
+                            style="border-radius: 12px !important;"
                           >
                             <q-list
                               padding
