@@ -4,7 +4,7 @@
       id="top"
       class="fixed-top"
     />
-    <carousel-web />
+    <carousel-web :height="400" />
     <section-berita class="q-pb-lg" />
     <section-pelayanan class="q-pb-lg" />
     <!-- <section-one /> -->

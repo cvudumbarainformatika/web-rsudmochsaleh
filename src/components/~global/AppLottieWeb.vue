@@ -1,19 +1,22 @@
 <!-- eslint-disable vue/attribute-hyphenation -->
 <template>
-  <div>
+  <div
+    class="lottie-container"
+    :style="containerStyle"
+  >
     <Vue3Lottie
       ref="anim"
       :animationLink="getJson()"
       :height="height"
+      :width="width"
+      :style="lottieStyle"
     />
   </div>
 </template>
 <script setup>
 import { Vue3Lottie } from 'vue3-lottie'
 import { pathImg } from 'src/boot/axios'
-import { watch, ref } from 'vue'
-
-// import preview from 'src/assets/lottie/123408-image-not-preview.json'
+import { watch, ref, computed } from 'vue'
 
 const props = defineProps({
   url: {
@@ -23,42 +26,55 @@ const props = defineProps({
   height: {
     type: Number,
     default: 200
+  },
+  width: {
+    type: Number,
+    default: null
+  },
+  fit: {
+    type: String,
+    default: 'cover' // 'cover' | 'contain' | 'fill'
   }
 })
 
 const anim = ref(null)
 
-// const getJson = computed(() => {
-//   if (props.url === null || props.url === 'undefined' || props.url === undefined || props.url === '') {
-//     return new URL('../../assets/lottie/123408-image-not-preview.json', import.meta.url).href
-//   } else {
-//     return pathImg + 'lottie/' + props.url
-//   }
-// })
+const containerStyle = computed(() => ({
+  height: `${props.height}px`,
+  width: props.width ? `${props.width}px` : '100%',
+  overflow: 'hidden',
+  position: 'relative'
+}))
 
-// const onLoaded = () => {
-//   console.log('loaded ')
-// }
-// console.log('lottie', anim.value)
+const lottieStyle = computed(() => ({
+  objectFit: props.fit,
+  width: '100%',
+  height: '100%',
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)'
+}))
+
 function getJson() {
   const file = props.url
-  if (file === null || file === 'undefined' || file === undefined || file === '') {
+  if (!file) {
     return new URL('../../assets/lottie/123408-image-not-preview.json', import.meta.url).href
-  } else {
-    return pathImg + 'lottie/' + file
   }
+  return pathImg + 'lottie/' + file
 }
 
-watch(() => props.url, (obj) => {
-  console.log('watch lottie', obj)
-  console.log('lottie ref', anim.value)
-
-  // anim.value.destroy()
-  getJson()
-  // anim.value.play()
-  // setTimeout(() => {
-  //   getJson()
-  // }, 2000)
+watch(() => props.url, (newUrl) => {
+  if (newUrl && anim.value) {
+    getJson()
+  }
 })
-
 </script>
+
+<style scoped>
+.lottie-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
