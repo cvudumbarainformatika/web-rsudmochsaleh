@@ -4,7 +4,10 @@
     <header-web :fixed="store.visible" />
 
     <!-- Main content dengan max-width yang lebih besar -->
-    <q-page-container v-scroll="onScroll">
+    <q-page-container
+      v-scroll="onScroll"
+      class="q-px-none"
+    >
       <div
         id="top"
         class="

@@ -13,7 +13,7 @@
     </div>
     <div
       style="min-height:400px"
-      class="container-padding"
+      class=""
     >
       <router-view
         v-slot="{ Component }"
