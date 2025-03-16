@@ -288,6 +288,7 @@ ul[data-type="taskList"] {
   list-style: none;
   padding: 0;
   p {
+    font-size: 1.5rem;
     margin: 0;
     line-height: 0.8rem;
   }

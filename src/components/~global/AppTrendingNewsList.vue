@@ -111,8 +111,8 @@ function beritaClick(item) {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 50px;
-    font-size: 1.2rem;
+    min-width: 20px;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--q-primary);
     background: rgba(var(--q-primary-rgb), 0.1);
@@ -145,7 +145,7 @@ function beritaClick(item) {
   .trending-content {
     flex: 1;
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
     padding: 0.75rem;
   }
 
@@ -186,7 +186,7 @@ function beritaClick(item) {
   }
 
   .trending-category {
-    font-size: 0.75rem;
+    font-size: 0.50rem;
     color: var(--q-primary);
     font-weight: 600;
     text-transform: uppercase;
@@ -198,7 +198,7 @@ function beritaClick(item) {
   }
 
   .trending-title {
-    font-size: 0.95rem;
+    font-size: 0.75rem;
     font-weight: 600;
     line-height: 1.3;
     margin: 0.25rem 0;

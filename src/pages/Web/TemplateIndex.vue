@@ -29,7 +29,7 @@
     </div>
     <!-- footer -->
     <!-- </q-scroll-area> -->
-    <transition
+    <!-- <transition
       appear
       enter-active-class="animated fadeIn"
       leave-active-class="animated fadeOut"
@@ -47,7 +47,7 @@
           @click="scrollToElement()"
         />
       </q-page-sticky>
-    </transition>
+    </transition> -->
   </q-page>
 </template>
 <script setup>
@@ -55,8 +55,8 @@ import { useAppStore } from 'src/stores/app'
 import { useCategoryStore } from 'src/stores/admin/category'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { scroll } from 'quasar'
-const { getScrollTarget, setVerticalScrollPosition } = scroll
+// import { scroll } from 'quasar'
+// const { getScrollTarget, setVerticalScrollPosition } = scroll
 // import { computed } from 'vue'
 // import { ref } from 'vue'
 
@@ -90,13 +90,13 @@ const onScroll = (position) => {
 //   window.scrollTo(0, 0)
 // }
 
-function scrollToElement() {
-  const el = document.getElementById('top')
-  const target = getScrollTarget(el)
-  const offset = el.offsetTop
-  const duration = 500
-  setVerticalScrollPosition(target, offset, duration)
-}
+// function scrollToElement() {
+//   const el = document.getElementById('top')
+//   const target = getScrollTarget(el)
+//   const offset = el.offsetTop
+//   const duration = 500
+//   setVerticalScrollPosition(target, offset, duration)
+// }
 </script>
 
 <style lang="scss" scoped>

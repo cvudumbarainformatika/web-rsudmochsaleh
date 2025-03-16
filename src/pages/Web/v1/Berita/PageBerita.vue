@@ -10,6 +10,7 @@
             <div class="col-md-8 col-lg-8 col-xs-12">
               <div v-if="route.query.page">
                 <PageSlug />
+                <!-- <FuturisticPageSlug /> -->
               </div>
               <div
                 v-else
@@ -148,6 +149,7 @@ import { useBeritaWeb } from 'src/stores/web/berita'
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import PageSlug from './PageSlug.vue'
+// import FuturisticPageSlug from './FuturisticPageSlug.vue'
 
 const route = useRoute()
 const store = useBeritaWeb()

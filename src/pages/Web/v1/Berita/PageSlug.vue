@@ -12,7 +12,9 @@
             </q-avatar>
           </q-btn>
           <div class="column q-ml-sm">
-            <div>{{ storeApp.header.title }}</div>
+            <div class="text-dark">
+              {{ storeApp.header.title }}
+            </div>
             <div>{{ dateWeb(store.tanggal) }}</div>
           </div>
         </div>
