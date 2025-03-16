@@ -6,7 +6,7 @@
     />
     <carousel-web :height="400" />
     <section-berita class="q-pb-lg" />
-    <section-pelayanan class="q-pb-lg" />
+    <section-pelayanan class="" />
     <!-- <section-one /> -->
     <section-two class="q-pb-lg" />
     <section-three class="q-pb-lg" />
