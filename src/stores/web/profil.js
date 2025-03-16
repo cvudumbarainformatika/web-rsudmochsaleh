@@ -34,7 +34,7 @@ export const useProfilWeb = defineStore('profil_web', {
       this.loading = true
       try {
         await api.get('/v1/profil/web_content').then((resp) => {
-          // console.log('profil web ', resp)
+          console.log('profil web ', resp)
           this.items = resp.data
           this.loading = false
         })

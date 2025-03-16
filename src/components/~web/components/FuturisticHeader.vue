@@ -4,7 +4,7 @@
     :class="{'bg-primary': fixed, 'bg-transparent': !fixed, 'fixed-top': fixed, 'relative': !fixed}"
   >
     <!-- Navbar Container -->
-    <nav class="mx-auto px-4 w-full">
+    <nav class="mx-auto px-10 w-full">
       <div class="flex items-center justify-between h-16 w-full">
         <!-- Logo -->
         <div class="flex-shrink-0">
@@ -16,7 +16,7 @@
         </div>
 
         <!-- Desktop Navigation -->
-        <div class="lg:flex lg:items-center lg:space-x-1 flex-grow justify-end">
+        <div class="lg:flex lg:items-center flex-grow justify-end">
           <template
             v-for="(item, index) in menuItems"
             :key="index"
@@ -38,12 +38,12 @@
                 @click="item.dropdown ? toggleDropdown(index) : navigateTo(item.href)"
               >
                 {{ item.label }}
-                <q-icon
-                  v-if="item.dropdown"
+                <!-- <q-icon
+                  v-if="item.submenu"
                   name="mdi-chevron-down"
                   class="ml-1 w-4 h-4 transition-transform duration-200"
                   :class="{'rotate-180': activeDropdown === index}"
-                />
+                /> -->
               </q-btn>
 
               <!-- Dropdown Content -->
@@ -51,6 +51,7 @@
                 v-if="item.dropdown"
                 v-show="activeDropdown === index"
                 class="absolute top-full left-0 w-56 transform-gpu z-50 overflow-visible"
+                style="margin-top: 5px;"
               >
                 <q-card
                   class="bg-white shadow-xl animate-slide-down"
@@ -62,7 +63,7 @@
                       :key="subIndex"
                     >
                       <!-- Regular Dropdown Item -->
-                      <template v-if="!subItem.submenu">
+                      <template v-if="!subItem?.submenu?.length">
                         <q-item
                           v-ripple
                           clickable
@@ -78,20 +79,12 @@
                               {{ subItem.label }}
                             </q-item-label>
                           </q-item-section>
-
-                          <q-item-section side>
-                            <q-icon
-                              name="arrow_forward"
-                              size="xs"
-                              class="text-primary opacity-0 transition-all duration-300"
-                            />
-                          </q-item-section>
                         </q-item>
                       </template>
 
                       <!-- Nested Dropdown Item -->
                       <div
-                        v-if="subItem.submenu"
+                        v-else
                         class="relative group overflow-visible dropdown-wrapper"
                       >
                         <!-- Parent Item -->
@@ -114,10 +107,10 @@
 
                           <q-item-section side>
                             <q-icon
-                              name="chevron_right"
+                              name="arrow_forward"
                               size="xs"
                               class="text-primary transition-transform duration-300"
-                              :class="{'rotate-90': hoveredSubmenu === subIndex}"
+                              :class="{'scale-150': hoveredSubmenu === subIndex}"
                             />
                           </q-item-section>
                         </q-item>
@@ -154,13 +147,13 @@
                                   </q-item-label>
                                 </q-item-section>
 
-                                <q-item-section side>
+                                <!-- <q-item-section side>
                                   <q-icon
                                     name="arrow_forward"
                                     size="xs"
                                     class="text-primary opacity-0 transition-all duration-300"
                                   />
-                                </q-item-section>
+                                </q-item-section> -->
                               </q-item>
                             </q-list>
                           </q-card>
@@ -221,21 +214,23 @@
 
 <script setup>
 import { useAppStore } from 'src/stores/app'
+import { usePelayananWeb } from 'src/stores/web/pelayanan'
+import { usePengaduanWeb } from 'src/stores/web/pengaduan'
+import { usePokjaWeb } from 'src/stores/web/pokja'
+import { usePpidWeb } from 'src/stores/web/ppid'
+import { useProfilWeb } from 'src/stores/web/profil'
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-const props = defineProps({
-  transparent: {
-    type: Boolean,
-    default: false
-  },
+defineProps({
+
   fixed: {
     type: Boolean,
     default: false
   }
 })
 
-console.log(props.transparent)
+// console.log(props.transparent)
 
 const router = useRouter()
 const activeDropdown = ref(null)
@@ -258,7 +253,7 @@ const navigateTo = (href) => {
 }
 
 const closeDropdown = (index) => {
-  console.log('Attempting to close dropdown:', index)
+  // console.log('Attempting to close dropdown:', index)
   // Hanya tutup jika tidak ada yang di-hover
   if (!isHoveringDropdown.value && !isHoveringParentItem.value) {
     console.log('Closing dropdown:', index)
@@ -269,18 +264,6 @@ const closeDropdown = (index) => {
 
 const toggleDropdown = (index) => {
   activeDropdown.value = activeDropdown.value === index ? null : index
-}
-
-// eslint-disable-next-line no-unused-vars
-const handleSubmenuHover = (subIndex) => {
-  isHoveringParentItem.value = true
-  if (!isHoveringParentItem.value) {
-    hoveredSubmenu.value = subIndex
-  }
-  if (closeTimeout.value) {
-    clearTimeout(closeTimeout.value)
-    closeTimeout.value = null
-  }
 }
 
 const handleParentItemEnter = (subIndex) => {
@@ -299,7 +282,7 @@ const handleParentItemLeave = () => {
 }
 
 const handleDropdownMouseEnter = (index) => {
-  console.log('Dropdown enter:', index)
+  // console.log('Dropdown enter:', index)
   isHoveringDropdown.value = true
   if (closeTimeout.value) {
     clearTimeout(closeTimeout.value)
@@ -309,7 +292,7 @@ const handleDropdownMouseEnter = (index) => {
 }
 
 const handleDropdownMouseLeave = (index) => {
-  console.log('Dropdown leave:', index)
+  // console.log('Dropdown leave:', index)
   isHoveringDropdown.value = false
 
   if (closeTimeout.value) {
@@ -392,16 +375,84 @@ const menuItems = [
 ]
 
 const store = useAppStore()
+const storePelayanan = usePelayananWeb()
+const storeProfil = useProfilWeb()
+const storePpid = usePpidWeb()
+const storePokja = usePokjaWeb()
+const storePengaduan = usePengaduanWeb()
+
 onMounted(() => {
   Promise.all([
-    store.getAppHeader()
-    // storePelayanan.getMenu(),
-    // storeProfil.getData(),
-    // storePpid.getData(),
-    // storePokja.getMenu(),
-    // storePengaduan.getMenu()
+    store.getAppHeader(),
+    storePelayanan.getMenu(),
+    storeProfil.getData(),
+    storePpid.getData(),
+    storePokja.getMenu(),
+    storePengaduan.getMenu()
   ])
 })
+
+const handlePelayananMenu = () => {
+  const pelayanan = storePelayanan.menus
+  const newPel = pelayanan?.map(x => {
+    return {
+      label: x?.nama,
+      submenu: x?.submenu.length
+        ? x?.submenu?.map(y => {
+          return {
+            label: y.nama,
+            href: '/pelayanan/submenu/' + y.slug
+          }
+        })
+        : [],
+      href: '/pelayanan/' + x.slug
+    }
+  })
+  // console.log('pelayanan xxxx', newPel)
+  menuItems.find(x => x.label === 'Pelayanan').items = newPel
+}
+const handleProfileMenu = () => {
+  const menus = storeProfil.items
+  const newPel = menus?.map(x => {
+    return {
+      label: x?.nama,
+      submenu: x?.submenu?.length
+        ? x?.submenu?.map(y => {
+          return {
+            label: y.nama,
+            href: '/profil/submenu/' + y.slug
+          }
+        })
+        : [],
+      href: '/profil/' + x.slug
+    }
+  })
+  console.log('profil xxxx', newPel)
+  menuItems.find(x => x.label === 'Profil').items = newPel
+}
+const handlePpidMenu = () => {
+  const menus = storePpid.items
+  const newPel = menus?.map(x => {
+    return {
+      label: x?.nama,
+      submenu: x?.submenu.length
+        ? x?.submenu?.map(y => {
+          return {
+            label: y.nama,
+            href: '/ppid/submenu/' + y.slug
+          }
+        })
+        : [],
+      href: '/ppid/' + x.slug
+    }
+  })
+  // console.log('pelayanan xxxx', newPel)
+  menuItems.find(x => x.label === 'PPID').items = newPel
+}
+
+watch(() => storePelayanan.menus, handlePelayananMenu)
+watch(() => storeProfil.items, handleProfileMenu)
+watch(() => storePpid.items, handlePpidMenu)
 
 const prim = computed(() => {
   let pri = '#F2E3C6'

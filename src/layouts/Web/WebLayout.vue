@@ -11,13 +11,14 @@
           mx-auto
           w-full
           px-4
-          sm:max-w-[640px]
+          max-w-[1280px]
+        "
+      >
+        <!-- sm:max-w-[640px]
           md:max-w-[768px]
           lg:max-w-[1024px]
           xl:max-w-[1280px]
-          2xl:max-w-[1536px]
-        "
-      >
+          2xl:max-w-[1536px] -->
         <router-view />
       </div>
       <transition
