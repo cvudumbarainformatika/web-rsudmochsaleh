@@ -1,7 +1,7 @@
 <template>
   <header
-    class="w-full z-10"
-    :class="{'bg-primary': fixed, 'bg-transparent': !fixed, 'fixed-top': fixed, 'relative': !fixed}"
+    class="w-full z-10 border-1 border-grey-200"
+    :class="{'bg-primary': fixed, 'bg-gray-100': !fixed, 'fixed-top': fixed, 'relative': !fixed}"
   >
     <!-- bar -->
 
@@ -59,7 +59,7 @@
         <!-- Logo -->
         <div class="flex-shrink-0">
           <div
-            class="text-center px-1 bg-primary overflow-hidden deskt-only"
+            class="text-center px-2 bg-primary overflow-hidden deskt-only"
             style="margin-top: -2px;"
           >
             <img
@@ -230,21 +230,6 @@
 
         <!-- Mobile Menu Button -->
         <div class="lg:hidden">
-          <!-- <button
-            class="p-2 rounded-lg text-gray-300 hover:text-cyan-400 hover:bg-gray-700/50"
-            @click="mobileMenuOpen = !mobileMenuOpen"
-          >
-            <q-icon
-              v-if="!mobileMenuOpen"
-              name="mdi-menu"
-              class="w-6 h-6"
-            />
-            <q-icon
-              v-else
-              name="mdi-close"
-              class="w-6 h-6"
-            />
-          </button> -->
           <q-btn
             flat
             round
@@ -254,24 +239,6 @@
           />
         </div>
       </div>
-
-      <!-- Mobile Menu -->
-      <!-- <div
-        v-show="mobileMenuOpen"
-        class="lg:hidden"
-      >
-        <div class="px-2 pt-2 pb-3 space-y-1">
-          <button
-            v-for="(item, index) in menuItems"
-            :key="index"
-            class="w-full flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-gray-700/50"
-            @click="navigateTo(item.href)"
-          >
-            {{ item.label }}
-          </button>
-        </div>
-      </div>
-    </nav> -->
 
       <!-- drawer for mobile -->
       <div
