@@ -8,9 +8,9 @@
     />
     <!-- banner -->
     <app-banner-web />
-    <div>
+    <!-- <div>
       <app-tab-header v-if="route.name==='berita'" />
-    </div>
+    </div> -->
     <div
       style="min-height:400px"
       class=""

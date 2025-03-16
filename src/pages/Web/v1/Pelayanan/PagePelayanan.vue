@@ -1,13 +1,6 @@
 <template>
   <q-page>
     <app-loading-new v-if="store.loading" />
-    <!-- <TabPelayanan
-      v-model="store.tab"
-      :items="store.items"
-    /> -->
-
-    <!-- <q-separator /> -->
-    <!-- <div v-show="route.params.page===''"> -->
     <q-tab-panels
       v-else
       v-model="store.tab"

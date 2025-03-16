@@ -25,6 +25,8 @@
 
             <!-- Trending Section -->
             <div class="col-md-4 col-lg-4 col-xs-12">
+              <!-- <app-tab-header /> -->
+              <!-- <futuristic-news-categories /> -->
               <div class="trending-section">
                 <div class="section-title">
                   <div class="title-line" />
@@ -150,6 +152,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import PageSlug from './PageSlug.vue'
 // import FuturisticPageSlug from './FuturisticPageSlug.vue'
+// import FuturisticNewsCategories from 'src/components/~web/FuturisticNewsCategories.vue'
 
 const route = useRoute()
 const store = useBeritaWeb()

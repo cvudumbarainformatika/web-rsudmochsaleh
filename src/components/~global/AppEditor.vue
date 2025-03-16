@@ -154,72 +154,87 @@ onBeforeUnmount(() => {
 
 <style lang="scss">
   .editor {
-    border:1px solid $grey-3;
-    height:100vh;
+    border: 1px solid $grey-3;
+    height: 100vh;
     overflow: auto !important;
   }
 
 [contenteditable=false] {
   color: $grey-10;
-  // cursor: none;
 
-  .ProseMirror{
+  .ProseMirror {
     p:has(img) {
-      float:none;
+      float: none;
     }
     p {
-      img.custom-image{
+      font-size: 16px !important;
+      line-height: 1.6 !important;
+      margin-bottom: 1rem !important;
+
+      img.custom-image {
         &-small {
           width: 200px !important;
-          // height: fit-content;
-          // height: auto;
         }
         &-medium {
           width: 500px !important;
-          // height: fit-content;
-          // height: auto;
         }
         &-large {
           width: 100% !important;
-          // height: fit-content;
-          // height: auto;
         }
         &-left {
           float: left;
-          margin-right: 0.5rem;
+          margin-right: 1rem;
         }
         &-right {
           float: right;
-          margin-left: 0.5rem;
+          margin-left: 1rem;
         }
       }
     }
   }
 }
-.ProseMirror{
+.ProseMirror {
   width: 100% !important;
-  padding: 10px;
-  min-height:300px;
-  height:100%;
-  // display: flex;
-  // flex-direction: column;
+  padding: 20px;
+  min-height: 300px;
+  height: 100%;
+  font-size: 16px !important;
+  line-height: 1.6 !important;
 
-  p:has(img) {
-    float:none;
+  p {
+    margin-bottom: 1rem !important;
   }
 
-   pre {
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 1.5rem !important;
+    margin-bottom: 1rem !important;
+    line-height: 1.2 !important;
+  }
+
+  h1 { font-size: 2rem !important; }
+  h2 { font-size: 1.75rem !important; }
+  h3 { font-size: 1.5rem !important; }
+  h4 { font-size: 1.25rem !important; }
+  h5 { font-size: 1.1rem !important; }
+  h6 { font-size: 1rem !important; }
+
+  p:has(img) {
+    float: none;
+  }
+
+  pre {
     background: #0D0D0D;
     color: #FFF;
-    // font-family: 'JetBrainsMono', monospace;
-    padding: 10px;
+    padding: 1rem;
     border-radius: 0.5rem;
+    margin: 1rem 0;
 
     code {
       color: inherit;
       padding: 0;
       background: none;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
+      line-height: 1.5;
     }
   }
 
@@ -230,33 +245,35 @@ onBeforeUnmount(() => {
     }
   }
 
+  // Keep existing image size classes
   .custom-image-small {
     width: 200px !important;
     height: fit-content;
-    // height: auto;
   }
   .custom-image-medium {
     width: 500px !important;
     height: fit-content;
-    // height: auto;
   }
   .custom-image-large {
     width: 100% !important;
     height: fit-content;
-    // height: auto;
   }
   .custom-image-left {
     float: left;
-    margin-right: 0.5rem;
+    margin-right: 1rem;
   }
   .custom-image-right {
     float: right;
-    margin-left: 0.5rem;
+    margin-left: 1rem;
   }
 
   blockquote {
-    padding-left: .75rem;
-    border-left: 3px solid rgba(#0D0D0D, 0.1);
+    padding: 1rem 1.5rem;
+    border-left: 4px solid rgba(#0D0D0D, 0.1);
+    margin: 1rem 0;
+    font-size: 1.1rem;
+    font-style: italic;
+    background: rgba(#0D0D0D, 0.05);
   }
 
   iframe {
@@ -266,38 +283,44 @@ onBeforeUnmount(() => {
     min-height: 200px;
     display: block;
     outline: 0px solid transparent;
+    margin: 1rem 0;
   }
 
   div[data-youtube-video] {
     cursor: move;
     padding-right: 24px;
+    margin: 1rem 0;
   }
 
   .ProseMirror-selectednode iframe {
     transition: outline 0.15s;
     outline: 6px solid #ece111;
   }
-
 }
 
 hr.ProseMirror-selectednode {
-  border-top: 1px solid $grey;
+  border-top: 2px solid $grey;
+  margin: 1.5rem 0;
 }
 
 ul[data-type="taskList"] {
   list-style: none;
   padding: 0;
+  margin: 1rem 0;
+
   p {
-    font-size: 1.5rem;
+    font-size: 16px !important;
     margin: 0;
-    line-height: 0.8rem;
+    line-height: 1.4 !important;
   }
 
   li {
     display: flex;
+    margin-bottom: 0.5rem;
+
     > label {
       flex: 0 0 auto;
-      margin-right: 0.5rem;
+      margin-right: 0.75rem;
       user-select: none;
     }
 
@@ -306,5 +329,4 @@ ul[data-type="taskList"] {
     }
   }
 }
-
 </style>
