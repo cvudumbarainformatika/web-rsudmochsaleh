@@ -282,7 +282,7 @@ function clickList(val) {
       margin: 0 4px;
       transition: all 0.3s ease;
       opacity: 0.3;
-      background: $primary; // Already using primary color
+      background: var(--q-primary); // Menggunakan CSS variable Quasar
 
       &.is-active {
         transform: none;
@@ -294,7 +294,7 @@ function clickList(val) {
 
   // Modern arrows
   .splide__arrow {
-    background: rgba($primary, 0.9); // Using primary color with opacity
+    background: rgba(var(--q-primary-rgb), 0.9); // Menggunakan CSS variable Quasar dengan RGB
     backdrop-filter: blur(4px);
     width: 40px;
     height: 40px;
@@ -308,7 +308,7 @@ function clickList(val) {
     }
 
     &:hover {
-      background: $primary; // Solid primary color on hover
+      background: var(--q-primary); // Menggunakan CSS variable Quasar
     }
 
     &--prev {
