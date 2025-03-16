@@ -3,7 +3,8 @@
     show-if-above
     :width="250"
     :breakpoint="400"
-    class="bg-gray text-black"
+    class="bg-white text-black"
+    behavior="mobile"
   >
     <q-scroll-area style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
       <q-list class="q-pt-xs">

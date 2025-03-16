@@ -569,8 +569,6 @@ const menus = ref([
   { name: 'pokja', url: 'pokja', title: 'Pokja Akreditasi', active: false },
   { name: 'pengaduan', url: 'pengaduan', title: 'Pengaduan', active: false },
   { name: 'buku-tamu', url: 'buku-tamu', title: 'Buku Tamu', active: false }
-  // { name: 'galeri', url: '/galeri', title: 'Galeri', active: false },
-  // { name: 'profil', url: '/profil', title: 'Profil', active: false }
 ])
 
 // function gotoProfile(i) {

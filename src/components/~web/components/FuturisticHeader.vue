@@ -3,20 +3,75 @@
     class="w-full z-10"
     :class="{'bg-primary': fixed, 'bg-transparent': !fixed, 'fixed-top': fixed, 'relative': !fixed}"
   >
+    <!-- bar -->
+
+    <div
+      v-if="!store.visible"
+      class="header-one transparent"
+    >
+      <q-bar
+        class="container-padding bg-primary text-white"
+        style="height:40px !important;"
+      >
+        <q-icon
+          name="call"
+          size="18px"
+        />
+        <div class="f-12">
+          {{ store.header.phone }}
+        </div>
+
+        <q-space />
+
+        <q-btn
+          class="q-mr-sm"
+          dense
+          flat
+          icon="ti-facebook"
+          size="xs"
+          :href="store.header.link_fb"
+          target="_blank"
+        />
+        <q-btn
+          class="q-mr-sm"
+          dense
+          flat
+          icon="ti-instagram"
+          size="xs"
+          :href="store.header.link_instagram"
+          target="_blank"
+        />
+        <q-btn
+          class="q-mr-sm"
+          dense
+          flat
+          icon="ti-youtube"
+          size="xs"
+          :href="store.header.link_youtube"
+          target="_blank"
+        />
+      </q-bar>
+    </div>
+
     <!-- Navbar Container -->
-    <nav class="mx-auto px-10 w-full">
+    <nav class="mx-auto px-4 container-padding w-full">
       <div class="flex items-center justify-between h-16 w-full">
         <!-- Logo -->
         <div class="flex-shrink-0">
-          <img
-            src="logo.png"
-            alt="Logo"
-            class="h-8 w-auto"
+          <div
+            class="text-center px-1 bg-primary overflow-hidden deskt-only"
+            style="margin-top: -2px;"
           >
+            <img
+              src="/images/logos/logo-rsud.png"
+              alt="Logo"
+              class="h-14 w-auto deskt-only"
+            >
+          </div>
         </div>
 
         <!-- Desktop Navigation -->
-        <div class="lg:flex lg:items-center flex-grow justify-end">
+        <div class="desktop-nav flex-grow justify-end">
           <template
             v-for="(item, index) in menuItems"
             :key="index"
@@ -51,6 +106,7 @@
                 v-if="item.dropdown"
                 v-show="activeDropdown === index"
                 class="absolute top-full left-0 w-56 transform-gpu z-50 overflow-visible"
+                :class="{'w-64': item.label === 'Pokja Akreditasi'}"
                 style="margin-top: 5px;"
               >
                 <q-card
@@ -75,7 +131,7 @@
                           </q-item-section>
 
                           <q-item-section>
-                            <q-item-label class="text-primary text-sm">
+                            <q-item-label class="text-primary text-xs">
                               {{ subItem.label }}
                             </q-item-label>
                           </q-item-section>
@@ -100,7 +156,7 @@
                           </q-item-section>
 
                           <q-item-section>
-                            <q-item-label class="text-primary text-sm">
+                            <q-item-label class="text-primary text-xs">
                               {{ subItem.label }}
                             </q-item-label>
                           </q-item-section>
@@ -142,7 +198,7 @@
                                 </q-item-section>
 
                                 <q-item-section>
-                                  <q-item-label class="text-primary text-sm">
+                                  <q-item-label class="text-primary text-xs">
                                     {{ subSubItem.label }}
                                   </q-item-label>
                                 </q-item-section>
@@ -174,7 +230,7 @@
 
         <!-- Mobile Menu Button -->
         <div class="lg:hidden">
-          <button
+          <!-- <button
             class="p-2 rounded-lg text-gray-300 hover:text-cyan-400 hover:bg-gray-700/50"
             @click="mobileMenuOpen = !mobileMenuOpen"
           >
@@ -188,12 +244,19 @@
               name="mdi-close"
               class="w-6 h-6"
             />
-          </button>
+          </button> -->
+          <q-btn
+            flat
+            round
+            :color="`${store.visible?'white':'primary'}`"
+            :icon="mobileMenuOpen ? 'mdi-close' : 'mdi-menu'"
+            @click="mobileMenuOpen = !mobileMenuOpen"
+          />
         </div>
       </div>
 
       <!-- Mobile Menu -->
-      <div
+      <!-- <div
         v-show="mobileMenuOpen"
         class="lg:hidden"
       >
@@ -208,11 +271,26 @@
           </button>
         </div>
       </div>
+    </nav> -->
+
+      <!-- drawer for mobile -->
+      <div
+        v-if="mobileMenuOpen"
+        class="lg:hidden"
+      >
+        <mobileDrawer
+          v-model="mobileMenuOpen"
+          :logo="logo"
+          :menus="menus"
+          :route="route.name"
+        />
+      </div>
     </nav>
   </header>
 </template>
 
 <script setup>
+import { pathImg } from 'src/boot/axios'
 import { useAppStore } from 'src/stores/app'
 import { usePelayananWeb } from 'src/stores/web/pelayanan'
 import { usePengaduanWeb } from 'src/stores/web/pengaduan'
@@ -220,7 +298,9 @@ import { usePokjaWeb } from 'src/stores/web/pokja'
 import { usePpidWeb } from 'src/stores/web/ppid'
 import { useProfilWeb } from 'src/stores/web/profil'
 import { ref, onMounted, computed, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+
+import mobileDrawer from '../mobileDrawer.vue'
 
 defineProps({
 
@@ -232,7 +312,16 @@ defineProps({
 
 // console.log(props.transparent)
 
+const logo = computed(() => {
+  if (store.logo === null) {
+    return new URL('../../assets/logos/logo-rsud.png', import.meta.url).href
+  }
+
+  return pathImg + store.logo
+})
+
 const router = useRouter()
+const route = useRoute()
 const activeDropdown = ref(null)
 const activeSubmenu = ref(null)
 const mobileMenuOpen = ref(false)
@@ -282,7 +371,7 @@ const handleParentItemLeave = () => {
 }
 
 const handleDropdownMouseEnter = (index) => {
-  // console.log('Dropdown enter:', index)
+  console.log('Dropdown enter:', index)
   isHoveringDropdown.value = true
   if (closeTimeout.value) {
     clearTimeout(closeTimeout.value)
@@ -311,6 +400,7 @@ watch(hoveredSubmenu, (newVal) => {
   console.log('hoveredSubmenu changed to:', newVal)
 })
 
+// ini untuk desktop
 const menuItems = [
   { label: 'Beranda', href: '/' },
   { label: 'Berita', href: '/berita' },
@@ -373,6 +463,18 @@ const menuItems = [
   },
   { label: 'Buku Tamu', href: '/buku-tamu' }
 ]
+
+// ini untuk mobile
+const menus = ref([
+  { name: 'beranda', url: 'beranda', title: 'Beranda', active: false },
+  { name: 'berita', url: 'berita/all', title: 'Berita', active: false },
+  { name: 'pelayanan', url: 'pelayanan', title: 'Pelayanan', active: false },
+  { name: 'profil', url: 'profil', title: 'Profil', active: false },
+  { name: 'ppid', url: 'ppid', title: 'PPID', active: false },
+  { name: 'pokja', url: 'pokja', title: 'Pokja Akreditasi', active: false },
+  { name: 'pengaduan', url: 'pengaduan', title: 'Pengaduan', active: false },
+  { name: 'buku-tamu', url: 'buku-tamu', title: 'Buku Tamu', active: false }
+])
 
 const store = useAppStore()
 const storePelayanan = usePelayananWeb()
@@ -449,10 +551,50 @@ const handlePpidMenu = () => {
   // console.log('pelayanan xxxx', newPel)
   menuItems.find(x => x.label === 'PPID').items = newPel
 }
+const handlePokjaMenu = () => {
+  const menus = storePokja.menus
+  const newPel = menus?.map(x => {
+    return {
+      label: x?.nama,
+      submenu: x?.submenu.length
+        ? x?.submenu?.map(y => {
+          return {
+            label: y.nama,
+            href: '/pokja/submenu/' + y.slug
+          }
+        })
+        : [],
+      href: '/pokja'
+    }
+  })
+  // console.log('pelayanan xxxx', newPel)
+  menuItems.find(x => x.label === 'Pokja Akreditasi').items = newPel
+}
+const handlePengaduanMenu = () => {
+  const menus = storePengaduan.menus
+  const newPel = menus?.map(x => {
+    return {
+      label: x?.nama,
+      submenu: x?.submenu.length
+        ? x?.submenu?.map(y => {
+          return {
+            label: y.nama,
+            href: '/pengaduan/submenu/' + y.slug
+          }
+        })
+        : [],
+      href: '/pengaduan'
+    }
+  })
+  // console.log('pelayanan xxxx', newPel)
+  menuItems.find(x => x.label === 'Pengaduan').items = newPel
+}
 
 watch(() => storePelayanan.menus, handlePelayananMenu)
 watch(() => storeProfil.items, handleProfileMenu)
 watch(() => storePpid.items, handlePpidMenu)
+watch(() => storePokja.menus, handlePokjaMenu)
+watch(() => storePengaduan.menus, handlePengaduanMenu)
 
 const prim = computed(() => {
   let pri = '#F2E3C6'
@@ -472,6 +614,17 @@ const second = computed(() => {
 </script>
 
 <style lang="scss">
+.desktop-nav {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .desktop-nav {
+    display: flex;
+    align-items: center;
+  }
+}
+
 // Add or update these styles
 .relative.group {
   position: relative !important;

@@ -64,7 +64,7 @@ const onScroll = (info) => {
   // console.log('onScroll layout', info)
 
   const moveToY = info
-  if (moveToY > 75) {
+  if (moveToY > 175) {
     store.changeVisible(true)
   } else {
     store.changeVisible(false)
