@@ -90,15 +90,9 @@
                   {'text-white': fixed, 'text-primary': !fixed}
                 ]"
                 :text-color="fixed ? 'white' : 'primary'"
-                @click="item.dropdown ? toggleDropdown(index) : navigateTo(item.href)"
+                @click="item.dropdown ? toggleDropdown(index) : navigateTo(item.href, item)"
               >
                 {{ item.label }}
-                <!-- <q-icon
-                  v-if="item.submenu"
-                  name="mdi-chevron-down"
-                  class="ml-1 w-4 h-4 transition-transform duration-200"
-                  :class="{'rotate-180': activeDropdown === index}"
-                /> -->
               </q-btn>
 
               <!-- Dropdown Content -->
@@ -124,7 +118,7 @@
                           v-ripple
                           clickable
                           class="menu-item rounded-lg transition-all duration-300"
-                          @click="navigateTo(subItem.href)"
+                          @click="navigateTo(subItem.href, subItem, item)"
                         >
                           <q-item-section side>
                             <div class="circle-icon" />
@@ -253,6 +247,33 @@
         />
       </div>
     </nav>
+
+    <div class="hidden">
+      <app-tab-header
+        v-if="route.name==='berita'"
+        style="z-index:0"
+      />
+      <TabPelayanan
+        v-else-if="route.name==='pelayanan'"
+        v-model="storePelayanan.tab"
+        :items="storePelayanan.menus"
+      />
+      <TabProfil
+        v-else-if="route.name==='profil' "
+        v-model="storeProfil.tab"
+        :items="storeProfil.items"
+      />
+      <TabPpid
+        v-else-if="route.name==='ppid'"
+        v-model="storePpid.tab"
+        :items="storePpid.items"
+      />
+      <TabPokja
+        v-else-if="route.name==='pokja'"
+        v-model="storePokja.tab"
+        :items="storePokja.menus"
+      />
+    </div>
   </header>
 </template>
 
@@ -266,6 +287,11 @@ import { usePpidWeb } from 'src/stores/web/ppid'
 import { useProfilWeb } from 'src/stores/web/profil'
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+
+import TabPelayanan from 'src/pages/Web/v1/Pelayanan/TabPelayanan.vue'
+import TabPpid from 'src/pages/Web/v1/Ppid/TabPpid.vue'
+import TabProfil from 'src/pages/Web/v1/Profil/TabProfil.vue'
+import TabPokja from 'src/pages/Web/v1/Pokja/TabPokja.vue'
 
 import mobileDrawer from '../mobileDrawer.vue'
 
@@ -297,9 +323,23 @@ const closeTimeout = ref(null)
 const isHoveringDropdown = ref(false)
 const isHoveringParentItem = ref(false)
 
-const navigateTo = (href) => {
+const navigateTo = (href, item, parentItem) => {
+  console.log('Navigating to:', href, item, parentItem)
+  console.log('item:', item)
+  console.log('parentItem:', parentItem)
   if (href.startsWith('/')) {
     router.push(href)
+    if (parentItem?.label === 'Profil') {
+      storeProfil.setTab(item?.label)
+    } else if (parentItem?.label === 'PPID') {
+      storePpid.setTab(item?.label)
+    } else if (parentItem?.label === 'Pokja Akreditasi') {
+      storePokja.setTab(item?.label)
+    } else if (parentItem?.label === 'Pengaduan') {
+      storePengaduan.setTab(item?.label)
+    } else if (parentItem?.label === 'Pelayanan') {
+      storePelayanan.setTab(item?.label)
+    }
   } else {
     window.location.href = href
   }
