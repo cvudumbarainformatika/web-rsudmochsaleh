@@ -10,14 +10,27 @@
       <editor-content
         :editor="editor"
       />
+      <!-- Image Bubble Menu -->
       <bubble-menu
         v-if="editor && edited"
         v-show="editor.isActive('custom-image')"
         :editor="editor"
       >
-        <!-- <q-btn-group rounded> -->
         <bubble-image :editor="editor" />
-      <!-- </q-btn-group> -->
+      </bubble-menu>
+
+      <!-- Table Bubble Menu -->
+      <bubble-menu
+        v-if="editor && edited"
+        v-show="editor.isActive('table')"
+        :editor="editor"
+        :should-show="({ editor }) => editor.isActive('table')"
+        :tippy-options="{
+          placement: 'top-middle',
+          getReferenceClientRect: () => getTableRect()
+        }"
+      >
+        <table-toolbar :editor="editor" />
       </bubble-menu>
     </div>
   </div>
@@ -26,6 +39,7 @@
 <script setup>
 import EditorButton from '../~editor/EditorButton.vue'
 import BubbleImage from 'src/components/~editor/BubbleImage.vue'
+import TableToolbar from 'src/components/~editor/TableToolbar.vue'
 import { useEditor, EditorContent, BubbleMenu } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -84,9 +98,21 @@ const editor = useEditor({
         class: 'custom-table'
       }
     }),
-    TableRow,
-    TableHeader,
-    TableCell,
+    TableRow.configure({
+      HTMLAttributes: {
+        class: 'custom-table-row'
+      }
+    }),
+    TableHeader.configure({
+      HTMLAttributes: {
+        class: 'custom-table-header'
+      }
+    }),
+    TableCell.configure({
+      HTMLAttributes: {
+        class: 'custom-table-cell'
+      }
+    }),
     Youtube.configure({
       inline: false,
       controls: true,
@@ -170,6 +196,15 @@ onBeforeUnmount(() => {
 defineExpose({
   editor
 })
+
+// Function to get table position
+function getTableRect() {
+  const table = editor.value?.view?.dom?.querySelector('.ProseMirror-selectednode')
+  if (table) {
+    return table.getBoundingClientRect()
+  }
+  return null
+}
 </script>
 
 <style lang="scss">
@@ -357,7 +392,9 @@ ul[data-type="taskList"] {
   table-layout: fixed;
 
   td, th {
-    border: 2px solid $grey-4;
+    border-style: solid !important;
+    border-width: 1px !important;
+    border-color: $grey-4 !important;
     padding: 0.75rem;
     position: relative;
     min-width: 100px;
@@ -373,18 +410,14 @@ ul[data-type="taskList"] {
     font-weight: bold;
   }
 
-  .resize-handle {
-    position: absolute;
-    right: -2px;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    cursor: col-resize;
-    background-color: transparent;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: $primary;
+  /* Pastikan border style tidak di-override oleh style lain */
+  &[style*="border-style"],
+  &[style*="border-width"],
+  &[style*="border-color"] {
+    td, th {
+      border-style: inherit !important;
+      border-width: inherit !important;
+      border-color: inherit !important;
     }
   }
 }
@@ -402,57 +435,105 @@ ul[data-type="taskList"] {
 /* Styling untuk tabel dalam editor */
 .ProseMirror {
   table {
-    border-collapse: collapse;
-    margin: 0;
-    width: 100%;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+    width: 100% !important;
+    margin: 1rem 0;
     overflow: hidden;
-    table-layout: fixed;
-  }
 
-  td, th {
-    min-width: 1em;
-    border: 2px solid #ced4da;
-    padding: 8px;
-    vertical-align: top;
-    box-sizing: border-box;
-    position: relative;
+    // Default border styles
+    border: 1px solid $grey-4 !important;
 
-    > * {
-      margin-bottom: 0;
+    &.ProseMirror-selectednode {
+      outline: 2px solid $primary;
     }
   }
+}
 
-  th {
+/* Style untuk table dengan custom classes */
+table {
+  &:has(.custom-table-row) {
+    @extend .custom-table;
+  }
+
+  .custom-table-header,
+  .custom-table-cell {
+    border: 1px solid $grey-4 !important;
+    border-style: inherit !important;
+    border-width: inherit !important;
+    border-color: inherit !important;
+    padding: 0.75rem !important;
+    position: relative;
+    min-width: 100px;
+    word-break: break-word;
+  }
+
+  .custom-table-header {
+    background-color: $grey-2;
     font-weight: bold;
-    background-color: #f8f9fa;
   }
+}
 
-  .selectedCell {
-    background-color: rgba(200, 200, 255, 0.4);
+.custom-table {
+  border-collapse: collapse !important;
+  table-layout: fixed !important;
+  width: 100% !important;
+  margin: 1rem 0;
+
+  // Explicit border properties
+  border-style: solid !important;
+  border-width: 1px !important;
+  border-color: $grey-4 !important;
+
+  &[style*="border-style"],
+  &[style*="border-width"],
+  &[style*="border-color"] {
+    .custom-table-header,
+    .custom-table-cell {
+      border-style: inherit !important;
+      border-width: inherit !important;
+      border-color: inherit !important;
+    }
   }
+}
 
-  /* Styling untuk handle resize kolom */
-  .column-resize-handle {
-    position: absolute;
-    right: -2px;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background-color: #adf;
-    cursor: col-resize;
-    user-select: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
+/* Column resize handle */
+.column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: $primary;
+  cursor: col-resize;
+  user-select: none;
+  opacity: 0;
+  transition: opacity 0.2s;
 
-  /* Tampilkan handle resize saat hover */
-  .ProseMirror-focused .column-resize-handle {
+  &:hover {
     opacity: 1;
   }
+}
 
-  /* Pastikan tabel tidak overflow dari container */
-  .tableWrapper {
-    overflow-x: auto;
+/* Table wrapper untuk responsiveness */
+.tableWrapper {
+  padding: 1rem 0;
+  overflow-x: auto;
+}
+
+/* Selection styles */
+.selectedCell {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba($primary, 0.1);
+    pointer-events: none;
   }
 }
 
@@ -464,5 +545,52 @@ ul[data-type="taskList"] {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 10;
   padding: 4px;
+}
+
+/* Base table styles */
+.tableWrapper {
+  table {
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+    width: 100% !important;
+    margin: 1rem 0;
+    border: 1px solid $grey-4 !important;
+
+    // Style untuk table yang memiliki custom-table-row
+    &:has(.custom-table-row) {
+      border-style: var(--table-border-style, solid) !important;
+      border-width: var(--table-border-width, 1px) !important;
+      border-color: var(--table-border-color, $grey-4) !important;
+    }
+
+    &.ProseMirror-selectednode {
+      outline: 2px solid $primary;
+    }
+
+    // Styles untuk header dan cell
+    .custom-table-header,
+    .custom-table-cell {
+      border: 1px solid $grey-4 !important;
+      border-style: var(--table-border-style, solid) !important;
+      border-width: var(--table-border-width, 1px) !important;
+      border-color: var(--table-border-color, $grey-4) !important;
+      padding: 0.75rem !important;
+      position: relative;
+      min-width: 100px;
+      word-break: break-word;
+    }
+
+    .custom-table-header {
+      background-color: $grey-2;
+      font-weight: bold;
+    }
+  }
+}
+
+/* Add styles to ensure toolbar stays above table */
+.ProseMirror {
+  .tableWrapper {
+    margin-top: 40px; // Add space for toolbar
+  }
 }
 </style>
