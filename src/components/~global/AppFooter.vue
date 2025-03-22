@@ -82,8 +82,17 @@
             <div class="text-h5 text-weight-bold q-mb-lg">
               LINK TERKAIT :
             </div>
-            <div @click="goToLink('https://probolinggokota.go.id')">
-              probolinggokota.go.id
+            <div
+              class="cursor-pointer"
+              @click="goToLink('https://probolinggokota.go.id/')"
+            >
+              Kota Probolinggo
+            </div>
+            <div
+              class="cursor-pointer"
+              @click="goToLink('https://dlh.probolinggokota.go.id/')"
+            >
+              Dinas Lingkungan Hidup Kota Probolinggo
             </div>
           </div>
         </div>

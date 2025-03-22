@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="carousel-container"
-  >
+  <div class="carousel-container">
     <q-carousel
       v-if="!store.loading"
       v-model="slide"
@@ -10,10 +8,10 @@
       infinite
       :autoplay="autoplay"
       :autoplay-timeout="5000"
-      :style="carouselStyle"
       swipeable
       :navigation="showDots"
       transition-duration="800"
+      class="modern-carousel"
       @mouseenter="autoplay = false"
       @mouseleave="autoplay = true"
     >
@@ -23,71 +21,65 @@
         :name="i"
         class="carousel-slide"
       >
-        <template v-if="img.image">
-          <q-img
-            :src="getImage(img.image)"
-            :style="`width: 100%; height: ${height-20}px;`"
-            fit="cover"
-            loading="eager"
-            class="carousel-image"
-          >
-            <template #loading>
-              <q-skeleton type="QToolbar" />
+        <div class="slide-content">
+          <!-- Image/Animation Container -->
+          <div class="media-container">
+            <template v-if="img.image">
+              <q-img
+                :src="getImage(img.image)"
+                :style="`height: ${height}px`"
+                fit="cover"
+                loading="eager"
+                class="carousel-image"
+              >
+                <template #loading>
+                  <q-skeleton type="QToolbar" />
+                </template>
+              </q-img>
             </template>
-          </q-img>
-        </template>
-        <app-lottie-web
-          v-else
-          :url="img.animation"
-          :height="height - 20"
-          class="carousel-animation"
-        />
+            <app-lottie-web
+              v-else
+              :url="img.animation"
+              :height="height"
+              class="carousel-animation"
+            />
+          </div>
 
-        <div
-          v-show="img.title !== 'null'"
-          class="futuristic-caption"
-          :class="{ 'caption-visible': captionVisible }"
-        >
-          <div class="caption-content-left">
-            <div class="title-wrapper deskt-only">
-              <div class="title-line" />
-              <div class="title-container">
-                <h3 class="futuristic-title">
+          <!-- Caption Overlay -->
+          <div
+            v-show="img.title !== 'null'"
+            class="caption-overlay"
+          >
+            <div class="container-padding">
+              <div class="caption-content">
+                <h2 class="slide-title">
                   {{ formatText(img.title) }}
-                </h3>
-                <div class="glowing-underline" />
+                </h2>
+                <p class="slide-description">
+                  {{ formatText(img.desc) }}
+                </p>
+                <q-btn
+                  unelevated
+                  color="primary"
+                  class="q-mt-md"
+                  label="Learn More"
+                />
               </div>
-            </div>
-
-            <div class="mobile-only">
-              <h4 class="futuristic-title-mobile">
-                {{ formatText(img.title) }}
-              </h4>
-            </div>
-
-            <div class="futuristic-desc deskt-only">
-              <div class="desc-background" />
-              <p>{{ formatText(img.desc) }}</p>
-            </div>
-
-            <div class="futuristic-desc-mobile mobile-only">
-              <p>{{ formatText(img.desc) }}</p>
             </div>
           </div>
         </div>
       </q-carousel-slide>
 
-      <!-- Custom Navigation Arrows -->
+      <!-- Custom Navigation -->
       <template #control>
-        <div class="custom-arrows">
+        <div class="custom-navigation">
           <q-btn
             flat
             round
             dense
             color="white"
-            text-color="primary"
             icon="chevron_left"
-            class="arrow-btn q-mr-md"
+            class="nav-btn prev-btn"
             @click="prevSlide"
           />
           <q-btn
@@ -95,21 +87,13 @@
             round
             dense
             color="white"
-            text-color="primary"
             icon="chevron_right"
-            class="arrow-btn"
+            class="nav-btn next-btn"
             @click="nextSlide"
           />
         </div>
       </template>
     </q-carousel>
-
-    <q-skeleton
-      v-else
-      :height="`${height}px`"
-      class="carousel-skeleton"
-      animation="wave"
-    />
   </div>
 </template>
 
@@ -149,6 +133,7 @@ const autoplay = ref(true)
 const captionVisible = ref(false)
 
 // Computed property untuk style carousel berdasarkan type
+// eslint-disable-next-line no-unused-vars
 const carouselStyle = computed(() => {
   const baseStyle = {
     height: `${props.height}px`
@@ -207,203 +192,112 @@ function nextSlide() {
     slide.value = 0
   }
 }
+
 </script>
 
 <style lang="scss" scoped>
-.carousel-container {
-  position: relative;
+.modern-carousel {
+  height: v-bind('`${height}px`');
   background: var(--q-primary);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-
-  &.fullscreen {
-    height: 100vh;
-    width: 100vw;
-  }
-
-  &.compact {
-    max-width: 800px;
-    margin: 0 auto;
-  }
 }
 
 .carousel-slide {
+  padding: 0;
+}
+
+.slide-content {
   position: relative;
-  overflow: hidden;
+  height: 100%;
 }
 
-.carousel-image {
-  transition: transform 0.3s ease;
+.media-container {
+  height: 100%;
+  width: 100%;
 
-  &:hover {
-    transform: scale(1.05);
-  }
-}
-
-.futuristic-caption {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%) translateX(-100%);
-  padding: 2rem;
-  width: 40%;
-  min-width: 400px;
-  opacity: 0;
-  transition: all 0.8s cubic-bezier(0.17, 0.67, 0.83, 0.67);
-  z-index: 2;
-
-  &.caption-visible {
-    transform: translateY(-50%) translateX(0);
-    opacity: 1;
-  }
-}
-
-.caption-content-left {
-  position: relative;
-  padding: 2rem;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(10px);
-  border-radius: 0 20px 20px 0;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-
-  &::before {
+  &::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 2px;
-    height: 100%;
-    background: linear-gradient(180deg, var(--q-primary), transparent);
-    animation: glow 2s infinite alternate;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to right,
+      rgba(0,0,0,0.6) 0%,
+      rgba(0,0,0,0.3) 50%,
+      rgba(0,0,0,0.1) 100%
+    );
   }
 }
 
-.title-wrapper {
-  display: flex;
-  align-items: center;
+.carousel-image {
+  height: 100%;
+  width: 100%;
+}
+
+.caption-overlay {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  z-index: 2;
+}
+
+.caption-content {
+  max-width: 600px;
+  color: white;
+  animation: fadeInLeft 0.8s ease;
+}
+
+.slide-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.slide-description {
+  font-size: 1.1rem;
+  opacity: 0.9;
   margin-bottom: 1.5rem;
 }
 
-.title-line {
-  width: 3px;
-  height: 40px;
-  background: var(--q-primary);
-  margin-right: 1rem;
-  animation: heightPulse 2s infinite alternate;
-}
-
-.title-container {
-  position: relative;
-}
-
-.futuristic-title {
-  color: white;
-  font-size: 2.2rem;
-  font-weight: 600;
-  margin: 0;
-  line-height: 1.2 !important;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  background: linear-gradient(90deg, #fff, #e0e0e0);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.glowing-underline {
-  width: 0;
-  height: 2px;
-  background: var(--q-primary);
-  margin-top: 0.5rem;
-  animation: expandWidth 0.8s forwards 0.3s;
-  box-shadow: 0 0 10px var(--q-primary);
-}
-
-.futuristic-desc {
-  position: relative;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 1rem;
-  line-height: 1.6;
-  margin-top: 1rem;
-  padding-left: 1rem;
-
-  p {
-    position: relative;
-    z-index: 1;
-  }
-}
-
-.desc-background {
+.custom-navigation {
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 2px;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.1);
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  gap: 1rem;
 }
 
-@keyframes glow {
-  0% {
-    box-shadow: 0 0 5px var(--q-primary);
-  }
-  100% {
-    box-shadow: 0 0 20px var(--q-primary);
-  }
-}
+.nav-btn {
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(4px);
 
-@keyframes heightPulse {
-  0% {
-    height: 30px;
-  }
-  100% {
-    height: 50px;
+  &:hover {
+    background: rgba(255,255,255,0.3);
   }
 }
 
-@keyframes expandWidth {
+@keyframes fadeInLeft {
   from {
-    width: 0;
+    opacity: 0;
+    transform: translateX(-30px);
   }
   to {
-    width: 100%;
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
-// Mobile styles
 @media (max-width: 768px) {
-  .futuristic-caption {
-    width: 100%;
-    min-width: unset;
-    bottom: 0;
-    top: auto;
-    transform: translateY(100%);
-    padding: 1rem;
-
-    &.caption-visible {
-      transform: translateY(0);
-    }
+  .slide-title {
+    font-size: 1.8rem;
   }
 
-  .caption-content-left {
-    padding: 1rem;
-    border-radius: 20px 20px 0 0;
-  }
-
-  .futuristic-title-mobile {
-    color: white;
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin: 0;
-    line-height: 1.2 !important;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .futuristic-desc-mobile {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.875rem;
-    line-height: 1.4;
-    margin-top: 0.5rem;
+  .slide-description {
+    font-size: 1rem;
   }
 }
 </style>

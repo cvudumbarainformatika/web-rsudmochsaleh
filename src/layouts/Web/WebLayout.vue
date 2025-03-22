@@ -3,6 +3,19 @@
     <!-- Header selalu full width untuk background -->
     <header-web :fixed="store.visible" />
 
+    <!-- DateTime Block -->
+    <div class="datetime-block">
+      <div class="datetime-container">
+        <div class="time">
+          {{ currentTime }}
+          <span class="seconds">{{ seconds }}</span>
+        </div>
+        <div class="date">
+          {{ currentDate }}
+        </div>
+      </div>
+    </div>
+
     <!-- Social Media Floating Buttons -->
     <div class="social-float">
       <q-btn
@@ -70,14 +83,45 @@
 
 <script setup>
 import { useAppStore } from 'src/stores/app'
-import { defineAsyncComponent, ref } from 'vue'
-import { scroll } from 'quasar'
+import { defineAsyncComponent, ref, onMounted, onBeforeUnmount } from 'vue'
+import { scroll, date } from 'quasar'
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const HeaderWeb = defineAsyncComponent(() => import('src/components/~web/components/FuturisticHeader.vue'))
 const AppFooter = defineAsyncComponent(() => import('src/components/~global/AppFooter.vue'))
 
 const store = useAppStore()
+
+// Add datetime related code
+const currentTime = ref('')
+const seconds = ref('')
+const currentDate = ref('')
+let timeInterval
+
+function updateDateTime() {
+  const now = new Date()
+  currentTime.value = date.formatDate(now, 'HH:mm')
+  seconds.value = date.formatDate(now, 'ss')
+  // Mengubah format tanggal ke Bahasa Indonesia
+  const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
+  const bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+
+  const namaHari = hari[now.getDay()]
+  const tanggal = now.getDate()
+  const namaBulan = bulan[now.getMonth()]
+  const tahun = now.getFullYear()
+
+  currentDate.value = `${namaHari}, ${tanggal} ${namaBulan} ${tahun}`
+}
+
+onMounted(() => {
+  updateDateTime()
+  timeInterval = setInterval(updateDateTime, 1000)
+})
+
+onBeforeUnmount(() => {
+  if (timeInterval) clearInterval(timeInterval)
+})
 
 const socials = ref([
   {
@@ -130,7 +174,75 @@ const scrollToElement = () => {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.datetime-block {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s ease;
+
+  @media (max-width: 768px) {
+    bottom: 1rem;
+    left: 1rem;
+    padding: 0.75rem;
+
+    .time {
+      font-size: 2rem !important;
+
+      .seconds {
+        font-size: 1.2rem !important;
+      }
+    }
+
+    .date {
+      font-size: 0.875rem !important;
+    }
+  }
+}
+
+.datetime-container {
+  color: white;
+  text-align: left;
+}
+
+.time {
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: 'Arial', sans-serif;
+  letter-spacing: 2px;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+
+  .seconds {
+    font-size: 1.5rem;
+    opacity: 0.8;
+    animation: pulse 1s infinite;
+  }
+}
+
+.date {
+  font-size: 1rem;
+  opacity: 0.8;
+  font-weight: 500;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
 .q-layout {
   min-height: 100vh;
   width: 100%;

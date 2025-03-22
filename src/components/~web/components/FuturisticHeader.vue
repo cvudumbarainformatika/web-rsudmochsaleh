@@ -15,7 +15,7 @@
       >
         <q-icon
           name="call"
-          size="18px"
+          size="24px"
         />
         <div class="f-12">
           {{ store.header.phone }}
@@ -64,19 +64,19 @@
 
     <!-- Navbar Container -->
     <nav class="mx-auto px-4 container-padding w-full">
-      <div class="flex items-center justify-between h-16 w-full">
+      <div class="flex items-center justify-between h-18 w-full">
         <!-- Logo -->
         <div class="flex-shrink-0">
-          <div
+          <!-- <div
             class="text-center px-2 bg-primary overflow-hidden deskt-only"
             style="margin-top: -2px;"
+          > -->
+          <img
+            src="/images/logos/logo-rsud.png"
+            alt="Logo"
+            class="h-18 deskt-only p-1"
           >
-            <img
-              src="/images/logos/logo-rsud.png"
-              alt="Logo"
-              class="h-14 w-auto deskt-only"
-            >
-          </div>
+          <!-- </div> -->
         </div>
 
         <!-- Desktop Navigation -->
@@ -93,7 +93,6 @@
             >
               <q-btn
                 flat
-                no-caps
                 :class="[
                   'menu__item',
                   {'text-white': fixed, 'text-primary': !fixed}
@@ -771,15 +770,15 @@ const second = computed(() => {
   position: relative;
   margin-right: 10px;
   font-size: 14px;
-  padding: 5px 10px;
+  padding: 2px 10px;
   text-decoration: none;
 
   &::before {
     content: "";
     position: absolute;
-    border-radius: 10px;
+    border-radius: 15px;
     background-color: v-bind(prim);
-    top: 30px;
+    // top: 30px;
     /* bottom: -3px; */
     left: 10px;
     width: 0px;
