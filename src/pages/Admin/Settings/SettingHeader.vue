@@ -106,6 +106,11 @@
             class="q-mb-md"
           />
           <app-input
+            v-model="store.header.link_tiktok"
+            label="link tiktok"
+            class="q-mb-md"
+          />
+          <app-input
             v-model="store.header.link_map"
             label="link Map"
             class="q-mb-md"

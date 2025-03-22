@@ -3,6 +3,28 @@
     <!-- Header selalu full width untuk background -->
     <header-web :fixed="store.visible" />
 
+    <!-- Social Media Floating Buttons -->
+    <div class="social-float">
+      <q-btn
+        v-for="(social, index) in socials"
+        :key="social.icon"
+        round
+        :style="{
+          transform: `translateY(${store.visible ? '0' : '100'}px)`,
+          transition: `all 0.3s ease ${index * 0.1}s`
+        }"
+        class="social-btn q-mb-sm"
+        :color="social.color"
+        :icon="social.icon"
+        :href="store.header[social.link]"
+        target="_blank"
+      >
+        <q-tooltip>
+          {{ social.name }}
+        </q-tooltip>
+      </q-btn>
+    </div>
+
     <!-- Main content dengan max-width yang lebih besar -->
     <q-page-container
       v-scroll="onScroll"
@@ -17,11 +39,6 @@
           max-w-[1280px]
         "
       >
-        <!-- sm:max-w-[640px]
-          md:max-w-[768px]
-          lg:max-w-[1024px]
-          xl:max-w-[1280px]
-          2xl:max-w-[1536px] -->
         <router-view />
       </div>
       <transition
@@ -53,9 +70,8 @@
 
 <script setup>
 import { useAppStore } from 'src/stores/app'
-import { defineAsyncComponent } from 'vue'
+import { defineAsyncComponent, ref } from 'vue'
 import { scroll } from 'quasar'
-// import { computed } from 'vue'
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const HeaderWeb = defineAsyncComponent(() => import('src/components/~web/components/FuturisticHeader.vue'))
@@ -63,9 +79,34 @@ const AppFooter = defineAsyncComponent(() => import('src/components/~global/AppF
 
 const store = useAppStore()
 
-const onScroll = (info) => {
-  // console.log('onScroll layout', info)
+const socials = ref([
+  {
+    name: 'Facebook',
+    icon: 'ti-facebook',
+    color: 'blue-7',
+    link: 'link_fb'
+  },
+  {
+    name: 'Instagram',
+    icon: 'ti-instagram',
+    color: 'purple-5',
+    link: 'link_instagram'
+  },
+  {
+    name: 'Youtube',
+    icon: 'ti-youtube',
+    color: 'red-7',
+    link: 'link_youtube'
+  },
+  {
+    name: 'TikTok',
+    icon: 'ti-tumblr-alt',
+    color: 'dark',
+    link: 'link_tiktok'
+  }
+])
 
+const onScroll = (info) => {
   const moveToY = info
   if (moveToY > 175) {
     store.changeVisible(true)
@@ -78,8 +119,6 @@ const onScroll = (info) => {
   } else {
     store.setBtnScrollTop(false)
   }
-
-  // console.log(info)
 }
 
 const scrollToElement = () => {
@@ -89,12 +128,52 @@ const scrollToElement = () => {
   const duration = 500
   setVerticalScrollPosition(target, offset, duration)
 }
-
 </script>
 
 <style>
 .q-layout {
   min-height: 100vh;
   width: 100%;
+}
+
+.social-float {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.social-btn {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.social-btn:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+.social-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: inherit;
+  filter: blur(5px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: -1;
+}
+
+.social-btn:hover::before {
+  opacity: 0.7;
+  transform: scale(1.3);
 }
 </style>

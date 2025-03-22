@@ -243,6 +243,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@use "sass:color";
+
 .news-section {
   background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
   position: relative;
@@ -297,7 +299,7 @@ export default defineComponent({
   .title-h2 {
     margin: 0;
     padding: 0 1rem;
-    background: linear-gradient(120deg, var(--q-primary) 0%, darken(#06b8b8, 10%) 100%);
+    background: linear-gradient(120deg, var(--q-primary) 0%, color.scale(#06b8b8, $lightness: -10%) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }

@@ -28,7 +28,7 @@
           dense
           flat
           icon="ti-facebook"
-          size="xs"
+          size="sm"
           :href="store.header.link_fb"
           target="_blank"
         />
@@ -37,7 +37,7 @@
           dense
           flat
           icon="ti-instagram"
-          size="xs"
+          size="sm"
           :href="store.header.link_instagram"
           target="_blank"
         />
@@ -46,8 +46,17 @@
           dense
           flat
           icon="ti-youtube"
-          size="xs"
+          size="sm"
           :href="store.header.link_youtube"
+          target="_blank"
+        />
+        <q-btn
+          class="q-mr-sm"
+          dense
+          flat
+          icon="ti-tumblr-alt"
+          size="sm"
+          :href="store.header.link_tiktok"
           target="_blank"
         />
       </q-bar>
@@ -92,7 +101,9 @@
                 :text-color="fixed ? 'white' : 'primary'"
                 @click="item.dropdown ? toggleDropdown(index) : navigateTo(item.href, item)"
               >
-                {{ item.label }}
+                <div class="text-bold">
+                  {{ item.label }}
+                </div>
               </q-btn>
 
               <!-- Dropdown Content -->
@@ -352,7 +363,7 @@ const closeDropdown = (index) => {
   // console.log('Attempting to close dropdown:', index)
   // Hanya tutup jika tidak ada yang di-hover
   if (!isHoveringDropdown.value && !isHoveringParentItem.value) {
-    console.log('Closing dropdown:', index)
+    // console.log('Closing dropdown:', index)
     activeDropdown.value = null
     hoveredSubmenu.value = null
   }
@@ -378,7 +389,7 @@ const handleParentItemLeave = () => {
 }
 
 const handleDropdownMouseEnter = (index) => {
-  console.log('Dropdown enter:', index)
+  // console.log('Dropdown enter:', index)
   isHoveringDropdown.value = true
   if (closeTimeout.value) {
     clearTimeout(closeTimeout.value)
@@ -404,7 +415,7 @@ const handleDropdownMouseLeave = (index) => {
 
 // Tambahkan watch untuk memonitor perubahan
 watch(hoveredSubmenu, (newVal) => {
-  console.log('hoveredSubmenu changed to:', newVal)
+  console.log('watch:', newVal)
 })
 
 // ini untuk desktop
@@ -499,9 +510,43 @@ onMounted(() => {
     storePokja.getMenu(),
     storePengaduan.getMenu()
   ])
+
+  // console.log('header Web..', route.matched[2])
+
+  handleRouteAwal()
+  // handlePpidMenu()
 })
 
-const handlePelayananMenu = () => {
+// eslint-disable-next-line no-unused-vars
+const handleRouteAwal = () => {
+  const path = route?.matched[2]?.path ?? null
+  const page = route?.matched[1]?.path
+  const fullPath = route?.fullPath
+  const noSub = path?.includes('/submenu')
+  // const paramsPage = route?.params?.page
+
+  if (!noSub) { // jika tidak ada submenu
+    console.log('page tanpa submenu', noSub, fullPath, page)
+    console.log('page tanpa submenu route', fullPath)
+    if (page === '/ppid') {
+      handlePpidMenu(fullPath)
+    }
+    if (page === '/profil') {
+      handleProfileMenu(fullPath)
+    }
+    if (page === '/pelayanan') {
+      handlePelayananMenu(fullPath)
+    }
+    if (page === '/pokja') {
+      handlePokjaMenu(fullPath)
+    }
+    if (page === '/pengaduan') {
+      handlePengaduanMenu(fullPath)
+    }
+  }
+}
+
+const handlePelayananMenu = (path) => {
   const pelayanan = storePelayanan.menus
   const newPel = pelayanan?.map(x => {
     return {
@@ -518,9 +563,13 @@ const handlePelayananMenu = () => {
     }
   })
   // console.log('pelayanan xxxx', newPel)
-  menuItems.find(x => x.label === 'Pelayanan').items = newPel
+  const x = menuItems.find(x => x.label === 'Pelayanan').items = newPel
+  if (path) {
+    const page = x?.find(y => y.href === route.fullPath)?.label || null
+    if (page) storePelayanan.setTab(page)
+  }
 }
-const handleProfileMenu = () => {
+const handleProfileMenu = (path) => {
   const menus = storeProfil.items
   const newPel = menus?.map(x => {
     return {
@@ -536,10 +585,15 @@ const handleProfileMenu = () => {
       href: '/profil/' + x.slug
     }
   })
-  console.log('profil xxxx', newPel)
-  menuItems.find(x => x.label === 'Profil').items = newPel
+  // console.log('profil xxxx', newPel)
+  const x = menuItems.find(x => x.label === 'Profil').items = newPel
+
+  if (path) {
+    const page = x?.find(y => y.href === route.fullPath)?.label || null
+    if (page) storeProfil.setTab(page)
+  }
 }
-const handlePpidMenu = () => {
+const handlePpidMenu = (path) => {
   const menus = storePpid.items
   const newPel = menus?.map(x => {
     return {
@@ -555,10 +609,18 @@ const handlePpidMenu = () => {
       href: '/ppid/' + x.slug
     }
   })
-  // console.log('pelayanan xxxx', newPel)
-  menuItems.find(x => x.label === 'PPID').items = newPel
+  // console.log('ppid xxxx', newPel)
+  const x = menuItems.find(x => x.label === 'PPID').items = newPel
+  // console.log('ppid tac', x)
+  // console.log('path', path)
+  if (path) {
+    const page = x?.find(y => y.href === route.fullPath)?.label || null
+    // console.log('ppid page', page)
+
+    if (page) storePpid.setTab(page)
+  }
 }
-const handlePokjaMenu = () => {
+const handlePokjaMenu = (path) => {
   const menus = storePokja.menus
   const newPel = menus?.map(x => {
     return {
@@ -571,13 +633,17 @@ const handlePokjaMenu = () => {
           }
         })
         : [],
-      href: '/pokja'
+      href: '/pokja/' + x.slug
     }
   })
   // console.log('pelayanan xxxx', newPel)
-  menuItems.find(x => x.label === 'Pokja Akreditasi').items = newPel
+  const x = menuItems.find(x => x.label === 'Pokja Akreditasi').items = newPel
+  if (path) {
+    const page = x?.find(y => y.href === route.fullPath)?.label || null
+    if (page) storePokja.setTab(page)
+  }
 }
-const handlePengaduanMenu = () => {
+const handlePengaduanMenu = (path) => {
   const menus = storePengaduan.menus
   const newPel = menus?.map(x => {
     return {
@@ -590,11 +656,15 @@ const handlePengaduanMenu = () => {
           }
         })
         : [],
-      href: '/pengaduan'
+      href: '/pengaduan/' + x.slug
     }
   })
   // console.log('pelayanan xxxx', newPel)
-  menuItems.find(x => x.label === 'Pengaduan').items = newPel
+  const x = menuItems.find(x => x.label === 'Pengaduan').items = newPel
+  if (path) {
+    const page = x?.find(y => y.href === route.fullPath)?.label || null
+    if (page) storePengaduan.setTab(page)
+  }
 }
 
 watch(() => storePelayanan.menus, handlePelayananMenu)

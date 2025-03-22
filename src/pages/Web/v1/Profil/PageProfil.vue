@@ -31,7 +31,7 @@
         :key="n"
         :name="item.nama"
       >
-        <app-text-judul judul="Profil" />
+        <app-text-judul :judul="item.nama" />
         <q-separator />
         <div class="content">
           <div v-if="item.thumbnail">

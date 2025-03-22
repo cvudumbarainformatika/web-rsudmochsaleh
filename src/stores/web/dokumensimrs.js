@@ -1,4 +1,3 @@
-
 import { defineStore } from 'pinia'
 import { api2 } from 'src/boot/axios'
 

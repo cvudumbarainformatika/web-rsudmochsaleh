@@ -35,7 +35,7 @@ export const usePpidWeb = defineStore('ppid_web', {
       this.loading = true
       try {
         await api.get('/v1/ppid/web_content').then((resp) => {
-          console.log('ppid web ', resp)
+          // console.log('ppid web ', resp)
           this.items = resp.data
           this.loading = false
         })

@@ -14,7 +14,7 @@
             <div class="f-12">
               {{ store.header.alamat }}
             </div>
-            <div class="q-py-lg">
+            <div class="q-py-lg flex q-gutter-sm">
               <q-btn
                 dense
                 flat
@@ -37,6 +37,14 @@
                 icon="ti-youtube"
                 size="lg"
                 :href="store.header.link_youtube"
+                target="_blank"
+              />
+              <q-btn
+                dense
+                flat
+                icon="ti-tumblr-alt"
+                size="lg"
+                :href="store.header.link_tiktok"
                 target="_blank"
               />
             </div>

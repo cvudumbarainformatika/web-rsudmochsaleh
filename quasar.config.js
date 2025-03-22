@@ -1,13 +1,13 @@
 /* eslint-env node */
 
 import { configure } from 'quasar/wrappers'
-import { 
-  presetWind,  // Ganti presetUno dengan presetWind
-  presetAttributify, 
+import {
+  presetWind, // Ganti presetUno dengan presetWind
+  presetAttributify,
   presetIcons,
   presetTypography,
   transformerVariantGroup,
-  transformerDirectives 
+  transformerDirectives
 } from 'unocss'
 import viteCompression from 'vite-plugin-compression'
 
@@ -67,10 +67,10 @@ export default configure(function () {
       rollupOptions: {
         output: {
           manualChunks: {
-            'vendor': ['vue', 'quasar'],
-            'admin': ['./src/router/modules/admin.routes.js'],
-            'web': ['./src/router/modules/web.routes.js'],
-            'auth': ['./src/router/modules/auth.routes.js']
+            vendor: ['vue', 'quasar'],
+            admin: ['./src/router/modules/admin.routes.js'],
+            web: ['./src/router/modules/web.routes.js'],
+            auth: ['./src/router/modules/auth.routes.js']
           }
         }
       },
@@ -115,8 +115,8 @@ export default configure(function () {
             // Custom shortcuts untuk header futuristik
             'nav-link': 'px-4 py-2 rounded-lg text-gray-300 hover:text-cyan-400 hover:bg-gray-700/50 transition-all duration-200 ease-in-out',
             'dropdown-item': 'block px-4 py-2 text-sm text-gray-300 hover:text-cyan-400 hover:bg-gray-700/50',
-            'btn': 'py-2 px-4 font-semibold rounded-lg shadow-md',
-            'btn-primary': 'text-white bg-blue-500 hover:bg-blue-700',
+            btn: 'py-2 px-4 font-semibold rounded-lg shadow-md',
+            'btn-primary': 'text-white bg-blue-500 hover:bg-blue-700'
           },
           safelist: [
             'btn',
@@ -209,6 +209,7 @@ export default configure(function () {
         skipWaiting: true,
         clientsClaim: true,
         runtimeCaching: [{
+          // eslint-disable-next-line prefer-regex-literals
           urlPattern: new RegExp('^https://rsudmochsaleh.my.id/api'),
           handler: 'NetworkFirst'
         }]
