@@ -11,27 +11,29 @@
         :editor="editor"
       />
       <!-- Image Bubble Menu -->
-      <bubble-menu
-        v-if="editor && edited"
-        v-show="editor.isActive('custom-image')"
-        :editor="editor"
-      >
-        <bubble-image :editor="editor" />
-      </bubble-menu>
+      <div class="bubble-menu-wrapper">
+        <bubble-menu
+          v-if="editor && edited"
+          v-show="editor.isActive('custom-image')"
+          :editor="editor"
+          :tippy-options="tippyOptions"
+        >
+          <bubble-image :editor="editor" />
+        </bubble-menu>
+      </div>
 
       <!-- Table Bubble Menu -->
-      <bubble-menu
-        v-if="editor && edited"
-        v-show="editor.isActive('table')"
-        :editor="editor"
-        :should-show="({ editor }) => editor.isActive('table')"
-        :tippy-options="{
-          placement: 'top-middle',
-          getReferenceClientRect: () => getTableRect()
-        }"
-      >
-        <table-toolbar :editor="editor" />
-      </bubble-menu>
+      <div class="bubble-menu-wrapper">
+        <bubble-menu
+          v-if="editor && edited"
+          v-show="editor.isActive('table')"
+          :editor="editor"
+          :should-show="shouldShowTableMenu"
+          :tippy-options="tableTippyOptions"
+        >
+          <table-toolbar :editor="editor" />
+        </bubble-menu>
+      </div>
     </div>
   </div>
 </template>
@@ -56,7 +58,7 @@ import TextAlign from '@tiptap/extension-text-align'
 import Link from '@tiptap/extension-link'
 import Youtube from '@tiptap/extension-youtube'
 import CustomImage from '../~editor/extensions/custom-image'
-import { onBeforeUnmount, ref, watch } from 'vue'
+import { onBeforeUnmount, ref, watch, onMounted } from 'vue'
 // import { computed } from 'vue'
 
 import Table from '@tiptap/extension-table'
@@ -197,14 +199,72 @@ defineExpose({
   editor
 })
 
-// Function to get table position
-function getTableRect() {
-  const table = editor.value?.view?.dom?.querySelector('.ProseMirror-selectednode')
-  if (table) {
-    return table.getBoundingClientRect()
-  }
-  return null
+const shouldShowTableMenu = ({ editor }) => {
+  return editor.isActive('table')
 }
+
+function getTableRect() {
+  if (!editor.value) return { top: 0, left: 0, width: 0, height: 0 }
+
+  const { view } = editor.value
+  if (!view) return { top: 0, left: 0, width: 0, height: 0 }
+
+  // First try: check for selected node
+  const selectedNode = view.dom.querySelector('.ProseMirror-selectednode')
+  if (selectedNode) {
+    return selectedNode.getBoundingClientRect()
+  }
+
+  // Second try: check for table element in selection
+  const selection = view.state.selection
+  if (selection.$anchor.depth > 0) {
+    const currentNode = selection.$anchor
+    let depth = selection.$anchor.depth
+
+    // Traverse up the node tree to find table node
+    while (depth > 0) {
+      const node = currentNode.node(depth)
+      if (node.type.name === 'table') {
+        // Find the DOM element for this position
+        const pos = currentNode.before(depth)
+        const domAtPos = view.domAtPos(pos)
+        if (domAtPos) {
+          const tableElement = domAtPos.node.closest('table')
+          if (tableElement) {
+            return tableElement.getBoundingClientRect()
+          }
+        }
+        break
+      }
+      depth--
+    }
+  }
+
+  // Fallback: try to find any table in the editor
+  const tableElement = view.dom.querySelector('table')
+  if (tableElement) {
+    return tableElement.getBoundingClientRect()
+  }
+
+  // Last resort: return default values
+  return { top: 0, left: 0, width: 0, height: 0 }
+}
+
+const tippyOptions = ref({
+  interactive: true
+})
+
+const tableTippyOptions = ref({
+  placement: 'top',
+  interactive: true
+})
+
+onMounted(() => {
+  // Set appendTo option after component is mounted
+  tippyOptions.value.appendTo = document.body
+  tableTippyOptions.value.appendTo = document.body
+  tableTippyOptions.value.getReferenceClientRect = getTableRect
+})
 </script>
 
 <style lang="scss">
@@ -592,5 +652,15 @@ table {
   .tableWrapper {
     margin-top: 40px; // Add space for toolbar
   }
+}
+
+.bubble-menu-wrapper {
+  position: relative;
+  z-index: 50;
+}
+
+/* Tambahkan style untuk memastikan menu tetap terlihat */
+.tippy-box {
+  z-index: 99999 !important;
 }
 </style>
