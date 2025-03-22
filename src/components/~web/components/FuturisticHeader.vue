@@ -72,7 +72,7 @@
             style="margin-top: -2px;"
           > -->
           <img
-            src="/images/logos/logo-rsud.png"
+            :src="logo"
             alt="Logo"
             class="h-18 deskt-only p-1"
           >
@@ -315,11 +315,12 @@ defineProps({
 
 // console.log(props.transparent)
 
+const store = useAppStore()
+
 const logo = computed(() => {
   if (store.logo === null) {
-    return new URL('../../assets/logos/logo-rsud.png', import.meta.url).href
+    return '/images/logos/logo-rsud.png'
   }
-
   return pathImg + store.logo
 })
 
@@ -493,7 +494,6 @@ const menus = ref([
   { name: 'buku-tamu', url: 'buku-tamu', title: 'Buku Tamu', active: false }
 ])
 
-const store = useAppStore()
 const storePelayanan = usePelayananWeb()
 const storeProfil = useProfilWeb()
 const storePpid = usePpidWeb()

@@ -115,9 +115,9 @@ const jsonLd = computed(() => ({
 useHead({
   title: store.judul,
   meta: [
-    { name: 'description', content: store.content.substring(0, 160) },
+    { name: 'description', content: store.content ? store.content.substring(0, 160) : '' },
     { property: 'og:title', content: store.judul },
-    { property: 'og:description', content: store.content.substring(0, 160) },
+    { property: 'og:description', content: store.content ? store.content.substring(0, 160) : '' },
     { property: 'og:image', content: pathImg + store.image },
     { name: 'twitter:card', content: 'summary_large_image' }
   ],

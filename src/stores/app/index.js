@@ -3,6 +3,7 @@ import { api } from 'src/boot/axios'
 import { notifSuccess } from 'src/modules/utils'
 
 export const useAppStore = defineStore('app', {
+
   state: () => ({
     logo: null,
     banner: null,
@@ -48,6 +49,7 @@ export const useAppStore = defineStore('app', {
     btnScrollTop: false
 
   }),
+  persist: true,
   getters: {
     stafs: (state) => {
       if (state.section_three.length === 0) {
