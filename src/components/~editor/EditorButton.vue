@@ -190,6 +190,13 @@
       <!-- <button @click="editor.chain().focus().setHardBreak().run()">
         hard break
       </button> -->
+      <q-separator vertical />
+      <menu-bar-btn
+        icon="table_chart"
+        tooltip="Insert Table"
+        :active="editor.isActive('table')"
+        @click="insertTable"
+      />
     </div>
     <!-- dialog gallery -->
     <!-- <app-dialog
@@ -242,6 +249,10 @@
       </q-card>
     </q-dialog>
   </div>
+  <table-toolbar
+    v-if="editor && editor.isActive('table')"
+    :editor="editor"
+  />
 </template>
 <script setup>
 import { api } from 'src/boot/axios'
@@ -252,6 +263,7 @@ import { notifErrVue } from 'src/modules/utils'
 import MenuBarBtn from './components/MenuBarBtn.vue'
 import HeadingDropdown from 'src/components/~editor/components/HeadingDropdown.vue'
 import BtnDropdownColor from './BtnDropdownColor.vue'
+import TableToolbar from './TableToolbar.vue'
 
 const props = defineProps({
   editor: {
@@ -353,6 +365,18 @@ function setLink() {
     .focus()
     .extendMarkRange('link')
     .setLink({ href: url })
+    .run()
+}
+
+function insertTable() {
+  if (!props.editor) return
+  props.editor.chain()
+    .focus()
+    .insertTable({
+      rows: 3,
+      cols: 3,
+      withHeaderRow: true
+    })
     .run()
 }
 

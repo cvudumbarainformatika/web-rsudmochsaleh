@@ -45,6 +45,11 @@ import CustomImage from '../~editor/extensions/custom-image'
 import { onBeforeUnmount, ref, watch } from 'vue'
 // import { computed } from 'vue'
 
+import Table from '@tiptap/extension-table'
+import TableRow from '@tiptap/extension-table-row'
+import TableHeader from '@tiptap/extension-table-header'
+import TableCell from '@tiptap/extension-table-cell'
+
 const props = defineProps({
   modelValue: {
     type: String,
@@ -71,8 +76,17 @@ const editor = useEditor({
     Color,
     TaskList, TaskItem,
     TextAlign.configure({
-      types: ['heading', 'paragraph']
+      types: ['heading', 'paragraph', 'table']
     }),
+    Table.configure({
+      resizable: true,
+      HTMLAttributes: {
+        class: 'custom-table'
+      }
+    }),
+    TableRow,
+    TableHeader,
+    TableCell,
     Youtube.configure({
       inline: false,
       controls: true,
@@ -150,6 +164,12 @@ onBeforeUnmount(() => {
   editor.value.destroy()
 })
 
+// Tambahkan fungsi untuk membuat tabel
+
+// Expose the editor instance itself instead of individual functions
+defineExpose({
+  editor
+})
 </script>
 
 <style lang="scss">
@@ -328,5 +348,121 @@ ul[data-type="taskList"] {
       flex: 1 1 auto;
     }
   }
+}
+
+.custom-table {
+  border-collapse: collapse;
+  margin: 1rem 0;
+  width: 100%;
+  table-layout: fixed;
+
+  td, th {
+    border: 2px solid $grey-4;
+    padding: 0.75rem;
+    position: relative;
+    min-width: 100px;
+    word-break: break-word;
+
+    &.selectedCell {
+      background-color: rgba($primary, 0.1);
+    }
+  }
+
+  th {
+    background-color: $grey-2;
+    font-weight: bold;
+  }
+
+  .resize-handle {
+    position: absolute;
+    right: -2px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    cursor: col-resize;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: $primary;
+    }
+  }
+}
+
+// Tambahkan style untuk toolbar tabel yang muncul saat tabel aktif
+.table-toolbar {
+  position: absolute;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  padding: 4px;
+  z-index: 10;
+}
+
+/* Styling untuk tabel dalam editor */
+.ProseMirror {
+  table {
+    border-collapse: collapse;
+    margin: 0;
+    width: 100%;
+    overflow: hidden;
+    table-layout: fixed;
+  }
+
+  td, th {
+    min-width: 1em;
+    border: 2px solid #ced4da;
+    padding: 8px;
+    vertical-align: top;
+    box-sizing: border-box;
+    position: relative;
+
+    > * {
+      margin-bottom: 0;
+    }
+  }
+
+  th {
+    font-weight: bold;
+    background-color: #f8f9fa;
+  }
+
+  .selectedCell {
+    background-color: rgba(200, 200, 255, 0.4);
+  }
+
+  /* Styling untuk handle resize kolom */
+  .column-resize-handle {
+    position: absolute;
+    right: -2px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: #adf;
+    cursor: col-resize;
+    user-select: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Tampilkan handle resize saat hover */
+  .ProseMirror-focused .column-resize-handle {
+    opacity: 1;
+  }
+
+  /* Pastikan tabel tidak overflow dari container */
+  .tableWrapper {
+    overflow-x: auto;
+  }
+}
+
+/* Style untuk toolbar tabel */
+.table-toolbar {
+  position: absolute;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  padding: 4px;
 }
 </style>
