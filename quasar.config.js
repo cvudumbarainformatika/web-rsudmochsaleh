@@ -28,6 +28,7 @@ export default configure(function () {
       'axios',
       'global-components',
       'router',
+      'head',
       'main' // pastikan main.js ada di sini
     ],
 
@@ -130,7 +131,14 @@ export default configure(function () {
           algorithm: 'brotli',
           ext: '.br'
         }]
-      ]
+      ],
+      prerender: {
+        routes: [
+          '/',
+          '/beranda',
+          '/berita'
+        ]
+      }
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
@@ -178,22 +186,10 @@ export default configure(function () {
 
     // https://v2.quasar.dev/quasar-cli/developing-ssr/configuring-ssr
     ssr: {
-      // ssrPwaHtmlFilename: 'offline.html', // do NOT use index.html as name!
-      // will mess up SSR
-
-      // extendSSRWebserverConf (esbuildConf) {},
-      // extendPackageJson (json) {},
-
-      pwa: false,
-
-      // manualStoreHydration: true,
-      // manualPostHydrationTrigger: true,
-
-      prodPort: 3000, // The default port that the production server should use
-      // (gets superseded if process.env.PORT is specified at runtime)
-
+      pwa: true,
+      prodPort: 3000,
       middlewares: [
-        'render' // keep this as last one
+        'render'
       ]
     },
 

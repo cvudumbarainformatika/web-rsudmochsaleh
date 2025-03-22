@@ -61,6 +61,12 @@
         name="visibility"
       /> {{ store.views }}
     </div> -->
+    <!-- <script
+      v-once
+      type="application/ld+json"
+    >
+      {{ JSON.stringify(jsonLd) }}
+    </script> -->
   </div>
 </template>
 
@@ -71,6 +77,7 @@ import { useRoute } from 'vue-router'
 import { pathImg } from 'src/boot/axios'
 import { useAppStore } from 'src/stores/app'
 import { dateWeb } from 'src/modules/formatter'
+import { useHead } from '@vueuse/head'
 
 const route = useRoute()
 const store = useBeritaWeb()
@@ -91,6 +98,36 @@ const sharings = ref([
   { network: 'facebook', color: 'blue-8', icon: 'mdi-facebook' },
   { network: 'twitter', color: 'blue', icon: 'mdi-twitter' }
 ])
+
+const jsonLd = computed(() => ({
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: store.judul,
+  image: pathImg + store.image,
+  datePublished: store.tanggal,
+  dateModified: store.created_at,
+  author: {
+    '@type': 'Organization',
+    name: storeApp.header.title
+  }
+}))
+
+useHead({
+  title: store.judul,
+  meta: [
+    { name: 'description', content: store.content.substring(0, 160) },
+    { property: 'og:title', content: store.judul },
+    { property: 'og:description', content: store.content.substring(0, 160) },
+    { property: 'og:image', content: pathImg + store.image },
+    { name: 'twitter:card', content: 'summary_large_image' }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: computed(() => JSON.stringify(jsonLd.value))
+    }
+  ]
+})
 
 // const params = ref({
 //   q: route.query.page || '',

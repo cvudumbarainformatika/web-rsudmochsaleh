@@ -1,4 +1,3 @@
-
 import adminRoutes from './modules/admin.routes'
 import webRoutes from './modules/web.routes'
 import authRoutes from './modules/auth.routes'
@@ -21,7 +20,7 @@ const routes = [
       }
     ]
   },
-  
+
   // Always leave this as last one
   {
     path: '/:catchAll(.*)*',
