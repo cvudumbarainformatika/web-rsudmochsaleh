@@ -25,7 +25,6 @@
               >
                 <q-img
                   :src="pathImg + store.item.thumbnail"
-                  :ratio="16/9"
                   class="featured-image"
                 >
                   <template #loading>

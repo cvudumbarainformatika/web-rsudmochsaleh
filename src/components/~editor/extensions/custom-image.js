@@ -4,10 +4,12 @@ import { mergeAttributes } from '@tiptap/core'
 export default Image.extend({
   name: 'custom-image',
 
-  addOptions: {
-    ...Image.options,
-    sizes: ['small', 'medium', 'large'],
-    pos: ['left', 'middle', 'right']
+  addOptions() {
+    return {
+      ...Image.options,
+      sizes: ['small', 'medium', 'large'],
+      pos: ['left', 'middle', 'right']
+    }
   },
 
   addAttributes() {
@@ -15,13 +17,30 @@ export default Image.extend({
       ...Image.config.addAttributes(),
       size: {
         default: 'small',
-        rendered: false
+        parseHTML: element => element.getAttribute('data-size'),
+        renderHTML: attributes => {
+          if (!attributes.size) {
+            return {}
+          }
+          return {
+            'data-size': attributes.size,
+            class: `custom-image-${attributes.size}`
+          }
+        }
       },
       pos: {
         default: 'left',
-        rendered: false
+        parseHTML: element => element.getAttribute('data-pos'),
+        renderHTML: attributes => {
+          if (!attributes.pos) {
+            return {}
+          }
+          return {
+            'data-pos': attributes.pos,
+            class: `custom-image-${attributes.pos}`
+          }
+        }
       }
-
     }
   },
 
@@ -128,13 +147,13 @@ export default Image.extend({
   },
 
   renderHTML({ node, HTMLAttributes }) {
-    // When we render the HTML, grab the
-    // size and add an appropriate
-    // corresponding class
+    const { size, pos } = node.attrs
+    const classes = []
 
-    const size = node.attrs.size
-    const pos = node.attrs.pos
-    HTMLAttributes.class = ' custom-image-' + size + ' custom-image-' + pos
+    if (size) classes.push(`custom-image-${size}`)
+    if (pos) classes.push(`custom-image-${pos}`)
+
+    HTMLAttributes.class = classes.join(' ')
 
     return [
       'img',
