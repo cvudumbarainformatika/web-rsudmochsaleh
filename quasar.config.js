@@ -136,7 +136,11 @@ export default configure(function () {
         routes: [
           '/',
           '/beranda',
-          '/berita'
+          '/berita',
+          '/pelayanan',
+          '/profil',
+          '/ppid',
+          '/pokja'
         ]
       }
     },

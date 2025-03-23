@@ -126,7 +126,7 @@ const getPositionIcon = (position) => {
     }
 
     &.active {
-      background: linear-gradient(145deg, var(--q-primary) 0%, darken($primary, 10%) 100%);
+      background: linear-gradient(145deg, var(--q-primary) 0%, color-mix(in srgb, var(--q-primary), black 10%) 100%);
       color: white;
       box-shadow:
         0 2px 4px rgba(0,0,0,0.1),

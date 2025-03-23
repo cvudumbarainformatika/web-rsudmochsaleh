@@ -85,7 +85,10 @@
 import { useAppStore } from 'src/stores/app'
 import { defineAsyncComponent, ref, onMounted, onBeforeUnmount } from 'vue'
 import { scroll, date } from 'quasar'
+import { useSeo } from 'src/composables/useSeo'
 const { getScrollTarget, setVerticalScrollPosition } = scroll
+
+useSeo()
 
 const HeaderWeb = defineAsyncComponent(() => import('src/components/~web/components/FuturisticHeader.vue'))
 const AppFooter = defineAsyncComponent(() => import('src/components/~global/AppFooter.vue'))
