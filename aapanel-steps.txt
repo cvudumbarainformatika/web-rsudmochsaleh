@@ -1,0 +1,36 @@
+1. Buat Website Baru di AA Panel:
+   - Pilih "Website"
+   - Klik "Add Site"
+   - Masukkan domain (misalnya rsudmochsaleh.my.id)
+   - Pilih PHP Version: Pure Static
+   - Create
+
+2. Setup Node.js:
+   - Ke menu "App Store"
+   - Cari dan install "PM2 Manager"
+   - Install Node.js versi yang sesuai (rekomendasi v18.x)
+
+3. Setup direktori:
+   - Buka File Manager
+   - Buka folder website Anda (biasanya di /www/wwwroot/rsudmochsaleh.my.id/)
+   - Upload semua isi folder dist/ssr dari local ke server
+   - Pastikan struktur folder seperti ini:
+     /www/wwwroot/rsudmochsaleh.my.id/
+     ├── client/
+     ├── webserver/
+     └── index.js
+
+4. Setup PM2:
+   - Buka terminal di AA Panel
+   - Masuk ke direktori website:
+     cd /www/wwwroot/rsudmochsaleh.my.id/
+   - Install dependencies:
+     npm install
+   - Start aplikasi dengan PM2:
+     pm2 start index.js --name "rsud-mochsaleh"
+
+5. Setup Nginx:
+   - Di AA Panel, buka "Website"
+   - Klik icon konfigurasi (gear icon) di samping domain
+   - Pilih "Configure"
+   - Ganti konfigurasi dengan:

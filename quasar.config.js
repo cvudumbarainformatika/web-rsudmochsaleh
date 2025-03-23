@@ -188,14 +188,25 @@ export default configure(function () {
     ssr: {
       pwa: true,
       prodPort: 3000,
-      middlewares: [
-        'render'
-      ]
+      maxAge: 1000 * 60 * 60 * 24, // Cache selama 24 jam
+      middlewares: ['render'],
+
+      // Tambahkan optimasi memori
+      serverMemoryLimit: 256, // Batasi penggunaan memori server (dalam MB)
+
+      // Aktifkan kompresi
+      compression: true,
+
+      // Batasi jumlah concurrent requests
+      throttleRequests: {
+        maxRequests: 25,
+        timeWindow: 1000
+      }
     },
 
     // https://v2.quasar.dev/quasar-cli/developing-pwa/configuring-pwa
     pwa: {
-      workboxMode: 'generateSW', // or 'injectManifest'
+      workboxMode: 'GenerateSW', // Diubah dari 'generateSW' menjadi 'GenerateSW'
       injectPwaMetaTags: true,
       swFilename: 'sw.js',
       manifestFilename: 'manifest.json',
@@ -205,8 +216,7 @@ export default configure(function () {
         skipWaiting: true,
         clientsClaim: true,
         runtimeCaching: [{
-          // eslint-disable-next-line prefer-regex-literals
-          urlPattern: new RegExp('^https://rsudmochsaleh.my.id/api'),
+          urlPattern: /^https:\/\/rsudmochsaleh\.my\.id\/api/, // Menggunakan regex literal
           handler: 'NetworkFirst'
         }]
       }
@@ -247,7 +257,7 @@ export default configure(function () {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'RSUD-MochSaleh'
+        appId: 'RSUD-MohSaleh'
       }
     },
 
