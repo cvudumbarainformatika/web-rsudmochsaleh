@@ -8,6 +8,7 @@
             :src="logo"
             width="200px"
             class="cursor-pointer"
+            alt="logo rsud mohamad saleh"
             @click="$router.push('/')"
           />
         </div>

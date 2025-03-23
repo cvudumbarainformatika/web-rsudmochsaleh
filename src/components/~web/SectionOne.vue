@@ -207,6 +207,7 @@
             img-class="my-custom-image"
             class="my-pict-style"
             :ratio="1"
+            alt="gambar sectrion one rsud dr mohamad saleh"
           >
             <div
               v-if="admin"

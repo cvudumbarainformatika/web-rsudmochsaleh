@@ -43,7 +43,10 @@
           size="56px"
           class="q-mb-md text-center"
         >
-          <img :src="logo">
+          <img
+            :src="logo"
+            alt="logo rsud mohamad saleh"
+          >
         </q-avatar>
         <div class="f-8 text-weight-bold">
           {{ title }}

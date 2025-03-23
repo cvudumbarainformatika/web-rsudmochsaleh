@@ -67,6 +67,7 @@
       src="https://cdn.quasar.dev/img/parallax2.jpg"
       :ratio="16/9"
       class="rounded-borders"
+      alt="gambar thumbnail rsud dr mohamad saleh"
     />
 
     <div class="desc-image text-grey">

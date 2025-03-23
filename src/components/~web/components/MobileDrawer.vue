@@ -14,6 +14,7 @@
             :src="logo"
             width="150px"
             class="cursor-pointer"
+            alt="logo rsud mohamad saleh"
             @click="$router.push('/')"
           />
         </q-item>

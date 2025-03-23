@@ -26,6 +26,7 @@
                 <q-img
                   :src="pathImg + store.item.thumbnail"
                   class="featured-image"
+                  alt="gambar thumbnail rsud dr mohamad saleh"
                 >
                   <template #loading>
                     <div class="text-center full-width full-height">

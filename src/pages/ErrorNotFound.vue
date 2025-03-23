@@ -6,6 +6,7 @@
         fit="fill"
         width="250px"
         class="cursor-pointer"
+        alt="gambar rsud dr mohamad saleh"
       />
       <div
         class="text-weight-thin"

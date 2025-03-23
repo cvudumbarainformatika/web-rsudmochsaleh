@@ -9,6 +9,7 @@
       :src="pathImg + item.thumbnail"
       :ratio="16/9"
       fit="cover"
+      alt="gambar thumbnail rsud dr mohamad saleh"
     />
     <q-card-section>
       <q-item-label

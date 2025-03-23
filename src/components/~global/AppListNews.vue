@@ -26,6 +26,7 @@
                 :ratio="1"
                 fit="cover"
                 class="rounded-borders"
+                alt="gambar thumbnail rsud dr mohamad saleh"
               />
             </q-avatar>
           </q-item-section>

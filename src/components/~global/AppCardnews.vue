@@ -10,6 +10,7 @@
     <q-img
       :src="pathImg + bigCardNews.thumbnail"
       :ratio="16/9"
+      alt="gambar thumbnail rsud dr mohamad saleh"
     />
     <q-card-section>
       <div class="f-20 text-weight-bold">

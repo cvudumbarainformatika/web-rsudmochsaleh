@@ -81,6 +81,7 @@
                           :ratio="16/9"
                           fit="cover"
                           :src="file.__img.src"
+                          alt="gambar thumbnail rsud dr mohamad saleh"
                         >
                           <div class="absolute-bottom">
                             <div class="f-12 ellipsis">
@@ -151,6 +152,7 @@
                     round
                     :ratio="16/9"
                     :src="pathImg +'gallery/'+ item.original"
+                    alt="gambar thumbnail rsud dr mohamad saleh"
                   />
                   <q-card-section
                     class="q-pa-xs"

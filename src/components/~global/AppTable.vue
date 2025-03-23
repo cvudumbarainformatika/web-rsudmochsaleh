@@ -235,28 +235,28 @@
       </thead>
       <tbody v-if="!loading">
         <tr v-if="!items.length > 0">
-          <transition
+          <!-- <transition
             transition-show="fade"
             transition-hide="fade"
-          >
-            <td :colspan="rowImage === null? filterColumn.length + 2 : filterColumn.length + 3">
-              <div
-                class="flex column flex-center bg-loading-bg__table"
-                style="height:300px"
-              >
-                <div>
-                  <q-icon
-                    name="icon-mat-receipt_long"
-                    color="primary"
-                    size="60px"
-                  />
-                </div>
-                <div class="text-primary q-mt-sm">
-                  Data Belum Ada
-                </div>
+          > -->
+          <td :colspan="rowImage === null? filterColumn.length + 2 : filterColumn.length + 3">
+            <div
+              class="flex column flex-center bg-loading-bg__table"
+              style="height:300px"
+            >
+              <div>
+                <q-icon
+                  name="icon-mat-receipt_long"
+                  color="primary"
+                  size="60px"
+                />
               </div>
-            </td>
-          </transition>
+              <div class="text-primary q-mt-sm">
+                Data Belum Ada
+              </div>
+            </div>
+          </td>
+          <!-- </transition> -->
         </tr>
         <tr
           v-for="(item, i) in items"
@@ -278,7 +278,10 @@
             class="text-left"
           >
             <q-avatar size="30px">
-              <img src="~assets/images/user-avatar.svg">
+              <img
+                src="~assets/images/user-avatar.svg"
+                alt="avatar user"
+              >
             </q-avatar>
           </td>
           <td

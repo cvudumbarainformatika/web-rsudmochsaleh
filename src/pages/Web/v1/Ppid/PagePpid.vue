@@ -63,6 +63,7 @@
             <div class="q-py-md">
               <q-img
                 :src="pathImg + item.thumbnail"
+                alt="thumbnail Rsud dr mohamad saleh"
               />
             </div>
           </div>

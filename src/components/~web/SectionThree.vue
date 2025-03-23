@@ -26,6 +26,7 @@
               :src="sourceImage(item.image)"
               :ratio="1"
               class="staff-image"
+              alt="gambar direksi rsud dr mohamad saleh"
             >
               <template #loading>
                 <div class="text-center full-width full-height">

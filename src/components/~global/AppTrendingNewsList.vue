@@ -15,6 +15,7 @@
             :src="pathImg + item.thumbnail"
             :ratio="16/9"
             class="rounded-image"
+            alt="gambar thumbnail rsud dr mohamad saleh"
           >
             <template #loading>
               <div class="text-center full-width full-height">

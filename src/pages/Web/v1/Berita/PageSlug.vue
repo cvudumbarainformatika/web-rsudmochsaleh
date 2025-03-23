@@ -8,7 +8,10 @@
         <div class="row items-center">
           <q-btn round>
             <q-avatar size="40px">
-              <img :src="logo">
+              <img
+                :src="logo"
+                alt="logo-rsudmohamadsaleh"
+              >
             </q-avatar>
           </q-btn>
           <div class="column q-ml-sm">
@@ -46,6 +49,7 @@
       <div>
         <q-img
           class="rounded-borders"
+          alt="gambar thumbnail rsud dr mohamad saleh"
           :src="pathImg + store.thumbnail"
         />
       </div>

@@ -16,6 +16,7 @@
             >
               <q-img
                 :src="pathImg + store?.item?.thumbnail"
+                alt="thumbnail Rsud dr mohamad saleh"
               />
             </div>
           </div>

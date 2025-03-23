@@ -31,6 +31,7 @@
                 fit="cover"
                 loading="eager"
                 class="carousel-image"
+                alt="gambar carousel rsud dr mohamad saleh"
               >
                 <template #loading>
                   <q-skeleton type="QToolbar" />

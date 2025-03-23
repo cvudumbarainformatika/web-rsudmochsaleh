@@ -9,6 +9,7 @@
     >
       <template #media>
         <img
+          alt="media banner rsud mohamad saleh"
           :src="image"
         >
         <div

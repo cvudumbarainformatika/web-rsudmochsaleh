@@ -1,4 +1,3 @@
-
 <template>
   <div
     class="cont"
@@ -33,7 +32,7 @@
         <div class="app__text-line app__text-line--1">
           <img
             src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/537051/opus-attachment.png"
-            alt=""
+            alt="rsud"
           >
         </div>
       </div>
@@ -51,7 +50,7 @@
         <div class="app__text-line app__text-line--1">
           <img
             src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/537051/opus-attachment.png"
-            alt=""
+            alt="xxx"
           >
         </div>
       </div>
