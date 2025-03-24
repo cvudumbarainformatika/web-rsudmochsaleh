@@ -84,16 +84,28 @@
             </div>
             <div
               class="cursor-pointer"
-              @click="goToLink('https://probolinggokota.go.id/')"
+              @click="goToLink('https://probolinggokota.go.id')"
             >
               Kota Probolinggo
             </div>
             <div
               class="cursor-pointer"
-              @click="goToLink('https://dlh.probolinggokota.go.id/')"
+              @click="goToLink('https://diskominfo.probolinggokota.go.id')"
             >
-              Dinas Lingkungan Hidup Kota Probolinggo
+              Diskominfo
             </div>
+            <div
+              class="cursor-pointer"
+              @click="goToLink('https://www.lapor.go.id/')"
+            >
+              LAPOR.GO.ID
+            </div>
+            <!-- <div
+              class="cursor-pointer"
+              @click="goToLink('https://satudata.probolinggokota.go.id')"
+            >
+              Satu Data
+            </div> -->
           </div>
         </div>
 
