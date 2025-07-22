@@ -1,6 +1,6 @@
 <template>
   <div class="futuristic-page">
-    <app-loading-new v-if="store.loading" />
+    <app-loading v-if="store.loading" />
 
     <!-- Hero Section -->
     <div class="hero-section">

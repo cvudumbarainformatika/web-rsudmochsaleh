@@ -1,50 +1,50 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <!-- Header selalu full width untuk background -->
-    <header-web :fixed="store.visible" />
+    <AppClientOnly>
+      <FuturisticHeader />
+      <!-- Main content dengan max-width yang lebih besar -->
 
-    <!-- DateTime Block -->
-    <div
-      v-if="!$q.platform.is.server"
-      class="datetime-block"
-    >
-      <div class="datetime-container">
-        <div class="time">
-          {{ currentTime }}
-          <span class="seconds">{{ seconds }}</span>
-        </div>
-        <div class="date">
-          {{ currentDate }}
+      <!-- DateTime Block -->
+      <div
+        class="datetime-block"
+      >
+        <div class="datetime-container">
+          <div class="time">
+            {{ currentTime }}
+            <span class="seconds">{{ seconds }}</span>
+          </div>
+          <div class="date">
+            {{ currentDate }}
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Social Media Floating Buttons -->
-    <div
-      v-if="!$q.platform.is.server"
-      class="social-float"
-    >
-      <q-btn
-        v-for="(social, index) in socials"
-        :key="social.icon"
-        round
-        :style="{
-          transform: `translateY(${store.visible ? '0' : '100'}px)`,
-          transition: `all 0.3s ease ${index * 0.1}s`
-        }"
-        class="social-btn q-mb-sm"
-        :color="social.color"
-        :icon="social.icon"
-        :href="store.header[social.link]"
-        target="_blank"
+      <!-- Social Media Floating Buttons -->
+
+      <div
+        class="social-float"
       >
-        <q-tooltip>
-          {{ social.name }}
-        </q-tooltip>
-      </q-btn>
-    </div>
+        <q-btn
+          v-for="(social, index) in socials"
+          :key="social.icon"
+          round
+          :style="{
+            transform: `translateY(${store.visible ? '0' : '100'}px)`,
+            transition: `all 0.3s ease ${index * 0.1}s`
+          }"
+          class="social-btn q-mb-sm"
+          :color="social.color"
+          :icon="social.icon"
+          :href="store.header[social.link]"
+          target="_blank"
+        >
+          <q-tooltip>
+            {{ social.name }}
+          </q-tooltip>
+        </q-btn>
+      </div>
+    </AppClientOnly>
 
-    <!-- Main content dengan max-width yang lebih besar -->
     <q-page-container
       v-scroll="onScroll"
       class="q-px-none"
@@ -66,7 +66,6 @@
         leave-active-class="animated fadeOut"
       >
         <q-page-sticky
-          v-if="store.btnScrollTop"
           position="bottom-right"
           :offset="[30, 30]"
           style="z-index: 100;"
@@ -81,31 +80,37 @@
         </q-page-sticky>
       </transition>
     </q-page-container>
-
     <!-- Footer juga full width untuk background -->
-    <app-footer />
+    <AppClientOnly>
+      <app-footer />
+    </AppClientOnly>
   </q-layout>
 </template>
 
 <script setup>
+import { onMounted, ref, onBeforeUnmount } from 'vue'
 import { useAppStore } from 'src/stores/app'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { scroll, date, useQuasar } from 'quasar'
-
-import HeaderWeb from 'src/components/~web/components/FuturisticHeader.vue'
+import AppClientOnly from 'src/components/~global/AppClientOnly.vue'
+import FuturisticHeader from 'src/components/~web/components/FuturisticHeader.vue'
 import AppFooter from 'src/components/~global/AppFooter.vue'
+// eslint-disable-next-line no-unused-vars
+import { date, useQuasar, scroll } from 'quasar'
 
-// import { useSeo } from 'src/composables/useSeo'
+// eslint-disable-next-line no-unused-vars
 const { getScrollTarget, setVerticalScrollPosition } = scroll
+// const $q = useQuasar()
+// eslint-disable-next-line no-unused-vars
+let store
 
-const $q = useQuasar()
+if (process.env.CLIENT) {
+  store = useAppStore()
 
-// useSeo()
-
-// HeaderWeb = defineAsyncComponent(() => import('src/components/~web/components/FuturisticHeader.vue'))
-// AppFooter = defineAsyncComponent(() => import('src/components/~global/AppFooter.vue'))
-
-const store = useAppStore()
+  onMounted(() => {
+    // misal kamu butuh akses state atau jalankan aksi
+    // store.loadSomething()
+    console.log('store', store)
+  })
+}
 
 const currentTime = ref('')
 const seconds = ref('')
@@ -144,6 +149,7 @@ if (process.client) {
   })
 }
 
+// eslint-disable-next-line no-unused-vars
 const socials = ref([
   { name: 'Facebook', icon: 'ti-facebook', color: 'blue-7', link: 'link_fb' },
   { name: 'Instagram', icon: 'ti-instagram', color: 'purple-5', link: 'link_instagram' },
@@ -152,14 +158,14 @@ const socials = ref([
 ])
 
 const onScroll = (info) => {
-  if (!process.client) return
+  if (!process.env.CLIENT) return
   const moveToY = info
   store.changeVisible(moveToY > 175)
   store.setBtnScrollTop(moveToY > 200)
 }
 
 const scrollToElement = () => {
-  if (!process.client) return
+  if (!process.env.CLIENT) return
   try {
     const el = document.getElementById('top')
     if (el) {

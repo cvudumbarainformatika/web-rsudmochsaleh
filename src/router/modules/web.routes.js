@@ -1,13 +1,13 @@
 export default {
   path: '/',
-  component: () => import('layouts/Web/WebLayout.vue'),
+  component: () => import('layouts/Web/WebSsrLayout.vue'),
   meta: { requireAuth: false },
   children: [
     { path: '', redirect: '/beranda' },
     {
       path: '/beranda',
       name: 'beranda',
-      component: () => import(/* webpackChunkName: "web.home" */'pages/Web/v1/Home/IndexPage.vue'),
+      component: () => import('pages/Web/v1/Home/IndexPage.vue'),
       meta: {
         title: 'Beranda - RSUD Moh Saleh',
         metaTags: [

@@ -2,7 +2,7 @@
 
 import { configure } from 'quasar/wrappers'
 import {
-  presetWind, // Ganti presetUno dengan presetWind
+  presetWind,
   presetAttributify,
   presetIcons,
   presetTypography,
@@ -13,47 +13,33 @@ import viteCompression from 'vite-plugin-compression'
 
 export default configure(function () {
   return {
+    // === ESLint ===
     eslint: {
       warnings: true,
       errors: true
     },
 
-    // https://v2.quasar.dev/quasar-cli/prefetch-feature
-    // preFetch: true,
-
-    // app boot file (/src/boot)
-    // --> boot files are part of "main.js"
-    // https://v2.quasar.dev/quasar-cli/boot-files
+    // === Boot Files ===
     boot: [
-      // 'axios',
       { path: 'axios', server: false },
-      { path: 'global-components', server: false }, // Hanya di klien
+      { path: 'global-components', server: true },
+      // 'global-components',
       'router',
       'head',
-      // 'main' // pastikan main.js ada di sini
-      { path: 'main', server: false } // H
+      { path: 'main', server: false }
     ],
 
-    // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
-    css: [
-      'app.scss'
-    ],
+    // === CSS Files ===
+    css: ['app.scss'],
 
-    // https://github.com/quasarframework/quasar/tree/dev/extras
+    // === Extra Icons ===
     extras: [
-      // 'ionicons-v4',
       'mdi-v5',
-      // 'fontawesome-v6',
-      // 'eva-icons',
       'themify',
-      // 'line-awesome',
-      // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
-
-      // 'roboto-font', // optional, you are not bound to it
-      'material-icons' // optional, you are not bound to it
+      'material-icons'
     ],
 
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
+    // === Build Options ===
     build: {
       target: {
         browser: ['es2022', 'edge118', 'firefox115', 'chrome115', 'safari16'],
@@ -67,6 +53,9 @@ export default configure(function () {
           pure_funcs: ['console.log', 'console.info', 'console.debug']
         }
       },
+      vueRouterMode: 'history',
+
+      // Custom chunking
       rollupOptions: {
         output: {
           manualChunks: {
@@ -77,32 +66,15 @@ export default configure(function () {
           }
         }
       },
-      vueRouterMode: 'history', // available values: 'hash', 'history'
-      // vueRouterBase,
-      // vueDevtools,
-      // vueOptionsAPI: false,
 
-      // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
-
-      // publicPath: '/',
-      // analyze: true,
-      // env: {},
-      // rawDefine: {}
-      // ignorePublicFolder: true,
-      // minify: false,
-      // polyfillModulePreload: true,
-      // distDir
-
-      // extendViteConf (viteConf) {},
-      // viteVuePluginOptions: {},
-
+      // Vite Plugins
       vitePlugins: [
         ['unocss/vite', {
           presets: [
-            presetWind(), // Gunakan presetWind sebagai pengganti presetUno
+            presetWind(),
             presetAttributify({
               prefix: 'un-',
-              prefixedOnly: true // Hanya aktifkan class dengan prefix un-
+              prefixedOnly: true
             }),
             presetIcons({
               scale: 1.2,
@@ -115,7 +87,6 @@ export default configure(function () {
             transformerDirectives()
           ],
           shortcuts: {
-            // Custom shortcuts untuk header futuristik
             'nav-link': 'px-4 py-2 rounded-lg text-gray-300 hover:text-cyan-400 hover:bg-gray-700/50 transition-all duration-200 ease-in-out',
             'dropdown-item': 'block px-4 py-2 text-sm text-gray-300 hover:text-cyan-400 hover:bg-gray-700/50',
             btn: 'py-2 px-4 font-semibold rounded-lg shadow-md',
@@ -130,10 +101,14 @@ export default configure(function () {
           ]
         }],
         [viteCompression, {
-          algorithm: 'brotli',
-          ext: '.br'
+          algorithm: 'brotliCompress',
+          ext: '.br',
+          threshold: 10240,
+          deleteOriginFile: false
         }]
       ],
+
+      // Prerender routes (optional, for SEO)
       prerender: {
         routes: [
           '/',
@@ -147,134 +122,84 @@ export default configure(function () {
       }
     },
 
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
+    // === Dev Server ===
     devServer: {
       port: 9001,
-      open: true // opens browser window automatically
+      open: true
     },
 
-    // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
+    // === Quasar Framework Config ===
     framework: {
       config: {
         dark: true
       },
-
-      // iconSet: 'material-icons', // Quasar icon set
-      // lang: 'en-US', // Quasar language pack
-
-      // For special cases outside of where the auto-import strategy can have an impact
-      // (like functional components as one of the examples),
-      // you can manually specify Quasar components/directives to be available everywhere:
-      //
-      // components: [],
-      // directives: [],
-
-      // Quasar plugins
-      // plugins: []
-      plugins: ['Notify', 'LocalStorage', 'Dialog', 'Loading', 'AppFullscreen']
+      plugins: [
+        'Notify',
+        'LocalStorage',
+        'Dialog',
+        'Loading',
+        'AppFullscreen'
+      ]
     },
 
-    animations: 'all', // --- includes all animations
-    // https://v2.quasar.dev/options/animations
-    // animations: [],
+    // === Animations ===
+    animations: 'all',
 
-    // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#property-sourcefiles
-    // sourceFiles: {
-    //   rootComponent: 'src/App.vue',
-    //   router: 'src/router/index',
-    //   store: 'src/store/index',
-    //   registerServiceWorker: 'src-pwa/register-service-worker',
-    //   serviceWorker: 'src-pwa/custom-service-worker',
-    //   pwaManifestFile: 'src-pwa/manifest.json',
-    //   electronMain: 'src-electron/electron-main',
-    //   electronPreload: 'src-electron/electron-preload'
-    // },
-
-    // https://v2.quasar.dev/quasar-cli/developing-ssr/configuring-ssr
+    // === SSR Mode ===
     ssr: {
-      pwa: true,
+      pwa: false,
       prodPort: 3000,
-      maxAge: 1000 * 60 * 60 * 24, // Cache selama 24 jam
-      middlewares: ['render'],
-
-      // Tambahkan optimasi memori
-      serverMemoryLimit: 256, // Batasi penggunaan memori server (dalam MB)
-
-      // Aktifkan kompresi
-      compression: true,
-
-      // Batasi jumlah concurrent requests
-      throttleRequests: {
-        maxRequests: 25,
-        timeWindow: 1000
-      }
+      maxAge: 1000 * 60 * 60 * 24, // 24 jam cache control
+      middlewares: ['render'], // urutan penting: render harus terakhir
+      serverMemoryLimit: 256, // Limit RAM untuk render SSR (MB)
+      compression: true, // Gzip bawaan express
+      manualHydration: true, // Hindari hydration mismatch
+      external: ['lottie-web']
+      // throttleRequests: {
+      //   maxRequests: 25,
+      //   timeWindow: 1000
+      // }
     },
 
-    // https://v2.quasar.dev/quasar-cli/developing-pwa/configuring-pwa
+    // === PWA (Jika dibutuhkan nanti) ===
     pwa: {
-      workboxMode: 'GenerateSW', // Diubah dari 'generateSW' menjadi 'GenerateSW'
+      workboxMode: 'GenerateSW',
       injectPwaMetaTags: true,
       swFilename: 'sw.js',
       manifestFilename: 'manifest.json',
       useCredentialsForManifestTag: false,
-      // Optimize caching
       workboxOptions: {
         skipWaiting: true,
         clientsClaim: true,
-        runtimeCaching: [{
-          urlPattern: /^https:\/\/rsudmochsaleh\.my\.id\/api/, // Menggunakan regex literal
-          handler: 'NetworkFirst'
-        }]
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/rsudmochsaleh\.my\.id\/api/,
+            handler: 'NetworkFirst'
+          }
+        ]
       }
     },
 
-    // Full list of options: https://v2.quasar.dev/quasar-cli/developing-cordova-apps/configuring-cordova
-    cordova: {
-      // noIosLegacyBuildFlag: true, // uncomment only if you know what you are doing
-    },
-
-    // Full list of options: https://v2.quasar.dev/quasar-cli/developing-capacitor-apps/configuring-capacitor
+    // === Capacitor Mobile App ===
     capacitor: {
       hideSplashscreen: true
     },
 
-    // Full list of options: https://v2.quasar.dev/quasar-cli/developing-electron-apps/configuring-electron
+    // === Electron App ===
     electron: {
-      // extendElectronMainConf (esbuildConf)
-      // extendElectronPreloadConf (esbuildConf)
-
       inspectPort: 5858,
-
-      bundler: 'packager', // 'packager' or 'builder'
-
+      bundler: 'packager',
       packager: {
-        // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
-
-        // OS X / Mac App Store
-        // appBundleId: '',
-        // appCategoryType: '',
-        // osxSign: '',
-        // protocol: 'myapp://path',
-
-        // Windows only
-        // win32metadata: { ... }
+        // Konfigurasi opsional untuk mac/windows
       },
-
       builder: {
-        // https://www.electron.build/configuration/configuration
-
         appId: 'RSUD-MohSaleh'
       }
     },
 
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex
+    // === Browser Extension (BEX) ===
     bex: {
-      contentScripts: [
-        'my-content-script'
-      ]
-
-      // extendBexScriptsConf (esbuildConf) {}
-      // extendBexManifestJson (json) {}
+      contentScripts: ['my-content-script']
     }
   }
 })

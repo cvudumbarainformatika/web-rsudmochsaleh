@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-loading-new v-if="store.loading" />
+    <app-loading v-if="store.loading" />
     <div class="q-my-xl">
       <app-text-judul :judul="store.item? store.item.nama:''" />
       <q-separator />

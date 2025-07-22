@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <app-loading-new v-if="store.loading" />
+    <app-loading v-if="store.loading" />
     <!-- <TabPokja
       v-model="store.tab"
       :items="store.menus"

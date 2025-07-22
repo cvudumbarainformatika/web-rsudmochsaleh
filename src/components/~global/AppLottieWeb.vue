@@ -4,19 +4,27 @@
     class="lottie-container"
     :style="containerStyle"
   >
-    <Vue3Lottie
-      ref="anim"
-      :animationLink="getJson()"
-      :height="height"
-      :width="width"
-      :style="lottieStyle"
-    />
+    <AppClientOnly>
+      <Vue3Lottie
+        ref="anim"
+        :animationLink="getJson()"
+        :height="height"
+        :width="width"
+        :style="lottieStyle"
+      />
+    </AppClientOnly>
   </div>
 </template>
 <script setup>
-import { Vue3Lottie } from 'vue3-lottie'
+// import { Vue3Lottie } from 'vue3-lottie'
 import { pathImg } from 'src/boot/axios'
-import { watch, ref, computed } from 'vue'
+import { watch, ref, computed, defineAsyncComponent, onMounted } from 'vue'
+
+const Vue3Lottie = process.env.SERVER
+  ? null
+  : defineAsyncComponent(() =>
+    import('vue3-lottie').then(m => m.Vue3Lottie)
+  )
 
 const props = defineProps({
   url: {
@@ -39,6 +47,11 @@ const props = defineProps({
 
 const anim = ref(null)
 
+onMounted(() => {
+  // console.log('SSR:', process.env.SERVER)
+  // console.log('Vue3Lottie:', Vue3Lottie)
+})
+
 const containerStyle = computed(() => ({
   height: `${props.height}px`,
   width: props.width ? `${props.width}px` : '100%',
@@ -57,11 +70,15 @@ const lottieStyle = computed(() => ({
 }))
 
 function getJson() {
-  const file = props.url
-  if (!file) {
-    return new URL('../../assets/lottie/123408-image-not-preview.json', import.meta.url).href
+  try {
+    const file = props.url
+    if (!file) {
+      return new URL('../../assets/lottie/123408-image-not-preview.json', import.meta.url).href
+    }
+    return pathImg + 'lottie/' + file
+  } catch (error) {
+    console.log('error lottie url', error)
   }
-  return pathImg + 'lottie/' + file
 }
 
 watch(() => props.url, (newUrl) => {

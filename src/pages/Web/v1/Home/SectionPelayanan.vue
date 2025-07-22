@@ -29,6 +29,7 @@
               :height="280"
               class="service-animation"
             />
+            <!-- {{ row }} -->
             <div class="animation-overlay" />
           </div>
         </template>
@@ -94,6 +95,9 @@ import { usePelayananWeb } from 'src/stores/web/pelayanan'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
+
+import AppSplide from 'src/components/~global/AppSplide.vue'
+import AppLottieWeb from 'src/components/~global/AppLottieWeb.vue'
 
 const $q = useQuasar()
 const router = useRouter()

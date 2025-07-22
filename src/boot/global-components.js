@@ -1,4 +1,4 @@
-// // vite
+// vite
 
 // import _ from 'lodash'
 
@@ -15,7 +15,7 @@
 //   })
 // }
 
-// src/boot/global.js
+// src/boot/global-components.js
 import _ from 'lodash'
 
 export default async ({ app }) => {

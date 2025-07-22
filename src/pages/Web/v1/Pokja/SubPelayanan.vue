@@ -3,7 +3,7 @@
     <Suspense>
       <PageSubmenu />
       <template #fallback>
-        <app-loading-new />
+        <app-loading />
       </template>
     </Suspense>
   </q-page>

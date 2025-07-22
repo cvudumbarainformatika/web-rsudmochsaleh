@@ -3,17 +3,17 @@
     <Suspense>
       <HomePage />
       <template #fallback>
-        <app-loading-new />
+        <AppLoading />
       </template>
     </Suspense>
-    <!-- <app-loading /> -->
   </q-page>
 </template>
 
 <script setup>
-import { defineAsyncComponent } from 'vue'
+// import { defineAsyncComponent } from 'vue'
+import AppLoading from 'src/components/~global/AppLoading.vue'
+import HomePage from './HomePage.vue'
 
-const HomePage = defineAsyncComponent(() => import('./HomePage.vue'/* webpackChunkName: "HomePage" */))
 </script>
 
 <style lang="scss" scoped>

@@ -38,12 +38,12 @@
                 </template>
               </q-img>
             </template>
-            <app-lottie-web
+            <!-- <app-lottie-web
               v-else
               :url="img.animation"
               :height="height"
               class="carousel-animation"
-            />
+            /> -->
           </div>
 
           <!-- Caption Overlay -->

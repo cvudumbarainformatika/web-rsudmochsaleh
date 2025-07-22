@@ -335,9 +335,9 @@ const isHoveringDropdown = ref(false)
 const isHoveringParentItem = ref(false)
 
 const navigateTo = (href, item, parentItem) => {
-  console.log('Navigating to:', href, item, parentItem)
-  console.log('item:', item)
-  console.log('parentItem:', parentItem)
+  // console.log('Navigating to:', href, item, parentItem)
+  // console.log('item:', item)
+  // console.log('parentItem:', parentItem)
   if (href.startsWith('/')) {
     router.push(href)
     if (parentItem?.label === 'Profil') {
@@ -352,7 +352,9 @@ const navigateTo = (href, item, parentItem) => {
       storePelayanan.setTab(item?.label)
     }
   } else {
-    window.location.href = href
+    if (process.env.CLIENT) {
+      window.location.href = href
+    }
   }
   mobileMenuOpen.value = false
   activeDropdown.value = null

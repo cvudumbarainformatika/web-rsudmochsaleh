@@ -1,6 +1,6 @@
 <template>
   <q-page class="news-page">
-    <app-loading-new v-if="store.loading" />
+    <app-loading v-if="store.loading" />
     <div v-else>
       <!-- Hero Section -->
       <section class="hero-section">
