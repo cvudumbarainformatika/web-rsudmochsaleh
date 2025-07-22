@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <AppClientOnly>
-      <FuturisticHeader />
+      <FuturisticHeader :fixed="store.visible" />
       <!-- Main content dengan max-width yang lebih besar -->
 
       <!-- DateTime Block -->
@@ -58,7 +58,9 @@
           max-w-[1280px]
         "
       >
-        <router-view />
+        <AppClientOnly>
+          <router-view />
+        </AppClientOnly>
       </div>
       <transition
         appear

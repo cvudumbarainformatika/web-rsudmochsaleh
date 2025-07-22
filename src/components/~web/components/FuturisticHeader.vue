@@ -417,7 +417,7 @@ const handleDropdownMouseLeave = (index) => {
 
 // Tambahkan watch untuk memonitor perubahan
 watch(hoveredSubmenu, (newVal) => {
-  console.log('watch:', newVal)
+  // console.log('watch:', newVal)
 })
 
 // ini untuk desktop
@@ -527,8 +527,8 @@ const handleRouteAwal = () => {
   // const paramsPage = route?.params?.page
 
   if (!noSub) { // jika tidak ada submenu
-    console.log('page tanpa submenu', noSub, fullPath, page)
-    console.log('page tanpa submenu route', fullPath)
+    // console.log('page tanpa submenu', noSub, fullPath, page)
+    // console.log('page tanpa submenu route', fullPath)
     if (page === '/ppid') {
       handlePpidMenu(fullPath)
     }

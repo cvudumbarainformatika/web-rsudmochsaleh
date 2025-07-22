@@ -21,7 +21,6 @@
 
     <!-- Social Media Floating Buttons -->
     <div
-      v-if="!$q.platform.is.server"
       class="social-float"
     >
       <q-btn
