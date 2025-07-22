@@ -25,11 +25,13 @@ export default configure(function () {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli/boot-files
     boot: [
-      'axios',
-      'global-components',
+      // 'axios',
+      { path: 'axios', server: false },
+      { path: 'global-components', server: false }, // Hanya di klien
       'router',
       'head',
-      'main' // pastikan main.js ada di sini
+      // 'main' // pastikan main.js ada di sini
+      { path: 'main', server: false } // H
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css

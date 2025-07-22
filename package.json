@@ -5,6 +5,7 @@
   "productName": "RSUD-MohSaleh",
   "author": "ryuuu1234 <pharyyady@gmail.com>",
   "private": true,
+  "type": "module",
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
     "custom-icons": "fantasticon src/custom-icons/svg -o public/custom-icons --normalize -t woff woff2 -g css",

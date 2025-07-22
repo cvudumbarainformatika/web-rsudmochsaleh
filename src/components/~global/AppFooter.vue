@@ -138,6 +138,7 @@ const store = useAppStore()
 
 function goToLink(val) {
   window.open(val, '_blank')
+  // console.log('link', val)
 }
 
 const prim = computed(() => {

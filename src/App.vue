@@ -3,28 +3,17 @@
 </template>
 
 <script setup>
-// import { onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 
 import customIcons from 'src/custom-icons/custom-icons'
-// import { useAppStore } from './stores/app'
-
-// export default defineComponent({
-//   name: 'App',
-//   setup() {
 const $q = useQuasar()
-// const store = useAppStore()
-// console.log($q.dark.isActive)
 $q.dark.set(false)
 $q.iconSet.set(customIcons)
-document.body.setAttribute(['data-theme'], 'wew')
+// document.body.setAttribute(['data-theme'], 'wew')
 
-// onMounted(() => {
-//   for (let i = 0; i < store.themes.length; i++) {
-//     setCssVar(store.themes[i].name, store.themes[i].value)
-//     // document.body.style.setProperty(`--q-${store.themes[i].name}`, store.themes[i].value)
-//   }
-// })
-//   }
-// })
+onMounted(() => {
+  document.body.setAttribute('data-theme', 'wew') // Hanya dijalankan di klien
+})
+
 </script>

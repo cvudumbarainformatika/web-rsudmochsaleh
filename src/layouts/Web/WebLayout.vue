@@ -4,7 +4,10 @@
     <header-web :fixed="store.visible" />
 
     <!-- DateTime Block -->
-    <div class="datetime-block">
+    <div
+      v-if="!$q.platform.is.server"
+      class="datetime-block"
+    >
       <div class="datetime-container">
         <div class="time">
           {{ currentTime }}
@@ -17,7 +20,10 @@
     </div>
 
     <!-- Social Media Floating Buttons -->
-    <div class="social-float">
+    <div
+      v-if="!$q.platform.is.server"
+      class="social-float"
+    >
       <q-btn
         v-for="(social, index) in socials"
         :key="social.icon"
@@ -84,11 +90,13 @@
 <script setup>
 import { useAppStore } from 'src/stores/app'
 import { defineAsyncComponent, ref, onMounted, onBeforeUnmount } from 'vue'
-import { scroll, date } from 'quasar'
-import { useSeo } from 'src/composables/useSeo'
+import { scroll, date, useQuasar } from 'quasar'
+// import { useSeo } from 'src/composables/useSeo'
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
-useSeo()
+const $q = useQuasar()
+
+// useSeo()
 
 const HeaderWeb = defineAsyncComponent(() => import('src/components/~web/components/FuturisticHeader.vue'))
 const AppFooter = defineAsyncComponent(() => import('src/components/~global/AppFooter.vue'))
