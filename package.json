@@ -11,9 +11,9 @@
     "custom-icons": "fantasticon src/custom-icons/svg -o public/custom-icons --normalize -t woff woff2 -g css",
     "custom-icons:watch": "watch \"npm run custom-icons\" src/custom-icons/svg",
     "dev": "quasar dev -m ssr",
-    "build": "quasar build -m ssr",
-    "serve": "quasar serve dist/ssr",
-    "start": "node dist/ssr/index.mjs"
+    "build": "quasar build",
+    "build:ssr": "quasar build -m ssr",
+    "start": "node .output/server/index.mjs"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.9",

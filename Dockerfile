@@ -1,22 +1,36 @@
-# Stage 1: build
-FROM node:20 AS builder
+# ========== 1. Base builder ================
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
+# Copy package files
+COPY package*.json ./
+
+# Bersihkan dan install dengan legacy-peer-deps agar tidak error
+RUN rm -rf node_modules package-lock.json && \
+    npm install --legacy-peer-deps
+
+# Copy semua file dan build SSR
 COPY . .
 
-# Hapus dan install ulang node_modules
-RUN rm -rf node_modules package-lock.json && npm install
-RUN npm run build
+# Build SSR (client + server)
+RUN npm run build:ssr
 
-# Stage 2: production
-FROM node:20
+
+# ========== 2. Final runtime ===============
+FROM node:22-alpine AS runtime
 
 WORKDIR /app
 
-COPY --from=builder /app .
+# Install production dependencies only
+COPY --from=builder /app/package*.json ./
+RUN npm install --only=production --legacy-peer-deps
 
-ENV PORT=3000
-EXPOSE 3000
+# Copy hasil build dari builder
+COPY --from=builder /app/.output ./.output
 
+# Ganti port sesuai permintaan
+ENV PORT=39001
+
+# Jalankan Quasar SSR
 CMD ["node", ".output/server/index.mjs"]
