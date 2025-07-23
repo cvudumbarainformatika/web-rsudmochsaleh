@@ -1,36 +1,38 @@
-# ========================
-# Stage 1: Build
-# ========================
+# Tahap 1: Build dengan Node
 FROM node:20-alpine AS builder
 
+# Install dependensi tambahan
+RUN apk add --no-cache python3 make g++
+
 WORKDIR /app
 
-# Salin semua file proyek
+# Salin file penting terlebih dahulu agar cache efisien
+COPY package*.json ./
+
+# Install dependency TANPA optional & legacy peer deps
+RUN npm install --omit=optional --legacy-peer-deps
+
+# Salin semua source code
 COPY . .
 
-# Bersihkan node_modules dan lockfile agar fresh
-RUN rm -rf node_modules package-lock.json && \
-    npm install --legacy-peer-deps && \
-    npm rebuild esbuild rollup && \
-    npm run build:ssr
+# Build SSR
+RUN npx quasar build -m ssr
 
-# ========================
-# Stage 2: Runtime
-# ========================
-FROM node:20-alpine AS runtime
+
+# Tahap 2: Jalankan hasil build
+FROM node:20-alpine
 
 WORKDIR /app
 
-# Salin package.json dan install dependencies production-only
-COPY --from=builder /app/package*.json ./
-RUN npm install --only=production --legacy-peer-deps
+# Copy output dari tahap builder
+COPY --from=builder /app/.output /app
 
-# Salin hasil build dari tahap builder
-COPY --from=builder /app/.output ./.output
+# Install hanya dependencies runtime
+RUN npm install --omit=dev --omit=optional --legacy-peer-deps || true
 
-# SSR apps listening on port 3000 by default
+# Pakai port sesuai kebutuhan
 ENV PORT=39001
-
 EXPOSE 39001
 
-CMD ["node", ".output/server/index.mjs"]
+# Jalankan SSR server
+CMD ["node", "server/index.mjs"]
