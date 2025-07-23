@@ -1,38 +1,31 @@
-# Tahap 1: Build dengan Node
-FROM node:20-alpine AS builder
-
-# Install dependensi tambahan
-RUN apk add --no-cache python3 make g++
+# ========== BUILD IMAGE ==========
+FROM node:20-bookworm AS builder
 
 WORKDIR /app
 
-# Salin file penting terlebih dahulu agar cache efisien
+# Salin package file
 COPY package*.json ./
 
-# Install dependency TANPA optional & legacy peer deps
-RUN npm install --omit=optional --legacy-peer-deps
+# Install dependencies full (termasuk devDependencies)
+RUN npm install --legacy-peer-deps
 
-# Salin semua source code
+# Salin seluruh project
 COPY . .
 
 # Build SSR
-RUN npx quasar build -m ssr
+RUN npm run build
 
-
-# Tahap 2: Jalankan hasil build
-FROM node:20-alpine
+# ========== RUNTIME IMAGE ==========
+FROM node:20-bookworm AS runtime
 
 WORKDIR /app
 
-# Copy output dari tahap builder
-COPY --from=builder /app/.output /app
+# Salin hanya dependency production saja
+COPY package*.json ./
+RUN npm install --only=production --legacy-peer-deps
 
-# Install hanya dependencies runtime
-RUN npm install --omit=dev --omit=optional --legacy-peer-deps || true
+# Salin hasil build dari builder
+COPY --from=builder /app/.output ./.output
 
-# Pakai port sesuai kebutuhan
-ENV PORT=39001
-EXPOSE 39001
-
-# Jalankan SSR server
-CMD ["node", "server/index.mjs"]
+# Jalankan SSR Quasar (bukan dev server)
+CMD ["node", ".output/server/index.mjs"]
