@@ -141,7 +141,7 @@ function goTo(val) {
 
 .hero-section {
   padding: 4rem 2rem;
-  background: linear-gradient(135deg, var(--q-primary), darken(#06b8b8, 20%));
+  background: linear-gradient(135deg, var(--q-primary), #059292);
   border-radius: 0 0 50px 50px;
   margin-bottom: 3rem;
 
