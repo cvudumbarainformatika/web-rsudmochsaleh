@@ -24,8 +24,11 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install --only=production --legacy-peer-deps
 
-# Salin hasil build dari builder
-COPY --from=builder /app/.output ./.output
+# Salin hasil build dari stage builder
+COPY --from=builder /app/dist/ssr ./
+
+# Ganti port default jika diperlukan
+ENV PORT=39001
 
 # Jalankan SSR Quasar (bukan dev server)
 CMD ["node", ".output/server/index.mjs"]
