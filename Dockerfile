@@ -25,7 +25,7 @@ COPY package*.json ./
 RUN npm install --only=production --legacy-peer-deps
 
 # Salin hasil build dari stage builder
-COPY --from=builder /app/dist/ssr ./
+COPY --from=builder /app/src-ssr ./
 
 # Ganti port default jika diperlukan
 ENV PORT=39001
