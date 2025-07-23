@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  quasar-ssr:
+    container_name: quasar_ssr
+    image: quasar-ssr:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "39001:39001"
+    environment:
+      - PORT=39001
+    volumes:
+      # Mount hasil build client ke host agar bisa diakses oleh Nginx
+      - ./public_assets:/app/dist/ssr/client
+    restart: unless-stopped

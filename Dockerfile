@@ -24,6 +24,7 @@ RUN corepack enable
 
 # Salin hasil build SSR dari stage builder
 COPY --from=builder /app/dist/ssr ./dist/ssr
+COPY --from=builder /app/dist/client ./dist/ssr/client  # <<< Tambahkan ini
 
 # Salin juga file lock Yarn jika perlu
 COPY --from=builder /app/yarn.lock ./dist/ssr/yarn.lock
