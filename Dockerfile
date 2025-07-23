@@ -29,8 +29,8 @@ WORKDIR /app/dist/ssr
 RUN npm install --omit=dev --legacy-peer-deps
 
 # ENV agar bisa disesuaikan
-ENV PORT=3000
-EXPOSE 3000
+ENV PORT=39001
+EXPOSE 39001
 
 # Jalankan server SSR
 CMD ["node", "index.js"]
