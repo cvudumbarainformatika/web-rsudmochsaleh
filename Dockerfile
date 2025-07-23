@@ -15,7 +15,7 @@ RUN rm -rf node_modules package-lock.json && \
     yarn build:ssr
 
 # --- Tahap Production ---
-FROM node:20-bookworm
+FROM node:20-bookworm AS production
 
 WORKDIR /app
 
