@@ -90,13 +90,13 @@
 </template>
 
 <script setup>
-import { onMounted, ref, onBeforeUnmount } from 'vue'
+import { onMounted, ref, onBeforeUnmount, computed, watch } from 'vue'
 import { useAppStore } from 'src/stores/app'
 import AppClientOnly from 'src/components/~global/AppClientOnly.vue'
 import FuturisticHeader from 'src/components/~web/components/FuturisticHeader.vue'
 import AppFooter from 'src/components/~global/AppFooter.vue'
-// eslint-disable-next-line no-unused-vars
-import { date, useQuasar, scroll } from 'quasar'
+import { date, scroll, useMeta } from 'quasar'
+import { useRoute } from 'vue-router'
 
 // eslint-disable-next-line no-unused-vars
 const { getScrollTarget, setVerticalScrollPosition } = scroll
@@ -110,9 +110,11 @@ if (process.env.CLIENT) {
   onMounted(() => {
     // misal kamu butuh akses state atau jalankan aksi
     // store.loadSomething()
-    console.log('store', store)
+    // console.log('store', store)
   })
 }
+
+const route = useRoute()
 
 const currentTime = ref('')
 const seconds = ref('')
@@ -132,7 +134,7 @@ function updateDateTime() {
   }
 }
 
-if (process.client) {
+if (process.env.CLIENT) {
   onMounted(() => {
     try {
       updateDateTime()
@@ -180,6 +182,68 @@ const scrollToElement = () => {
     console.error('Scroll error:', err)
   }
 }
+
+const title = computed(() => {
+  if (route.path.includes('beranda')) {
+    return 'SELAMAT DATANG'
+  } else if (route.path.includes('berita')) {
+    return route?.query?.page ?? 'BERITA dan INFORMASI SEPUTAR RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
+  } else if (route.path?.includes('pelayanan')) {
+    return route?.query?.page ?? 'Pelayanan Yang Ada di RSUD MOHAMAD SALEH '
+  } else {
+    return 'WEBSITE RESMI | RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
+  }
+})
+
+const description = computed(() => {
+  if (route.path.includes('beranda')) {
+    return 'WEBSITE RESMI'
+  } else if (route.path.includes('berita')) {
+    return route?.query?.page ?? 'BERITA dan INFORMASI SEPUTAR RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
+  } else if (route.path?.includes('pelayanan')) {
+    return route?.query?.page ?? 'Pelayanan Yang Ada di RSUD MOHAMAD SALEH - KOTA PROBOLINGGO, Layanan Rawat Inap, Rawat Jalan, IGD, POLIKLINIK, HOMECARE, Hedmodialisa dll'
+  } else {
+    return 'WEBSITE RESMI | UOBK RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
+  }
+})
+
+function escapeHtml(unsafe) {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
+
+useMeta(() => {
+  const cleanTitle = escapeHtml(title.value) || 'UOBK RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
+  const cleanDescription = escapeHtml(description.value) || 'WEBSITE RESMI | UOBK RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
+
+  return {
+    title: cleanTitle,
+    titleTemplate: title => `${title} | UOBK RSUD MOHAMAD SALEH - KOTA PROBOLINGGO`,
+    description: cleanDescription,
+    meta: [
+      { name: 'description', content: cleanDescription },
+      { property: 'og:description', content: cleanDescription },
+      { property: 'og:title', content: cleanTitle },
+      { property: 'og:type', content: 'website' },
+      { property: 'og:url', content: 'https://rsud.probolinggokota.go.id' + route.fullPath },
+      { name: 'robots', content: 'index, follow' }
+    ]
+  }
+})
+
+watch(
+  () => route.path,
+  () => {
+    console.log('route path', route.path)
+    console.log('route full path', route.fullPath)
+    console.log('route', route?.query?.page)
+  }, { immediate: true }
+)
+
 </script>
 
 <style lang="scss" scoped>

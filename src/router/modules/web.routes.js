@@ -9,7 +9,7 @@ export default {
       name: 'beranda',
       component: () => import('pages/Web/v1/Home/IndexPage.vue'),
       meta: {
-        title: 'Beranda - RSUD Moh Saleh',
+        title: 'Beranda | RSUD MOHAMAD SALEH - KOTA PROBOLINGGO',
         metaTags: [
           {
             name: 'description',
@@ -17,7 +17,7 @@ export default {
           },
           {
             property: 'og:description',
-            content: 'Selamat datang di website resmi RSUD Moh Saleh - Pelayanan kesehatan terpercaya untuk masyarakat'
+            content: 'Selamat datang di website resmi RSUD Mohamad Saleh - Pelayanan kesehatan terpercaya untuk masyarakat'
           },
           {
             property: 'og:title',

@@ -39,7 +39,7 @@ export const useCarouselApp = defineStore('carousel', {
       this.form.animation = payload
     },
     setPage (payload) {
-      console.log('setPage', payload)
+      // console.log('setPage', payload)
       this.params.page = payload
       this.manageData()
     },
@@ -51,7 +51,7 @@ export const useCarouselApp = defineStore('carousel', {
     async getData () {
       this.loading = true
       await api.get('/v1/carousel').then(resp => {
-        console.log(resp)
+        // console.log(resp)
         this.carousels = resp.data.data
       })
       try {
@@ -64,7 +64,7 @@ export const useCarouselApp = defineStore('carousel', {
       this.loading = true
       const params = { params: this.params }
       await api.get('/v1/carousel/manage', params).then(resp => {
-        console.log('manage', resp)
+        // console.log('manage', resp)
         this.items = resp.data.data
         this.meta = resp.data.meta
       })
@@ -99,7 +99,7 @@ export const useCarouselApp = defineStore('carousel', {
             'Content-Type': 'multipart/form-data'
           }
         }).then((resp) => {
-          console.log(resp)
+          // console.log(resp)
           notifSuccess(resp)
           this.addData()
           this.manageData()

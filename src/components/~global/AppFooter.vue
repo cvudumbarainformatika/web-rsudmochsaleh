@@ -132,7 +132,7 @@ import { ref, computed } from 'vue'
 
 const $q = useQuasar()
 const mobile = ref($q.platform.is.mobile)
-console.log('footer', mobile)
+console.log('footer mobile', mobile.value)
 
 const store = useAppStore()
 

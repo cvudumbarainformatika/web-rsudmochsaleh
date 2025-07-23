@@ -1,6 +1,7 @@
 /* eslint-env node */
 
 import { configure } from 'quasar/wrappers'
+
 import {
   presetWind,
   presetAttributify,
@@ -134,6 +135,7 @@ export default configure(function () {
         dark: true
       },
       plugins: [
+        'Meta',
         'Notify',
         'LocalStorage',
         'Dialog',
@@ -154,7 +156,11 @@ export default configure(function () {
       serverMemoryLimit: 256, // Limit RAM untuk render SSR (MB)
       compression: true, // Gzip bawaan express
       manualHydration: true, // Hindari hydration mismatch
-      external: ['lottie-web']
+      external: ['lottie-web'],
+      // ✅ Tambahkan ini
+      htmlVariables: {
+        lang: 'id'
+      }
       // throttleRequests: {
       //   maxRequests: 25,
       //   timeWindow: 1000

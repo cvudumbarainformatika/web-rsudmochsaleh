@@ -93,7 +93,7 @@ export const useAppStore = defineStore('app', {
       this.loading = true
       try {
         await api.get('/v1/header').then((resp) => {
-          console.log(resp)
+          // console.log(resp)
           if (resp.status === 200) {
             this.header.title = resp.data.title
             this.header.desc = resp.data.desc
@@ -126,7 +126,7 @@ export const useAppStore = defineStore('app', {
       const params = { themes: this.themes }
       try {
         await api.post('/v1/app/store_themes', params).then((resp) => {
-          console.log('themes_post', resp)
+          // console.log('themes_post', resp)
           notifSuccess(resp)
           this.getAppHeader()
           this.loading = false
@@ -146,7 +146,7 @@ export const useAppStore = defineStore('app', {
             'Content-Type': 'multipart/form-data'
           }
         }).then((resp) => {
-          console.log(resp)
+          // console.log(resp)
           notifSuccess(resp)
           this.getAppHeader()
           this.loading = false
@@ -163,7 +163,7 @@ export const useAppStore = defineStore('app', {
             'Content-Type': 'multipart/form-data'
           }
         }).then((resp) => {
-          console.log(resp)
+          // console.log(resp)
           notifSuccess(resp)
           this.getAppHeader()
           this.loading = false
@@ -177,7 +177,7 @@ export const useAppStore = defineStore('app', {
       this.loading = true
       try {
         await api.post('/v1/header/store', this.header).then((resp) => {
-          console.log(resp)
+          // console.log(resp)
           notifSuccess(resp)
           this.getAppHeader()
           this.loading = false
@@ -214,7 +214,7 @@ export const useAppStore = defineStore('app', {
             'Content-Type': 'multipart/form-data'
           }
         }).then((resp) => {
-          console.log('section_one_post', resp)
+          // console.log('section_one_post', resp)
           notifSuccess(resp)
           this.getAppHeader()
           this.loading = false
@@ -251,7 +251,7 @@ export const useAppStore = defineStore('app', {
       const params = { section_two: this.section_two }
       try {
         await api.post('/v1/app/store_section_two', params).then((resp) => {
-          console.log('section_two_post', resp)
+          // console.log('section_two_post', resp)
           notifSuccess(resp)
           this.getAppHeader()
           this.loading = false
@@ -274,7 +274,7 @@ export const useAppStore = defineStore('app', {
             'Content-Type': 'multipart/form-data'
           }
         }).then((resp) => {
-          console.log('staf_post', resp)
+          // console.log('staf_post', resp)
           notifSuccess(resp)
           this.getAppHeader()
           this.loading = false
