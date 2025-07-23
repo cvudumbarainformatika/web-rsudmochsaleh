@@ -13,5 +13,5 @@ services:
       - PORT=39001
     volumes:
       # Mount hasil build client ke host agar bisa diakses oleh Nginx
-      - ./public_assets:/app/dist/ssr/client
+      - ./public_assets:/app/dist/ssr
     restart: unless-stopped
