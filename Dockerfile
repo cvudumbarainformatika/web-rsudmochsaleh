@@ -1,34 +1,39 @@
 # --- Tahap Build ---
 FROM node:20-bookworm AS builder
 
+# Aktifkan corepack agar bisa pakai yarn modern
+RUN corepack enable
+
 WORKDIR /app
 
-# Salin semua file proyek ke container
+# Salin file proyek
 COPY . .
 
-# Install dependencies + build SSR
-RUN npm install --legacy-peer-deps && \
-    npm run build:ssr
+# Hapus cache dan file lock lama
+RUN rm -rf node_modules package-lock.json && \
+    yarn install --network-timeout 300000 && \
+    yarn build:ssr
 
 # --- Tahap Production ---
 FROM node:20-bookworm
 
-# Atur direktori kerja di container
 WORKDIR /app
 
-# Salin hasil build dari tahap builder
+# Aktifkan corepack juga di stage production (optional tapi aman)
+RUN corepack enable
+
+# Salin hasil build SSR dari stage builder
 COPY --from=builder /app/dist/ssr ./dist/ssr
 
-# (Opsional) Jika kamu ingin menyalin juga package.json yang dibuat otomatis oleh Quasar di dist/ssr
-COPY --from=builder /app/dist/ssr/package.json ./dist/ssr/package.json
+# Salin juga file lock Yarn jika perlu
+COPY --from=builder /app/yarn.lock ./dist/ssr/yarn.lock
 
-# Masuk ke folder SSR hasil build
 WORKDIR /app/dist/ssr
 
-# Install hanya dependency production di dalam folder build
-RUN npm install --omit=dev --legacy-peer-deps
+# Install hanya production deps
+RUN yarn install --production --network-timeout 300000
 
-# ENV agar bisa disesuaikan
+# Konfigurasi ENV & port
 ENV PORT=39001
 EXPOSE 39001
 
