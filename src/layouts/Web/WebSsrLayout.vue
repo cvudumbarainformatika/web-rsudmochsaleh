@@ -82,7 +82,7 @@
         </q-page-sticky>
       </transition>
     </q-page-container>
-    <!-- Footer juga full width untuk background -->
+
     <AppClientOnly>
       <app-footer />
     </AppClientOnly>
