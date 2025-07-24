@@ -2,7 +2,7 @@ name: Build & Release Quasar SSR
 
 on:
   push:
-    branches:
+    branches: checkout 
       - deploy
 
 jobs:
