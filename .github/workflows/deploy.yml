@@ -1,0 +1,39 @@
+name: Build & Release Quasar SSR
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  build-ssr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build SSR
+        run: yarn build:ssr
+
+      - name: Salin Dockerfile ke dist/ssr
+        run: cp ssr.Dockerfile dist/ssr/Dockerfile
+
+      - name: Zip hasil build
+        run: |
+          cd dist/ssr
+          zip -r ../../ssr-build.zip .
+
+      - name: Buat atau update release tag 'latest'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: latest
+          files: ssr-build.zip
