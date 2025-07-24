@@ -1,29 +1,13 @@
-version: '3.8'
-
 services:
-  # Tahap builder (sekali jalan untuk ekspor hasil build client)
-  quasar-builder:
-    container_name: quasar_ssr_builder
+  quasar-ssr:
+    container_name: quasar_ssr
     image: quasar-ssr:latest
     build:
       context: .
       dockerfile: Dockerfile
       target: production
-    command: sh -c "cp -r ./client /export && sleep 5"
-    volumes:
-      - ./public_assets:/export
-    working_dir: /app/dist/ssr
-    restart: "no"
-
-  # Tahap SSR server (tanpa volume bind, tidak tertimpa folder kosong)
-  quasar-ssr:
-    container_name: quasar_ssr
-    image: quasar-ssr:latest
-    depends_on:
-      - quasar-builder
     ports:
       - "39001:39001"
     environment:
       - PORT=39001
-    working_dir: /app/dist/ssr
     restart: unless-stopped
