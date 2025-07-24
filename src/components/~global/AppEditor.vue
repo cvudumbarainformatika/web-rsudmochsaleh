@@ -189,7 +189,7 @@ watch(() => props.edited, (first, prev) => {
 })
 
 onBeforeUnmount(() => {
-  editor.value.destroy()
+  editor?.value?.destroy()
 })
 
 // Tambahkan fungsi untuk membuat tabel

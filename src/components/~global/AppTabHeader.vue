@@ -39,6 +39,7 @@ import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const store = useCategoryStore()
+// eslint-disable-next-line no-unused-vars
 const storeBerita = useBeritaWeb()
 
 const items = computed(() => store.items)
@@ -64,11 +65,11 @@ const route = useRoute()
 // console.log('asdasd', items)
 
 watch(() => selected.value, (obj, old) => {
-  console.log('watch old', old)
-  const newObj = obj || 'all'
-  console.log('watch new', newObj)
-  store.setSelected(newObj)
-  storeBerita.getDataPagin(newObj)
+  // console.log('watch old', old)
+  // const newObj = obj || 'all'
+  // console.log('watch new', newObj)
+  // store.setSelected(newObj)
+  // storeBerita.getDataPagin(newObj)
 })
 </script>
 

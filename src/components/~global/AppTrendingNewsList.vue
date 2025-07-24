@@ -52,6 +52,7 @@ import { useBeritaWeb } from 'src/stores/web/berita'
 import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
+// eslint-disable-next-line no-unused-vars
 const route = useRoute()
 const store = useBeritaWeb()
 
@@ -67,13 +68,22 @@ function padNumber(num) {
 }
 
 function beritaClick(item) {
-  const page = route.params.page || 'all'
+  // const page = route.params.page || 'all'
+  // const params = {
+  //   q: item.slug,
+  //   page
+  // }
+  // store.getContent(params).then(() => {
+  //   router.replace({ name: 'berita', params: { page: params.page }, query: { page: params.q } })
+  // })
+  const slug = String(item.slug).replace(/^"+|"+$/g, '') || 'all'
   const params = {
-    q: item.slug,
-    page
+    q: slug,
+    slug
   }
+  // console.log('params', params)
   store.getContent(params).then(() => {
-    router.replace({ name: 'berita', params: { page: params.page }, query: { page: params.q } })
+    router.replace({ name: 'berita-detail', params: { slug } })
   })
 }
 </script>

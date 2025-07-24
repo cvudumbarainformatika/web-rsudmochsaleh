@@ -208,18 +208,28 @@ export default defineComponent({
 
     // onMounted(() => {
     store.getData('all')
-    console.log('onMounted ...', store.beranda)
+    // console.log('onMounted ...', store.beranda)
     // })
 
     function beritaClick(val) {
-      console.log(val)
-      const page = route.params.page || 'all'
+      // console.log(val)
+      // const page = route.params.page || 'all'
+      // const params = {
+      //   q: val.slug,
+      //   page
+      // }
+      // store.getContent(params).then(() => {
+      //   router.replace({ name: 'berita', params: { page: params.page }, query: { page: params.q } })
+      // })
+
+      const slug = String(val.slug).replace(/^"+|"+$/g, '') || 'all'
       const params = {
-        q: val.slug,
-        page
+        q: slug,
+        slug
       }
+      // console.log('params', params)
       store.getContent(params).then(() => {
-        router.replace({ name: 'berita', params: { page: params.page }, query: { page: params.q } })
+        router.replace({ name: 'berita-detail', params: { slug } })
       })
     }
 

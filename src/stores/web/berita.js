@@ -64,7 +64,7 @@ export const useBeritaWeb = defineStore('berita_web', {
   actions: {
     changeParams(hal, cat) {
       this.params.page = hal
-      this.params.category = cat
+      this.params.category = 'all'
       // // console.log('chamnge params', this.params)
       this.getDataPagin(cat, 'loadMore')
     },
@@ -75,11 +75,12 @@ export const useBeritaWeb = defineStore('berita_web', {
       if (!more) {
         this.params.page = 1
       }
-      this.params.category = (!payload || payload === 'undefined' || payload === null || payload === undefined) ? 'all' : payload
+      // this.params.category = (!payload || payload === 'undefined' || payload === null || payload === undefined) ? 'all' : payload
+      this.params.category = 'all'
       try {
         const params = { params: this.params }
         await api.get('/v1/berita/berita_paginate', params).then((resp) => {
-          // // console.log('berita beranda paginate', resp)
+          console.log('berita beranda paginate', resp)
           this.beritas = resp.data.data
           this.meta = resp.data
           this.isContent = false
@@ -119,9 +120,10 @@ export const useBeritaWeb = defineStore('berita_web', {
     async getContent(payload) {
       this.loading = true
       // console.log('get content ...', payload)
+      this.content = null
       try {
         await api.get(`/v1/berita/web_content?q=${payload.q}`).then((resp) => {
-          // console.log('berita content ', resp)
+          // console.log('berita content ', resp, payload)
           this.content = resp.data.content
           this.judul = resp.data.judul
           this.slug = resp.data.slug

@@ -106,7 +106,12 @@ export default configure(function () {
           ext: '.br',
           threshold: 10240,
           deleteOriginFile: false
-        }]
+        },
+        {
+          algorithm: 'gzip',
+          ext: '.gz'
+        }
+        ]
       ],
 
       // Prerender routes (optional, for SEO)
@@ -152,7 +157,10 @@ export default configure(function () {
       pwa: false,
       prodPort: 3000,
       maxAge: 1000 * 60 * 60 * 24, // 24 jam cache control
-      middlewares: ['render'], // urutan penting: render harus terakhir
+      middlewares: [
+        ctx => import('compression').then(m => m.default()), // ✅ Benar
+        'render'
+      ], // urutan penting: render harus terakhir
       serverMemoryLimit: 256, // Limit RAM untuk render SSR (MB)
       compression: true, // Gzip bawaan express
       manualHydration: true, // Hindari hydration mismatch

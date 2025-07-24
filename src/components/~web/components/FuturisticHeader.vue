@@ -338,8 +338,8 @@ const navigateTo = (href, item, parentItem) => {
   // console.log('Navigating to:', href, item, parentItem)
   // console.log('item:', item)
   // console.log('parentItem:', parentItem)
-  if (href.startsWith('/')) {
-    router.push(href)
+  if (href?.startsWith('/')) {
+    router?.push(href)
     if (parentItem?.label === 'Profil') {
       storeProfil.setTab(item?.label)
     } else if (parentItem?.label === 'PPID') {

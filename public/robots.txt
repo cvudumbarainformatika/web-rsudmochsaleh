@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
-Sitemap: https://rsud.probolinggokota.go.id/sitemap.xml
+Sitemap: https://domainmu.com/sitemap.xml

@@ -8,8 +8,8 @@
           <div class="row q-col-gutter-xl">
             <!-- Main Content -->
             <div class="col-md-8 col-lg-8 col-xs-12">
-              <div v-if="route.query.page">
-                <PageSlug />
+              <div v-if="route.params.slug !== 'all'">
+                <PageSlug :key="route.params.slug" />
                 <!-- <FuturisticPageSlug /> -->
               </div>
               <div
@@ -31,7 +31,7 @@
                 <div class="section-title">
                   <div class="title-line" />
                   <h2 class="text-h5 text-weight-bold q-mb-md">
-                    Populer
+                    Terbaru
                   </h2>
                   <div class="title-line" />
                 </div>
@@ -41,7 +41,7 @@
                     compact
                   /> -->
                   <app-trending-news-list
-                    :items="store.populars.slice(0, 5)"
+                    :items="store.beritas"
                   />
                 </div>
               </div>
@@ -166,14 +166,16 @@ const current = computed({
 const maxPagin = computed(() => store.meta?.last_page || 0)
 
 const p = ref({
-  q: route.query.page || '',
-  page: route.params.page || 'all'
+  q: route.params.slug || '',
+  page: route.params.slug || 'all'
 })
 
 const firstArr = computed(() => store.populars.slice(0, 3))
 const secondArr = computed(() => store.populars.slice(3))
 
 onMounted(() => {
+  // console.log(p.value)
+
   store.getDataPagin(p.value.page)
   store.getPopulars()
   store.getContent(p.value)

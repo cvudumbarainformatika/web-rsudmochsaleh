@@ -66,9 +66,12 @@ defineProps({
   }
 })
 
+// eslint-disable-next-line no-unused-vars
 const router = useRouter()
+// eslint-disable-next-line no-unused-vars
 const route = useRoute()
 
+// eslint-disable-next-line no-unused-vars
 const store = useBeritaWeb()
 
 function getKategori(val) {
@@ -77,14 +80,21 @@ function getKategori(val) {
 }
 
 function beritaClick(item) {
-  console.log('route', route.params.page)
-  const page = route.params.page || 'all'
+  console.log('route', route)
+  const slug = String(item.slug).replace(/^"+|"+$/g, '') || 'all'
+  // const page = route.params?.slug
   const params = {
-    q: item.slug,
-    page
+    q: slug,
+    slug
   }
+  console.log('params', params)
+
+  // // store.getContent(params).then(() => {
+  // //   router.replace({ name: 'berita', params: { page: params.page }, query: { page: params.q } })
+  // // })
+
   store.getContent(params).then(() => {
-    router.replace({ name: 'berita', params: { page: params.page }, query: { page: params.q } })
+    router.replace({ name: 'berita-detail', params: { slug } })
   })
 }
 </script>

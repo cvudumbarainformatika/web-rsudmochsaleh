@@ -38,33 +38,62 @@ export default {
         ]
       }
     },
+    // {
+    //   path: '/berita',
+    //   component: () => import(/* webpackChunkName: "web.template" */'pages/Web/TemplateIndex.vue'),
+    //   children: [
+    //     {
+    //       path: '',
+    //       redirect: to => ({
+    //         name: 'berita',
+    //         params: { page: 'all' }
+    //       })
+    //     },
+    //     {
+    //       path: '/berita/:page?',
+    //       name: 'berita',
+    //       component: () => import(/* webpackChunkName: "web.berita" */ 'src/pages/Web/v1/Berita/PageBerita.vue'),
+    //       meta: {
+    //         title: 'Berita - RSUD Moh Saleh',
+    //         metaTags: [
+    //           {
+    //             name: 'description',
+    //             content: 'Berita terkini dari RSUD Moh Saleh'
+    //           },
+    //           {
+    //             property: 'og:title',
+    //             content: 'Berita - RSUD Moh Saleh'
+    //           }
+    //         ]
+    //       }
+    //     }
+    //   ]
+    // },
     {
       path: '/berita',
-      component: () => import(/* webpackChunkName: "web.template" */'pages/Web/TemplateIndex.vue'),
+      component: () => import('pages/Web/TemplateIndex.vue'),
       children: [
         {
           path: '',
-          redirect: to => ({
-            name: 'berita',
-            params: { page: 'all' }
-          })
+          redirect: '/berita/all'
         },
         {
-          path: '/berita/:page?',
+          path: 'all',
           name: 'berita',
-          component: () => import(/* webpackChunkName: "web.berita" */ 'src/pages/Web/v1/Berita/PageBerita.vue'),
-          meta: {
-            title: 'Berita - RSUD Moh Saleh',
-            metaTags: [
-              {
-                name: 'description',
-                content: 'Berita terkini dari RSUD Moh Saleh'
-              },
-              {
-                property: 'og:title',
-                content: 'Berita - RSUD Moh Saleh'
-              }
-            ]
+          component: () => import('src/pages/Web/v1/Berita/PageBerita.vue')
+
+        },
+        {
+          path: ':slug',
+          name: 'berita-detail',
+          component: () => import('src/pages/Web/v1/Berita/PageBerita.vue'),
+          beforeEnter: (to, from, next) => {
+            const cleanSlug = to.params.slug.replace(/^"+|"+$/g, '')
+            if (cleanSlug !== to.params.slug) {
+              next({ name: 'berita-detail', params: { slug: cleanSlug } })
+            } else {
+              next()
+            }
           }
         }
       ]

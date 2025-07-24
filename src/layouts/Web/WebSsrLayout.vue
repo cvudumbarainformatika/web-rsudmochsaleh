@@ -185,9 +185,9 @@ const scrollToElement = () => {
 
 const title = computed(() => {
   if (route.path.includes('beranda')) {
-    return 'SELAMAT DATANG'
+    return 'SELAMAT DATANG DI RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
   } else if (route.path.includes('berita')) {
-    return route?.query?.page ?? 'BERITA dan INFORMASI SEPUTAR RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
+    return escapeHtml(route?.params?.slug) ?? 'BERITA dan INFORMASI SEPUTAR RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
   } else if (route.path?.includes('pelayanan')) {
     return route?.query?.page ?? 'Pelayanan Yang Ada di RSUD MOHAMAD SALEH '
   } else {
@@ -199,7 +199,7 @@ const description = computed(() => {
   if (route.path.includes('beranda')) {
     return 'WEBSITE RESMI | RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
   } else if (route.path.includes('berita')) {
-    return route?.query?.page ?? 'BERITA dan INFORMASI SEPUTAR RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
+    return escapeHtml(route?.params?.slug) ?? 'BERITA dan INFORMASI SEPUTAR RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
   } else if (route.path?.includes('pelayanan')) {
     return route?.query?.page ?? 'Pelayanan Yang Ada di RSUD MOHAMAD SALEH - KOTA PROBOLINGGO, Layanan Rawat Inap, Rawat Jalan, IGD, POLIKLINIK, HOMECARE, Hedmodialisa dll'
   } else {
@@ -209,16 +209,15 @@ const description = computed(() => {
 
 function escapeHtml(unsafe) {
   return unsafe
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;')
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // hilangkan karakter aneh
+    .replace(/\s+/g, '-') // spasi → dash
+    .trim()
 }
 
 useMeta(() => {
-  const cleanTitle = escapeHtml(title.value) || 'UOBK RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
-  const cleanDescription = escapeHtml(description.value) || 'WEBSITE RESMI | UOBK RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
+  const cleanTitle = title.value || 'UOBK RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
+  const cleanDescription = description.value || 'WEBSITE RESMI | UOBK RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
 
   return {
     title: cleanTitle,
@@ -238,9 +237,9 @@ useMeta(() => {
 watch(
   () => route.path,
   () => {
-    console.log('route path', route.path)
-    console.log('route full path', route.fullPath)
-    console.log('route', route?.query?.page)
+    // console.log('route params', route.params.slug)
+    // console.log('route full path', route.fullPath)
+    // console.log('route', route?.query?.page)
   }, { immediate: true }
 )
 
