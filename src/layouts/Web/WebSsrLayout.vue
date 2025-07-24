@@ -197,7 +197,7 @@ const title = computed(() => {
 
 const description = computed(() => {
   if (route.path.includes('beranda')) {
-    return 'WEBSITE RESMI'
+    return 'WEBSITE RESMI | RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
   } else if (route.path.includes('berita')) {
     return route?.query?.page ?? 'BERITA dan INFORMASI SEPUTAR RSUD MOHAMAD SALEH - KOTA PROBOLINGGO'
   } else if (route.path?.includes('pelayanan')) {
