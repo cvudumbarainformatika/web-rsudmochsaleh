@@ -10,7 +10,8 @@ WORKDIR /app
 COPY . .
 
 # Hapus cache dan file lock lama
-RUN rm -rf node_modules package-lock.json && \
+RUN rm -rf node_modules yarn.lock && \
+    corepack enable && \
     yarn install --network-timeout 300000 && \
     yarn build:ssr
 
