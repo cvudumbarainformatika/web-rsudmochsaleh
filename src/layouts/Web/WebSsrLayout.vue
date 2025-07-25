@@ -209,10 +209,10 @@ const description = computed(() => {
 
 function escapeHtml(unsafe) {
   return unsafe
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '') // hilangkan karakter aneh
-    .replace(/\s+/g, '-') // spasi → dash
-    .trim()
+    ?.toLowerCase()
+    ?.replace(/[^\w\s-]/g, '') // hilangkan karakter aneh
+    ?.replace(/\s+/g, '-') // spasi → dash
+    ?.trim()
 }
 
 useMeta(() => {
