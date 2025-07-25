@@ -64,19 +64,6 @@ export const useAppStore = defineStore('app', {
       setTimeout(() => {
         this.visibleNyusul = x
       }, 300)
-      // if (x) {
-      //   this.visible = x
-      //   setTimeout(() => {
-      //     this.visibleNyusul = x
-      //   }, 300)
-      // }
-      // this.visibleNyusul = false
-      // setTimeout(() => {
-      //   this.visible = false
-      // }, 300)
-
-      // this.visibleNyusul = x
-      // this.visible = x
     },
     setBtnScrollTop(x) {
       this.btnScrollTop = x

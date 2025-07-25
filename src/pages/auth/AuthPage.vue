@@ -1,4 +1,5 @@
 <template>
+  <!-- <AppClientOnly> -->
   <q-page class="flex column flex-center">
     <q-card
       flat
@@ -42,12 +43,6 @@
           />
 
           <div style="margin-top:50px">
-            <!-- <app-btn
-              type="submit"
-              :loading="storeAuth.loading"
-              class="full-width"
-              label="Login"
-            /> -->
             <q-btn
               label="Submit"
               type="submit"
@@ -78,22 +73,32 @@
       </div>
     </q-card>
   </q-page>
+  <!-- </AppClientOnly> -->
 </template>
 <script setup>
+// eslint-disable-next-line no-unused-vars
 import { computed, ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
+// eslint-disable-next-line no-unused-vars
 import { useAuthStore } from 'src/stores/auth'
 import { useAppStore } from 'src/stores/app'
+// eslint-disable-next-line no-unused-vars
 import { pathImg } from 'src/boot/axios'
 
-const storeAuth = useAuthStore()
-const app = useAppStore()
+// import AppClientOnly from 'src/components/~global/AppClientOnly.vue'
+
 const $q = useQuasar()
 
-onMounted(() => {
-  app.getAppHeader()
-  console.log('app store auth', app.themes)
-})
+const storeAuth = useAuthStore()
+
+let app
+if (process.env.CLIENT) {
+  app = useAppStore()
+
+  onMounted(() => {
+    app.getAppHeader()
+  })
+}
 
 // const myForm = ref(null)
 // const form = ref({
@@ -104,6 +109,7 @@ onMounted(() => {
 
 const email = ref(null)
 const password = ref(null)
+// eslint-disable-next-line no-unused-vars
 const deviceName = ref($q.platform.is.name + '-' + $q.platform.is.platform)
 
 const prim = computed(() => {
@@ -122,10 +128,10 @@ const second = computed(() => {
 })
 
 const logo = computed(() => {
-  if (app.logo === null) {
+  if (app?.logo === null) {
     return new URL('../../assets/logos/logo-rsud.png', import.meta.url).href
   } else {
-    return pathImg + app.logo
+    return pathImg + app?.logo
   }
 })
 

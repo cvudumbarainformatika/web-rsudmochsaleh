@@ -7,11 +7,12 @@ import { waitLoad, removeToken } from 'src/modules/utils'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     // state: () => ({
-    token: localStorage.getItem('token') ? storage.getLocalToken() : null,
-    user: localStorage.getItem('user') ? storage.getUser() : null,
+    token: null,
+    user: null,
     loading: false
     // })
   }),
+  persist: true,
   getters: {
     isAuth (state) {
       return state.token !== null || state.token !== undefined
@@ -28,11 +29,11 @@ export const useAuthStore = defineStore('auth', {
         await api.post('/v1/login', payload).then(resp => {
           storage.setLocalToken(resp.data.token)
           storage.setUser(resp.data.user)
-          const hdd = storage.getLocalToken()
-          const hddUser = storage.getUser()
-          if (hdd) {
-            this.SET_TOKEN_USER(hdd, hddUser)
-          }
+          const hdd = resp?.data?.token
+          const hddUser = resp?.data?.user
+          // if (hdd) {
+          this.SET_TOKEN_USER(hdd, hddUser)
+          // }
           this.loading = false
           waitLoad('done')
         })

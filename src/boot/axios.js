@@ -1,6 +1,7 @@
 import { boot } from 'quasar/wrappers'
 import axios from 'axios'
-import { getLocalToken } from 'src/modules/storage'
+// import { getLocalToken } from 'src/modules/storage'
+import { useAuthStore } from 'src/stores/auth'
 import { notifErr } from 'src/modules/utils'
 import { setCssVar } from 'quasar'
 
@@ -17,7 +18,9 @@ api2.defaults.headers.get.Accepts = 'application/json'
 
 // Inisialisasi Authorization hanya di klien
 if (!process.env.SERVER) {
-  api.defaults.headers.common.Authorization = `Bearer ${getLocalToken()}`
+  const auth = useAuthStore()
+  const token = auth.token || null
+  api.defaults.headers.common.Authorization = `Bearer ${token}`
 }
 
 /* Response Interceptors */

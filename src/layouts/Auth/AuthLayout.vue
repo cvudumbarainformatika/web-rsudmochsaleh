@@ -3,28 +3,24 @@
     view="lHh Lpr lFf"
     :class="dark?'':'page-light'"
   >
-    <q-page-container>
-      <router-view />
-    </q-page-container>
+    <AppClientOnly>
+      <q-page-container>
+        <router-view />
+      </q-page-container>
+    </AppClientOnly>
   </q-layout>
 </template>
 
-<script>
+<script setup>
 import { useQuasar } from 'quasar'
-import { computed, defineComponent } from 'vue'
+import { computed } from 'vue'
+import AppClientOnly from 'src/components/~global/AppClientOnly.vue'
 
-export default defineComponent({
-  name: 'AuthLayout',
-  setup() {
-    const $q = useQuasar()
+const $q = useQuasar()
 
-    const dark = computed(() => {
-      return $q.dark.isActive
-    })
-
-    return {
-      dark
-    }
-  }
+const dark = computed(() => {
+  return $q.dark.isActive
 })
+
+// })
 </script>
