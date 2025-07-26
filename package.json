@@ -14,7 +14,6 @@
     "build": "quasar build",
     "build:ssr": "quasar build -m ssr",
     "deploy": "git fetch origin && git checkout deploy && git merge master --no-edit && git push origin deploy && git checkout master"
-
   },
   "dependencies": {
     "@quasar/extras": "^1.16.9",

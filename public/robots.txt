@@ -1,3 +1,18 @@
 User-agent: *
-Allow: /
-Sitemap: https://domainmu.com/sitemap.xml
+Disallow: /
+
+Allow: /beranda
+Allow: /berita/
+Allow: /berita/*
+Allow: /pelayanan/submenu/
+Allow: /pelayanan/submenu/*
+Allow: /profil/
+Allow: /profil/*
+Allow: /ppid/
+Allow: /ppid/*
+Allow: /pokja/
+Allow: /pokja/*
+Allow: /pengaduan/
+Allow: /pengaduan/*
+
+Sitemap: https://rsud.probolinggokota.go.id/sitemap.xml

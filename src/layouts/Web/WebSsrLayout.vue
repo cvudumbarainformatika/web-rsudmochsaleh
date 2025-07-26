@@ -230,6 +230,9 @@ useMeta(() => {
       { property: 'og:type', content: 'website' },
       { property: 'og:url', content: 'https://rsud.probolinggokota.go.id' + route.fullPath },
       { name: 'robots', content: 'index, follow' }
+    ],
+    link: [
+      { rel: 'canonical', href: 'https://rsud.probolinggokota.go.id/beranda' }
     ]
   }
 })
