@@ -7,6 +7,26 @@ import { defineSsrMiddleware } from '#q-app/wrappers'
 export default defineSsrMiddleware(({ app, resolve, render, serve }) => {
   // we capture any other Express route and hand it
   // over to Vue and Vue Router to render our page
+  // Tambahkan handler robots.txt dulu sebelum catch-all route
+  app.get('/robots.txt', (req, res) => {
+    console.log('Serving robots.txt from middleware')
+    res.type('text/plain')
+    res.send(`
+    User-agent: *
+    Disallow: /
+    Allow: /beranda
+    Allow: /berita/all
+    Allow: /berita/*
+    Allow: /pelayanan/submenu/*
+    Allow: /profil/*
+    Allow: /ppid/*
+    Allow: /pokja/*
+    Allow: /pengaduan/*
+
+    Sitemap: https://rsud.probolinggokota.go.id/sitemap.xml
+        `.trim())
+  })
+
   app.get(resolve.urlPath('*'), (req, res) => {
     res.setHeader('Content-Type', 'text/html')
 

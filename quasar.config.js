@@ -156,7 +156,9 @@ export default configure(function () {
     ssr: {
       pwa: false,
       prodPort: 3000,
-      maxAge: 1000 * 60 * 60 * 24, // 24 jam cache control
+      maxAge: process.env.DEV
+        ? 0
+        : 1000 * 60 * 60 * 24 * 30,
       middlewares: [
         ctx => import('compression').then(m => m.default()), // ✅ Benar
         'render'
@@ -168,7 +170,11 @@ export default configure(function () {
       // ✅ Tambahkan ini
       htmlVariables: {
         lang: 'id'
-      }
+      },
+      staticPaths: [
+        'robots.txt',
+        'sitemap.xml'
+      ]
       // throttleRequests: {
       //   maxRequests: 25,
       //   timeWindow: 1000

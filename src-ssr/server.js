@@ -19,6 +19,8 @@ import {
   defineSsrRenderPreloadTag
 } from '#q-app/wrappers'
 
+import routes from './routes'
+
 /**
  * Create your webserver and return its instance.
  * If needed, prepare your webserver to receive
@@ -38,6 +40,9 @@ export const create = defineSsrCreate((/* { ... } */) => {
   if (process.env.PROD) {
     app.use(compression())
   }
+
+  // Register custom routes
+  app.use(routes)
 
   return app
 })
