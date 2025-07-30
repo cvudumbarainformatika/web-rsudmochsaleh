@@ -21,8 +21,8 @@
 <script setup>
 import AppClientOnly from 'src/components/~global/AppClientOnly.vue'
 import CarouselWeb from 'src/components/~web/CarouselWeb.vue'
-import SectionTt from './SectionTt.vue'
-import CobaTt from './CobaTt.vue'
+// import SectionTt from './SectionTt.vue'
+// import CobaTt from './CobaTt.vue'
 import SectionKelas from './SectionKelas.vue'
 import SectionBerita from './SectionBerita.vue'
 import SectionPelayanan from './SectionPelayanan.vue'
