@@ -25,7 +25,7 @@ export const useCategoryStore = defineStore('category_index', {
     async getAll () {
       this.loading = true
       await api.get('/v1/categories').then((resp) => {
-        console.log('categories', resp)
+        // console.log('categories', resp)
         this.items = resp.data
         this.loading = false
       })
@@ -34,7 +34,7 @@ export const useCategoryStore = defineStore('category_index', {
     async storeData (params) {
       this.loading = true
       await api.post('/v1/store_category', params).then((resp) => {
-        console.log('categories', resp)
+        // console.log('categories', resp)
         notifSuccess(resp)
         this.getAll()
         this.loading = false
@@ -46,7 +46,7 @@ export const useCategoryStore = defineStore('category_index', {
     async deleteData (params) {
       this.loading = true
       await api.post('/v1/delete_category', params).then((resp) => {
-        console.log('categories', resp)
+        // console.log('categories', resp)
         notifSuccess(resp)
         this.getAll()
         this.loading = false

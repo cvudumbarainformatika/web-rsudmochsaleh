@@ -217,7 +217,10 @@ const secondArr = computed(() => {
 console.log(secondArr)
 
 onMounted(() => {
-  storeBerita.getData('all')
-  storeBerita.getPopulars()
+  // storeBerita.getData('all')
+  // storeBerita.getPopulars()
+  Promise.all([storeBerita.getData('all'), storeBerita.getPopulars()]).then(() => {
+    
+  })
 })
 </script>

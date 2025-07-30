@@ -16,7 +16,7 @@ const routes = [
       {
         path: '/dokumen-simrs/legalitas/:noreg?',
         name: 'legalitas-dokumen-simrs',
-        component: () => import(/* webpackChunkName: "page-dokumen-simrs" */ 'src/pages/Web/v1/Legalitas/IndexPage.vue')
+        component: () => import('src/pages/Web/v1/Legalitas/IndexPage.vue')
       }
     ]
   },

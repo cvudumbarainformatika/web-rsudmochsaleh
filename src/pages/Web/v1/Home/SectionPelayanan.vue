@@ -170,8 +170,8 @@ const items = computed(() => store.menus)
 //   }
 //   return thumb
 // })
-
-store.getMenu()
+// store.getMenu()
+Promise.all([store.getMenu()])
 
 function clickList(val) {
   store.setTab(val)

@@ -315,6 +315,30 @@ export default {
           }
         }
       ]
+    },
+    {
+      path: '/informasi-ruang-perawatan',
+      component: () => import('pages/Web/TemplateIndex.vue'),
+      children: [
+        {
+          path: '',
+          name: 'informasi-ruang-perawatan',
+          component: () => import('src/pages/Web/v1/Publish/IndexPage.vue'),
+          meta: {
+            title: 'Ketersesiaan Ruang Perawatan - RSUD Moh Saleh',
+            metaTags: [
+              {
+                name: 'description',
+                content: 'Ketersesiaan Ruang Perawatan - RSUD Moh Saleh'
+              },
+              {
+                property: 'og:title',
+                content: 'Ketersesiaan Ruang Perawatan - RSUD Moh Saleh'
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }

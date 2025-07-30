@@ -146,7 +146,7 @@
     <!-- View More Button -->
     <div class="view-more-wrapper q-pa-lg q-mt-xl">
       <app-btn
-        v-if="store.beranda.length"
+        v-if="store?.beranda?.length"
         rounded
         label="Lihat Semua Berita"
         class="view-more-btn"
@@ -207,7 +207,9 @@ export default defineComponent({
     const route = useRoute()
 
     // onMounted(() => {
-    store.getData('all')
+    Promise.all([
+      store.getData('all')
+    ])
     // console.log('onMounted ...', store.beranda)
     // })
 

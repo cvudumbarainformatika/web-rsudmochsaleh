@@ -59,12 +59,12 @@
                 <p class="slide-description">
                   {{ formatText(img.desc) }}
                 </p>
-                <q-btn
+                <!-- <q-btn
                   unelevated
                   color="primary"
                   class="q-mt-md"
                   label="Learn More"
-                />
+                /> -->
               </div>
             </div>
           </div>
