@@ -10,6 +10,39 @@
         <div class="title-line" />
       </div>
     </div>
+
+    <div class="flex flex-wrap justify-center q-gutter-md q-mb-lg">
+      <div
+        v-for="(kelas, index) in kelasList"
+        :key="kelas"
+      >
+        <q-card
+          class="glass-tile shadow-10 cursor-pointer"
+          :class="[`glow-${index % 4}`]"
+          @click="handleKelasClick(kelas)"
+        >
+          <q-card-section class="q-pa-md text-center ">
+            <!-- <q-icon :name="iconMap[kelas] || 'hotel'" size="34px" class="text-primary q-mb-xs" /> -->
+            <div class="text-subtitle text-bold">Kelas {{ kelas }}</div>
+          </q-card-section>
+
+          
+        </q-card>
+      </div>
+      <q-card
+          class="glass-tile shadow-10 cursor-pointer"
+          :class="[`glow-${100 % 4}`]"
+          @click="handleKelasClick('semua')"
+        >
+          <q-card-section class="q-pa-md text-center ">
+            <!-- <q-icon :name="iconMap[kelas] || 'hotel'" size="34px" class="text-primary q-mb-xs" /> -->
+            <div class="text-subtitle text-bold">Semua</div>
+          </q-card-section>
+
+          
+        </q-card>
+    </div>
+
     
     <div class="flex flex-wrap items-stretch justify-center q-gutter-md">
       <q-card
@@ -68,6 +101,34 @@
     { ruang: 'RUANG SAKURA KELAS ISO', jenis: 'ISO', total: 18, terisi: 7, kosong: 11 },
     { ruang: 'RUANG WIJAYA KUSUMA PRESIDENTIAL SUITE', jenis: 'PS', total: 2, terisi: 1, kosong: 1 }
   ])
+
+
+  const kelasList = ref([
+  "1",
+  "2",
+  "3",
+  "HCU",
+  "ICCU",
+  "ICU",
+  "ISO",
+  "NICU",
+  "PS",
+  "VIP"
+]);
+
+const iconMap = {
+  "1": "looks_one",
+  "2": "looks_two",
+  "3": "looks_3",
+  "HCU": "favorite",
+  "ICCU": "monitor_heart",
+  "ICU": "local_hospital",
+  "ISO": "coronavirus",
+  "NICU": "baby_changing_station",
+  "PS": "accessible",
+  "VIP": "star"
+};
+
 const store = useTempatTidurStore()
 onMounted(() => {
   Promise.all([
@@ -75,8 +136,24 @@ onMounted(() => {
   ])
   .then(() => {
     ruangTidur.value = store?.data
+    kelasList.value = store?.kelas
   })
 })
+
+const handleKelasClick = (kelas) => {
+  // console.log('', kelas?.toLowerCase()?.replace(/kelas\s*/i, ''));
+  // console.log('', kelas);
+
+  if (kelas === 'semua') {
+    ruangTidur.value = store?.data
+  } else {
+
+    ruangTidur.value = store?.data?.filter((item) => item?.jenis === kelas)
+  }
+
+}
+
+
 </script>
 
 <style scoped>
@@ -108,5 +185,75 @@ onMounted(() => {
 @keyframes rotate-glow {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+
+
+/* style Khusus Atas */
+.bg-dark {
+  background: radial-gradient(ellipse at top, #0f2027 0%, #203a43 50%, #2c5364 100%);
+  /* min-height: 100%; */
+  padding-bottom: 40px;
+}
+
+.text-glow {
+  text-shadow: 0 0 8px #0ff, 0 0 14px #0ff;
+  color: #e0f7fa;
+}
+
+.glass-tile {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 14px;
+  /* width: 140px; */
+  /* height: 120px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.glass-tile:hover {
+  transform: scale(1.08) rotateY(6deg);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+}
+
+.glow-0 q-icon {
+  animation: glowPulseA 2s ease-in-out infinite;
+}
+
+.glow-1 q-icon {
+  animation: glowPulseB 3s ease-in-out infinite;
+}
+
+.glow-2 q-icon {
+  animation: glowPulseC 2.5s ease-in-out infinite;
+}
+
+.glow-3 q-icon {
+  animation: glowPulseD 3.2s ease-in-out infinite;
+}
+
+@keyframes glowPulseA {
+  0%, 100% { text-shadow: 0 0 6px #0ff, 0 0 12px #0ff; transform: scale(1); }
+  50% { text-shadow: 0 0 12px #0ff, 0 0 24px #0ff; transform: scale(1.1); }
+}
+
+@keyframes glowPulseB {
+  0%, 100% { text-shadow: 0 0 6px #f0f, 0 0 12px #f0f; transform: scale(1); }
+  50% { text-shadow: 0 0 12px #f0f, 0 0 24px #f0f; transform: scale(1.1); }
+}
+
+@keyframes glowPulseC {
+  0%, 100% { text-shadow: 0 0 6px #0f0, 0 0 12px #0f0; transform: scale(1); }
+  50% { text-shadow: 0 0 12px #0f0, 0 0 24px #0f0; transform: scale(1.1); }
+}
+
+@keyframes glowPulseD {
+  0%, 100% { text-shadow: 0 0 6px #ff0, 0 0 12px #ff0; transform: scale(1); }
+  50% { text-shadow: 0 0 12px #ff0, 0 0 24px #ff0; transform: scale(1.1); }
 }
 </style>

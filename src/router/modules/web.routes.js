@@ -339,6 +339,54 @@ export default {
           }
         }
       ]
+    },
+    {
+      path: '/informasi-top-icd10',
+      component: () => import('pages/Web/TemplateIndex.vue'),
+      children: [
+        {
+          path: '',
+          name: 'informasi-top-icd10',
+          component: () => import('src/pages/Web/v1/ICD/IndexPage.vue'),
+          meta: {
+            title: 'Top 10 Penyakit di - RSUD Moh Saleh ',
+            metaTags: [
+              {
+                name: 'description',
+                content: 'Top 10 Penyakit di - RSUD Moh Saleh - RSUD Moh Saleh'
+              },
+              {
+                property: 'og:title',
+                content: 'Top 10 Penyakit di - RSUD Moh Saleh - RSUD Moh Saleh'
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      path: '/informasi-index-kepuasan-masyarakat',
+      component: () => import('pages/Web/TemplateIndex.vue'),
+      children: [
+        {
+          path: '',
+          name: 'informasi-index-kepuasan-masyarakat',
+          component: () => import('src/pages/Web/v1/IKM/IndexPage.vue'),
+          meta: {
+            title: 'Index Kepuasan Masyarakat - RSUD Moh Saleh ',
+            metaTags: [
+              {
+                name: 'description',
+                content: 'Index Kepuasan Masyarakat - RSUD Moh Saleh'
+              },
+              {
+                property: 'og:title',
+                content: 'Index Kepuasan Masyarakat - RSUD Moh Saleh'
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }

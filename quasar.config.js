@@ -27,6 +27,7 @@ export default configure(function () {
       // 'global-components',
       'router',
       'head',
+      'echarts',
       { path: 'main', server: false }
     ],
 

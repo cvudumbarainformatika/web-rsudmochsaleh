@@ -1,6 +1,6 @@
 <template>
   <section class="dashboard-summary bg-dark">
-    <div class="summary-grid">
+    <!-- <div class="summary-grid">
       <div class="summary-card" v-for="item in stats" :key="item.label">
         <div class="icon-box" :class="item.color">
           <q-icon :name="item.icon" size="32px" />
@@ -9,13 +9,130 @@
         <div class="value">{{ item.value }}</div>
         <div class="unit">{{ item.unit }}</div>
       </div>
-    </div>
+    </div> -->
+<div class="summary-grid">
+    <q-card class="summary-card text-white shadow-10 relative-position">
+      <q-card-section>
+        <div class="text-h6 text-uppercase text-weight-bold">
+          INFO TT
+        </div>
+        <q-separator dark class="q-my-sm" />
+        <div class="text-subtitle2">Ketersediaan Tempat Perawatan</div>
+        <div class="q-my-md">
+          <q-linear-progress size="20px" :value="0.75" color="green" rounded>
+            <div class="absolute-full flex flex-center">
+              <q-icon name="bed" class="q-mr-sm" />
+              <span>75% Terisi</span>
+            </div>
+          </q-linear-progress>
+        </div>
+      </q-card-section>
+      <q-card-actions align="center" class="absolute-bottom q-pb-lg">
+        <!-- <q-btn flat label="Lihat Detail" icon="visibility" to="/info-tt" /> -->
+         <app-btn
+          rounded
+          label="Selengkapnya"
+          class="view-more-btn"
+          @click="router.push('/informasi-ruang-perawatan')"
+        >
+          <template #append>
+            <q-icon
+              name="arrow_forward"
+              class="q-ml-sm"
+            />
+          </template>
+        </app-btn>
+      </q-card-actions>
+    </q-card>
+
+
+       <!-- IKM -->
+      <q-card class="summary-card text-white shadow-10 relative-position">
+        <q-card-section>
+          <div class="text-h6 text-uppercase text-weight-bold">
+            IKM
+          </div>
+          <q-separator dark class="q-my-sm" />
+          <div class="text-subtitle2">Indeks Kepuasan Masyarakat</div>
+          <div class="q-my-md flex flex-center">
+            <q-circular-progress
+              show-value
+              font-size="14px"
+              :value="88.93"
+              size="100px"
+              color="cyan"
+              track-color="grey-8"
+              class="q-mr-sm"
+            />
+            <div>
+              <div class="text-h6">Tahun 2025</div>
+              <div class="text-caption">IKM meningkat dari tahun sebelumnya</div>
+            </div>
+          </div>
+        </q-card-section>
+        <q-card-actions align="center" class="">
+          <app-btn
+            rounded
+            label="Selengkapnya"
+            class="view-more-btn"
+            @click="router.push('/informasi-index-kepuasan-masyarakat')"
+          >
+            <template #append>
+              <q-icon
+                name="arrow_forward"
+                class="q-ml-sm"
+              />
+            </template>
+          </app-btn>
+        </q-card-actions>
+      </q-card>
+
+
+       <!-- Top 10 Penyakit -->
+      <q-card class="summary-card text-white shadow-10 relative-position">
+        <q-card-section>
+          <div class="text-h6 text-uppercase text-weight-bold">
+            Top 10 Penyakit
+          </div>
+          <q-separator dark class="q-my-sm" />
+          <div class="text-subtitle2">Data Diagnosa Tertinggi</div>
+          <div class="q-my-md">
+            <!-- <ul class="q-pl-none" style="list-style: none">
+              <li v-for="i in 3" :key="i" class="q-mb-sm">
+                <q-icon name="medication" class="q-mr-sm" />
+                {{ i + 1 }} aaa
+              </li>
+            </ul> -->
+            <div class="text-h1">📈</div>
+          </div>
+        </q-card-section>
+        <q-card-actions align="center" class="absolute-bottom q-pb-lg">
+          <app-btn
+            rounded
+            label="Selengkapnya"
+            class="view-more-btn"
+            @click="router.push('/informasi-top-icd10')"
+          >
+            <template #append>
+              <q-icon
+                name="arrow_forward"
+                class="q-ml-sm"
+              />
+            </template>
+          </app-btn>
+        </q-card-actions>
+      </q-card>
+</div>
+
   </section>
 </template>
 
 <script setup>
 import { reactive, onMounted } from 'vue'
 import { useTempatTidurStore } from 'src/stores/web/tempatTidur'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const stats = reactive([
   {

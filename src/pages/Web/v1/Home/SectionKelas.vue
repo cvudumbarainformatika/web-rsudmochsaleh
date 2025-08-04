@@ -43,6 +43,19 @@
           />
         </template>
       </app-btn>
+      <app-btn
+        rounded
+        label="top icd10"
+        class="view-more-btn"
+        @click="router.push('/informasi-top-icd10')"
+      >
+        <template #append>
+          <q-icon
+            name="arrow_forward"
+            class="q-ml-sm"
+          />
+        </template>
+      </app-btn>
     </div>
 
   </div>
