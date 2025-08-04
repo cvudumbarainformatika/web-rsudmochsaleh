@@ -102,17 +102,33 @@ export default configure(function () {
             'rotate-180'
           ]
         }],
-        [viteCompression, {
+        // [
+        //   viteCompression, {
+        //     algorithm: 'brotliCompress',
+        //     ext: '.br',
+        //     threshold: 10240,
+        //     deleteOriginFile: false
+        //   },
+        //   {
+        //     algorithm: 'gzip',
+        //     ext: '.gz'
+        //   }
+        // ]
+        // Compression Brotli
+        viteCompression({
           algorithm: 'brotliCompress',
           ext: '.br',
           threshold: 10240,
           deleteOriginFile: false
-        },
-        {
+        }),
+
+        // Compression Gzip
+        viteCompression({
           algorithm: 'gzip',
-          ext: '.gz'
-        }
-        ]
+          ext: '.gz',
+          threshold: 10240,
+          deleteOriginFile: false
+        })
       ],
 
       // Prerender routes (optional, for SEO)

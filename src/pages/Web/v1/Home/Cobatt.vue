@@ -19,12 +19,7 @@
         <q-separator dark class="q-my-sm" />
         <div class="text-subtitle2">Ketersediaan Tempat Perawatan</div>
         <div class="q-my-md">
-          <q-linear-progress size="20px" :value="0.75" color="green" rounded>
-            <div class="absolute-full flex flex-center">
-              <q-icon name="bed" class="q-mr-sm" />
-              <span>75% Terisi</span>
-            </div>
-          </q-linear-progress>
+          <div class="text-h1">🛋️</div>
         </div>
       </q-card-section>
       <q-card-actions align="center" class="absolute-bottom q-pb-lg">
@@ -97,12 +92,7 @@
           <q-separator dark class="q-my-sm" />
           <div class="text-subtitle2">Data Diagnosa Tertinggi</div>
           <div class="q-my-md">
-            <!-- <ul class="q-pl-none" style="list-style: none">
-              <li v-for="i in 3" :key="i" class="q-mb-sm">
-                <q-icon name="medication" class="q-mr-sm" />
-                {{ i + 1 }} aaa
-              </li>
-            </ul> -->
+           
             <div class="text-h1">📈</div>
           </div>
         </q-card-section>
