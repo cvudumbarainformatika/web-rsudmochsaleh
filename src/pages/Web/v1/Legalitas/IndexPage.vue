@@ -104,9 +104,9 @@ if (process.env.CLIENT) {
   const app = useAppStore()
   title = computed(() => app.header?.title || '')
   reg = computed(() => store?.data?.noreg)
-  foto = computed(() => store?.data?.petugas?.pegawai?.foto_pegawai || null)
-  nama = computed(() => store?.data?.petugas?.pegawai?.nama || null)
-  ID = computed(() => store?.data?.petugas?.pegawai?.nip || store?.data?.petugas?.pegawai?.nik || '-')
+  foto = computed(() => store?.data?.dataPetugas?.foto_pegawai || store?.data?.petugas?.pegawai?.foto_pegawai || null)
+  nama = computed(() => store?.data?.dataPetugas?.nama || store?.data?.petugas?.pegawai?.nama || null)
+  ID = computed(() => store?.data?.dataPetugas?.nip || store?.data?.petugas?.pegawai?.nip || store?.data?.petugas?.pegawai?.nik || '-')
   loading = computed(() => store?.loading)
 
   onMounted( async () => {

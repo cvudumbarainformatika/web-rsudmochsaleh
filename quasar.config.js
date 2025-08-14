@@ -36,7 +36,7 @@ export default configure(function () {
 
     // === Extra Icons ===
     extras: [
-      'mdi-v5',
+      // 'mdi-v5',
       'themify',
       'material-icons'
     ],
