@@ -210,7 +210,7 @@ export default configure(function () {
         clientsClaim: true,
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/rsudmochsaleh\.my\.id\/api/,
+            urlPattern: /.*\/api\/.*/,
             handler: 'NetworkFirst'
           }
         ]

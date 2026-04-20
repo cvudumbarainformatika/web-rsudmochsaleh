@@ -18,8 +18,9 @@ export default async function sitemap(req, res) {
   let beritaLinks = []
 
   try {
-    const response = await fetch('https://rsudmochsaleh.my.id/api/v1/berita/berita_paginate?category=all&page=1&perPage=50&orderBy=created_at&sort=desc', {
-      agent: new https.Agent({ rejectUnauthorized: false }) // hanya jika SSL tidak valid
+    const apiUrl = process.env.API_URL_INTERNAL || 'http://api-webrsud-web'
+    const response = await fetch(`${apiUrl}/api/v1/berita/berita_paginate?category=all&page=1&perPage=50&orderBy=created_at&sort=desc`, {
+      agent: new https.Agent({ rejectUnauthorized: false })
     })
 
     const json = await response.json()

@@ -6,7 +6,11 @@ import { notifErr } from 'src/modules/utils'
 import { setCssVar } from 'quasar'
 
 
-const SERV = 'https://rsudmochsaleh.my.id'
+const isServer = typeof window === 'undefined'
+const DEFAULT_API_URL = 'http://localhost:8123'
+const INTERNAL_API_URL = 'http://api-webrsud-web'
+
+const SERV = isServer ? (process.env.API_URL_INTERNAL || INTERNAL_API_URL) : (process.env.API_URL_EXTERNAL || DEFAULT_API_URL)
 const SERVER = SERV + '/api'
 
 const api = axios.create({ baseURL: SERVER })
