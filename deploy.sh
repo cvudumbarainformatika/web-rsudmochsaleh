@@ -10,6 +10,9 @@ fi
 
 echo "🚀 Starting Frontend Deployment to $DEPLOY_HOST..."
 
+# Ensure target directory exists on server
+ssh $DEPLOY_USER@$DEPLOY_HOST "mkdir -p $DEPLOY_PATH"
+
 # Sync files to server
 # --exclude: don't send heavy or unnecessary files
 rsync -avz --progress \
