@@ -1,10 +1,13 @@
 #!/bin/bash
 
+# Get script directory
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
 # Load configurations
-if [ -f .deploy.conf ]; then
-    source .deploy.conf
+if [ -f "$SCRIPT_DIR/.deploy.conf" ]; then
+    source "$SCRIPT_DIR/.deploy.conf"
 else
-    echo "Error: .deploy.conf not found!"
+    echo "Error: .deploy.conf not found in $SCRIPT_DIR!"
     exit 1
 fi
 

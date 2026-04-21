@@ -6,20 +6,16 @@ export default defineSsrMiddleware(({ app }) => {
 
   // Proxy for API
   app.use('/api', createProxyMiddleware({
-    target,
+    target: target + '/api', // Arahkan langsung ke backend/api
     changeOrigin: true,
-    pathRewrite: {
-       // logic: if user calls /api/v1, it stays /api/v1 because Laravel expects /api prefix
-       // but if your backend DOES NOT have /api in the actual server-side endpoint, 
-       // you might need rewrite. 
-       // But in most Laravel setups, API is at /api
-    }
+    pathRewrite: { '^/api': '' } // Bersihkan awalan agar tidak dobel jika ada
   }))
 
   // Proxy for Storage (Images/Assets)
   app.use('/storage', createProxyMiddleware({
-    target,
-    changeOrigin: true
+    target: target + '/storage', // Arahkan langsung ke backend/storage
+    changeOrigin: true,
+    pathRewrite: { '^/storage': '' } // Bersihkan awalan agar tidak dobel jika ada
   }))
 
   console.log('🚀 SSR Proxy Middleware loaded: /api and /storage targets', target)

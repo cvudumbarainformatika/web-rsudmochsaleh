@@ -11,6 +11,7 @@ const DEFAULT_API_URL = '/api' // Path relatif untuk Client (biar di-proxy)
 const INTERNAL_API_URL = 'http://api-webrsud-web/api' // URL internal untuk Server (SSR)
 
 const SERV = isServer ? INTERNAL_API_URL : DEFAULT_API_URL
+const SERV_STORAGE = isServer ? 'http://api-webrsud-web/storage' : '/storage'
 const SERVER = SERV
 
 const api = axios.create({ baseURL: SERVER })
@@ -59,7 +60,7 @@ const interceptRequest = (config) => {
 }
 api.interceptors.request.use(interceptRequest, interceptReqErrors)
 
-const pathImg = SERV + '/storage/'
+const pathImg = SERV_STORAGE + '/'
 const pathFotoSimrs = 'http://36.89.103.114:4542/simpeg/foto/'
 
 const getApp = async () => {
