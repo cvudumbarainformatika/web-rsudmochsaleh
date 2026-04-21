@@ -7,11 +7,11 @@ import { setCssVar } from 'quasar'
 
 
 const isServer = typeof window === 'undefined'
-const DEFAULT_API_URL = 'http://localhost:8123'
-const INTERNAL_API_URL = 'http://api-webrsud-web'
+const DEFAULT_API_URL = '/api' // Path relatif untuk Client (biar di-proxy)
+const INTERNAL_API_URL = 'http://api-webrsud-web/api' // URL internal untuk Server (SSR)
 
-const SERV = isServer ? (process.env.API_URL_INTERNAL || INTERNAL_API_URL) : (process.env.API_URL_EXTERNAL || DEFAULT_API_URL)
-const SERVER = SERV + '/api'
+const SERV = isServer ? INTERNAL_API_URL : DEFAULT_API_URL
+const SERVER = SERV
 
 const api = axios.create({ baseURL: SERVER })
 const api2 = axios.create({ baseURL: 'https://xenter.my.id' })

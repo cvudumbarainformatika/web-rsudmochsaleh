@@ -177,7 +177,8 @@ export default configure(function () {
         ? 0
         : 1000 * 60 * 60 * 24 * 30,
       middlewares: [
-        ctx => import('compression').then(m => m.default()), // ✅ Benar
+        'proxy', // proxy must be before render
+        ctx => import('compression').then(m => m.default()),
         'render'
       ], // urutan penting: render harus terakhir
       serverMemoryLimit: 256, // Limit RAM untuk render SSR (MB)

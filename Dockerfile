@@ -2,7 +2,7 @@
 FROM node:20-alpine AS build-stage
 WORKDIR /app
 COPY package*.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN yarn install
 COPY . .
 RUN npx quasar build -m ssr
 
