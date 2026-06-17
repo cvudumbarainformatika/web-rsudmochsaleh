@@ -8,7 +8,13 @@ export default defineSsrMiddleware(({ app }) => {
   app.use('/api', createProxyMiddleware({
     target: target + '/api', // Arahkan langsung ke backend/api
     changeOrigin: true,
-    pathRewrite: { '^/api': '' } // Bersihkan awalan agar tidak dobel jika ada
+    pathRewrite: { '^/api': '' }, // Bersihkan awalan agar tidak dobel jika ada
+    onProxyRes: function (proxyRes, req, res) {
+      // Paksa hapus dan tulis ulang header caching untuk semua request API dinamis
+      proxyRes.headers['cache-control'] = 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+      proxyRes.headers['pragma'] = 'no-cache';
+      proxyRes.headers['expires'] = '0';
+    }
   }))
 
   // Proxy for Storage (Images/Assets)

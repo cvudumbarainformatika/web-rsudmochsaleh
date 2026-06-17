@@ -56,6 +56,24 @@ api2.interceptors.response.use(interceptResponse, interceptResErrors)
 /* Request Interceptors */
 const interceptReqErrors = (err) => Promise.reject(err)
 const interceptRequest = (config) => {
+  // 1. Injeksi Token Dinamis
+  if (typeof window !== 'undefined') {
+    const rawToken = localStorage.getItem('token')
+    if (rawToken) {
+      const token = rawToken.startsWith('"') && rawToken.endsWith('"')
+        ? JSON.parse(rawToken)
+        : rawToken
+      config.headers.Authorization = `Bearer ${token}`
+    }
+  }
+
+  // 2. Cache-Busting untuk request GET
+  if (config.method && config.method.toLowerCase() === 'get') {
+    config.params = {
+      ...config.params,
+      _t: Date.now()
+    }
+  }
   return config
 }
 api.interceptors.request.use(interceptRequest, interceptReqErrors)

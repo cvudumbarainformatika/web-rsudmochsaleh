@@ -281,10 +281,12 @@ function onSave() {
   // console.log('edited', store.edited)
   // console.log(router)
 
-  store.saveData(formData).then(() => {
-    tempImg.value = null
-    store.resetFORM()
-    router.push('/admin/berita')
+  store.saveData(formData).then((success) => {
+    if (success) {
+      tempImg.value = null
+      store.resetFORM()
+      router.push('/admin/berita')
+    }
   })
 }
 

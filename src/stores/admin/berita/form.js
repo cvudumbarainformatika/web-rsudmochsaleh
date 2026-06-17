@@ -85,21 +85,19 @@ export const useBeritaForm = defineStore('berita_form', {
       this.loading = true
 
       try {
-        await api.post('/v1/berita/store', payload, {
+        const resp = await api.post('/v1/berita/store', payload, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
-        }).then((resp) => {
-          console.log(resp)
-          notifSuccess(resp)
-          this.loading = false
-          return new Promise((resolve, reject) => {
-            resolve()
-          })
         })
+        console.log(resp)
+        notifSuccess(resp)
+        this.loading = false
+        return true
       } catch (error) {
         notifErr(error.response)
         this.loading = false
+        return false
       }
     }
   }
