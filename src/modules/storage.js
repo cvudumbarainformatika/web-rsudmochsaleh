@@ -13,7 +13,15 @@ export const setLocalToken = token => {
 
 export const getLocalToken = () => {
   if (isBrowser()) {
-    return localStorage.getItem('token') || null
+    const token = localStorage.getItem('token')
+    if (!token) return null
+    try {
+      return token.startsWith('"') && token.endsWith('"')
+        ? JSON.parse(token)
+        : token
+    } catch (e) {
+      return token
+    }
   }
   return null
 }

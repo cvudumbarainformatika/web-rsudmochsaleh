@@ -55,9 +55,12 @@
           <template #error>
             <div
               class="absolute-full flex flex-center bg-dark"
-              style="color: red"
             >
-              Cannot load image
+              <q-img
+                :src="noImageUrl"
+                alt="No Image Placeholder"
+                width="200px"
+              />
             </div>
           </template>
         </q-img>
@@ -86,7 +89,8 @@ import AppClientOnly from 'src/components/~global/AppClientOnly.vue'
 // import { pathFotoSimrs } from 'src/boot/axios'
 
 const route = useRoute()
-  
+const noImageUrl = new URL('../../../../assets/images/no-image.png', import.meta.url).href
+
 
 
 let store
@@ -97,31 +101,37 @@ let foto
 let nama
 let ID
 let loading
-// let 
+// let
 if (process.env.CLIENT) {
 
   const store = useDokumenSimrsWeb()
   const app = useAppStore()
   title = computed(() => app.header?.title || '')
   reg = computed(() => store?.data?.noreg)
-  foto = computed(() => store?.data?.dataPetugas?.foto_pegawai || store?.data?.petugas?.pegawai?.foto_pegawai || null)
-  nama = computed(() => store?.data?.dataPetugas?.nama || store?.data?.petugas?.pegawai?.nama || null)
-  ID = computed(() => store?.data?.dataPetugas?.nip || store?.data?.petugas?.pegawai?.nip || store?.data?.petugas?.pegawai?.nik || '-')
+  foto = computed(() => {
+    const f = store?.data?.dataPetugas?.foto_pegawai
+    if (!f || f === 'null' || f === 'undefined') {
+      return noImageUrl
+    }
+    return f
+  })
+  nama = computed(() => store?.data?.dataPetugas?.nama || null)
+  ID = computed(() => store?.data?.dataPetugas?.nip || '-')
   loading = computed(() => store?.loading)
 
   onMounted( async () => {
-    
+
   // const noreg = '06562/04/2024/X'
     const noreg = route?.params?.noreg
     // console.log(route?.params?.noreg)
     await store.cekNoreg(noreg)
     // console.log('store app', title.value);
     // console.log('store', store?.data);
-    
+
   })
 
 
-  
+
 
 }
 
