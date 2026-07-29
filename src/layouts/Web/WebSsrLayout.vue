@@ -47,7 +47,7 @@
 
     <q-page-container
       v-scroll="onScroll"
-      class="q-px-none"
+      class="q-px-none light-grid-bg"
     >
       <div
         id="top"

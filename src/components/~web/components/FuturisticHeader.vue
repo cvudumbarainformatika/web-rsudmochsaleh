@@ -1,86 +1,87 @@
 <template>
   <header
-    class="w-full z-10 border-1 border-grey-200"
-    :class="{'bg-primary': fixed, 'bg-gray-100': !fixed, 'fixed-top': fixed, 'relative': !fixed}"
+    class="w-full z-50 transition-all duration-500"
+    :class="{'glass-nav-fixed fixed-top': fixed, 'glass-nav relative': !fixed}"
   >
-    <!-- bar -->
-
+    <!-- Futuristic Top Utility Bar -->
     <div
       v-if="!store.visible"
-      class="header-one transparent"
+      class="header-top-bar"
     >
-      <q-bar
-        class="container-padding bg-primary text-white"
-        style="height:40px !important;"
-      >
-        <q-icon
-          name="call"
-          size="24px"
-        />
-        <div class="f-12">
-          {{ store.header.phone }}
+      <div class="container-padding flex items-center justify-between py-2 text-white">
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 bg-white-10 q-px-sm q-py-xs rounded-full">
+            <q-icon name="call" size="16px" class="text-cyan-3" />
+            <span class="text-caption text-weight-bold tracking-wide">
+              {{ store.header.phone || '(0335) 433119, 511117' }}
+            </span>
+          </div>
+          <div class="gt-xs flex items-center gap-2 text-caption opacity-80">
+            <span class="pulse-dot-sm animate-pulse-dot" />
+            <span>RSUD DR. MOHAMAD SALEH KOTA PROBOLINGGO</span>
+          </div>
         </div>
 
-        <q-space />
-
-        <q-btn
-          class="q-mr-sm"
-          dense
-          flat
-          icon="ti-facebook"
-          size="sm"
-          :href="store.header.link_fb"
-          target="_blank"
-        />
-        <q-btn
-          class="q-mr-sm"
-          dense
-          flat
-          icon="ti-instagram"
-          size="sm"
-          :href="store.header.link_instagram"
-          target="_blank"
-        />
-        <q-btn
-          class="q-mr-sm"
-          dense
-          flat
-          icon="ti-youtube"
-          size="sm"
-          :href="store.header.link_youtube"
-          target="_blank"
-        />
-        <q-btn
-          class="q-mr-sm"
-          dense
-          flat
-          icon="ti-tumblr-alt"
-          size="sm"
-          :href="store.header.link_tiktok"
-          target="_blank"
-        />
-      </q-bar>
+        <!-- Social Media Links -->
+        <div class="flex items-center gap-1">
+          <q-btn
+            dense
+            flat
+            round
+            icon="ti-facebook"
+            size="xs"
+            class="top-social-btn"
+            :href="store.header.link_fb"
+            target="_blank"
+          />
+          <q-btn
+            dense
+            flat
+            round
+            icon="ti-instagram"
+            size="xs"
+            class="top-social-btn"
+            :href="store.header.link_instagram"
+            target="_blank"
+          />
+          <q-btn
+            dense
+            flat
+            round
+            icon="ti-youtube"
+            size="xs"
+            class="top-social-btn"
+            :href="store.header.link_youtube"
+            target="_blank"
+          />
+          <q-btn
+            dense
+            flat
+            round
+            icon="ti-tumblr-alt"
+            size="xs"
+            class="top-social-btn"
+            :href="store.header.link_tiktok"
+            target="_blank"
+          />
+        </div>
+      </div>
     </div>
 
-    <!-- Navbar Container -->
+    <!-- Main Futuristic Navbar -->
     <nav class="mx-auto px-4 container-padding w-full">
-      <div class="flex items-center justify-between h-18 w-full">
-        <!-- Logo -->
-        <div class="flex-shrink-0">
-          <!-- <div
-            class="text-center px-2 bg-primary overflow-hidden deskt-only"
-            style="margin-top: -2px;"
-          > -->
+      <div class="flex items-center justify-between h-16 md:h-20 w-full">
+        <!-- Logo (Desktop & Mobile) -->
+        <div class="flex items-center gap-2 cursor-pointer" @click="router.push('/')">
           <img
             :src="logo"
-            alt="Logo"
-            class="h-18 deskt-only p-1"
+            alt="Logo RSUD"
+            class="h-12 md:h-14 p-1 transition-transform duration-300 hover:scale-105"
           >
-          <!-- </div> -->
         </div>
 
-        <!-- Desktop Navigation -->
-        <div class="desktop-nav flex-grow justify-end">
+        <!-- Desktop Navigation (Futuristic & Sleek) -->
+        <div class="desktop-nav flex-grow justify-end items-center gap-1">
           <template
             v-for="(item, index) in menuItems"
             :key="index"
@@ -93,158 +94,230 @@
             >
               <q-btn
                 flat
-                :class="[
-                  'menu__item',
-                  {'text-white': fixed, 'text-primary': !fixed}
-                ]"
-                :text-color="fixed ? 'white' : 'primary'"
+                no-caps
+                class="futuristic-nav-item"
+                :class="{
+                  'active-nav-link': route.path === item.href,
+                  'text-slate-800': !fixed,
+                  'text-slate-900': fixed
+                }"
                 @click="item.dropdown ? toggleDropdown(index) : navigateTo(item.href, item)"
               >
-                <div class="text-bold">
+                <div class="text-weight-bold text-subtitle2 flex items-center gap-1">
                   {{ item.label }}
+                  <q-icon
+                    v-if="item.dropdown"
+                    name="keyboard_arrow_down"
+                    size="18px"
+                    class="transition-transform duration-300"
+                    :class="{'rotate-180': activeDropdown === index}"
+                  />
                 </div>
               </q-btn>
 
-              <!-- Dropdown Content -->
-              <div
-                v-if="item.dropdown"
-                v-show="activeDropdown === index"
-                class="absolute top-full left-0 w-56 transform-gpu z-50 overflow-visible"
-                :class="{'w-64': item.label === 'Pokja Akreditasi'}"
-                style="margin-top: 5px;"
-              >
-                <q-card
-                  class="bg-white shadow-xl animate-slide-down"
-                  style="border-radius: 12px;"
+              <!-- Dropdown Content (Futuristic Glass Card & Split-View Mega Menu) -->
+              <transition name="dropdown-fade">
+                <div
+                  v-if="item.dropdown && activeDropdown === index"
+                  class="absolute top-full transform-gpu z-50 overflow-visible pt-2"
+                  :class="[
+                    hasAnyNestedSubmenu(item)
+                      ? 'w-[720px] right-0'
+                      : (item.items && item.items.length > 8 ? 'w-[680px] right-0' : 'w-80 left-0')
+                  ]"
                 >
-                  <q-list padding>
-                    <template
-                      v-for="(subItem, subIndex) in item.items"
-                      :key="subIndex"
-                    >
-                      <!-- Regular Dropdown Item -->
-                      <template v-if="!subItem?.submenu?.length">
+                  <q-card
+                    class="glass-dropdown-card shadow-24 rounded-2xl border-light overflow-hidden"
+                  >
+                  <!-- CASE 1: Split-View 2-Panel for Nested Submenus (e.g. PPID / Profil) -->
+                  <div
+                    v-if="hasAnyNestedSubmenu(item)"
+                    class="row no-wrap dropdown-split-container"
+                    style="min-height: 380px;"
+                  >
+                    <!-- Left Panel: Category Items -->
+                    <div class="col-5 border-r border-slate-200/80 p-2 dropdown-scroll-body">
+                      <div class="text-caption text-weight-bolder text-teal-8 uppercase tracking-wider px-3 py-1.5 mb-1">
+                        Kategori {{ item.label }}
+                      </div>
+                      <div class="flex flex-col gap-1">
                         <q-item
+                          v-for="(subItem, subIndex) in item.items"
+                          :key="subIndex"
                           v-ripple
                           clickable
-                          class="menu-item rounded-lg transition-all duration-300"
-                          @click="navigateTo(subItem.href, subItem, item)"
+                          class="dropdown-menu-item rounded-xl p-2.5 transition-all duration-200"
+                          :class="{
+                            'bg-teal-50 text-teal-8 shadow-xs': (activeNestedSubMap[index] ?? getFirstNestedIndex(item)) === subIndex
+                          }"
+                          @mouseenter="activeNestedSubMap[index] = subIndex"
+                          @click="!subItem?.submenu?.length ? navigateTo(subItem.href, subItem, item) : null"
                         >
-                          <q-item-section side>
-                            <div class="circle-icon" />
+                          <q-item-section side class="q-pr-xs">
+                            <div
+                              class="glow-dot"
+                              :class="{'bg-teal-8 scale-125': (activeNestedSubMap[index] ?? getFirstNestedIndex(item)) === subIndex}"
+                            />
                           </q-item-section>
 
                           <q-item-section>
-                            <q-item-label class="text-primary text-xs">
-                              {{ subItem.label }}
-                            </q-item-label>
-                          </q-item-section>
-                        </q-item>
-                      </template>
-
-                      <!-- Nested Dropdown Item -->
-                      <div
-                        v-else
-                        class="relative group overflow-visible dropdown-wrapper"
-                      >
-                        <!-- Parent Item -->
-                        <q-item
-                          v-ripple
-                          clickable
-                          class="menu-item rounded-lg transition-all duration-300"
-                          @mouseenter="handleParentItemEnter(subIndex)"
-                          @mouseleave="handleParentItemLeave"
-                        >
-                          <q-item-section side>
-                            <div class="circle-icon" />
-                          </q-item-section>
-
-                          <q-item-section>
-                            <q-item-label class="text-primary text-xs">
+                            <q-item-label class="text-weight-bold text-body2 leading-snug">
                               {{ subItem.label }}
                             </q-item-label>
                           </q-item-section>
 
                           <q-item-section side>
                             <q-icon
-                              name="arrow_forward"
-                              size="xs"
-                              class="text-primary transition-transform duration-300"
-                              :class="{'scale-150': hoveredSubmenu === subIndex}"
+                              v-if="subItem?.submenu?.length"
+                              name="chevron_right"
+                              size="18px"
+                              class="transition-transform duration-200"
+                              :class="{
+                                'translate-x-1 text-teal-7': (activeNestedSubMap[index] ?? getFirstNestedIndex(item)) === subIndex,
+                                'text-slate-400': (activeNestedSubMap[index] ?? getFirstNestedIndex(item)) !== subIndex
+                              }"
+                            />
+                            <q-icon
+                              v-else
+                              name="east"
+                              size="14px"
+                              class="text-slate-400 opacity-60"
                             />
                           </q-item-section>
                         </q-item>
-
-                        <!-- Submenu -->
-                        <div
-                          v-show="hoveredSubmenu === subIndex"
-                          class="absolute left-full top-0 w-56 z-50 rounded-xl submenu-container"
-                          style="margin-left: 1px; margin-top: -8px;"
-                        >
-                          <q-card
-                            class="bg-white shadow-xl rounded-xl overflow-hidden"
-                            style="border-radius: 12px !important;"
-                          >
-                            <q-list
-                              padding
-                              class="overflow-visible"
-                            >
-                              <q-item
-                                v-for="(subSubItem, subSubIndex) in subItem.submenu"
-                                :key="subSubIndex"
-                                v-ripple
-                                clickable
-                                class="menu-item rounded-lg transition-all duration-300"
-                                @click="navigateTo(subSubItem.href)"
-                              >
-                                <q-item-section side>
-                                  <div class="circle-icon" />
-                                </q-item-section>
-
-                                <q-item-section>
-                                  <q-item-label class="text-primary text-xs">
-                                    {{ subSubItem.label }}
-                                  </q-item-label>
-                                </q-item-section>
-
-                                <!-- <q-item-section side>
-                                  <q-icon
-                                    name="arrow_forward"
-                                    size="xs"
-                                    class="text-primary opacity-0 transition-all duration-300"
-                                  />
-                                </q-item-section> -->
-                              </q-item>
-                            </q-list>
-                          </q-card>
-                        </div>
                       </div>
+                    </div>
 
-                      <q-separator
-                        v-if="subIndex < item.items.length - 1"
-                        class="opacity-30"
-                      />
-                    </template>
-                  </q-list>
+                    <!-- Right Panel: Dedicated Submenu Content Area -->
+                    <div class="col-7 p-3 bg-slate-50/60 dropdown-scroll-body">
+                      <template v-if="getActiveNestedItem(index, item)">
+                        <div class="row items-center justify-between border-b border-slate-200 pb-2 mb-2">
+                          <div>
+                            <div class="text-subtitle2 text-weight-bolder text-slate-900 leading-tight">
+                              {{ getActiveNestedItem(index, item).label }}
+                            </div>
+                            <div class="text-caption text-slate-500">
+                              {{ getActiveNestedItem(index, item)?.submenu?.length ? 'Daftar Sub-Layanan Tersedia' : 'Tautan Langsung Halaman' }}
+                            </div>
+                          </div>
+                          <q-badge
+                            v-if="getActiveNestedItem(index, item)?.submenu?.length"
+                            color="teal-8"
+                            rounded
+                            class="q-px-sm"
+                          >
+                            {{ getActiveNestedItem(index, item).submenu.length }} Item
+                          </q-badge>
+                        </div>
+
+                        <!-- Submenu Items List -->
+                        <div
+                          v-if="getActiveNestedItem(index, item)?.submenu?.length"
+                          class="flex flex-col gap-1.5"
+                        >
+                          <q-item
+                            v-for="(subSubItem, subSubIdx) in getActiveNestedItem(index, item).submenu"
+                            :key="subSubIdx"
+                            v-ripple
+                            clickable
+                            class="dropdown-menu-item bg-white rounded-xl p-2.5 border border-slate-100 shadow-2xs transition-all duration-200 hover:border-teal-300"
+                            @click="navigateTo(subSubItem.href)"
+                          >
+                            <q-item-section side class="q-pr-xs">
+                              <q-icon name="subdirectory_arrow_right" size="14px" class="text-teal-7 opacity-80" />
+                            </q-item-section>
+
+                            <q-item-section>
+                              <q-item-label class="text-weight-medium text-slate-700 text-body2 leading-snug">
+                                {{ subSubItem.label }}
+                              </q-item-label>
+                            </q-item-section>
+
+                            <q-item-section side>
+                              <q-icon name="arrow_forward" size="14px" class="text-slate-400" />
+                            </q-item-section>
+                          </q-item>
+                        </div>
+
+                        <!-- Direct Link Info Card (If no submenus) -->
+                        <div v-else class="flex flex-center text-center p-6 h-full">
+                          <div>
+                            <q-icon name="touch_app" size="36px" class="text-teal-7 q-mb-xs" />
+                            <div class="text-subtitle2 text-weight-bold text-slate-800">
+                              {{ getActiveNestedItem(index, item).label }}
+                            </div>
+                            <div class="text-caption text-slate-500 q-mb-md">
+                              Klik tombol di bawah ini untuk membuka halaman secara langsung.
+                            </div>
+                            <q-btn
+                              unelevated
+                              rounded
+                              color="primary"
+                              no-caps
+                              label="Buka Halaman"
+                              icon-right="east"
+                              size="sm"
+                              class="q-px-md"
+                              @click="navigateTo(getActiveNestedItem(index, item).href, getActiveNestedItem(index, item), item)"
+                            />
+                          </div>
+                        </div>
+                      </template>
+                    </div>
+                  </div>
+
+                  <!-- CASE 2: Standard / Mega Grid for Non-nested Dropdowns (e.g. Pokja / Pelayanan) -->
+                  <div v-else class="dropdown-scroll-body p-2">
+                    <div
+                      :class="[
+                        item.items && item.items.length > 8 ? 'grid grid-cols-2 gap-1' : 'flex flex-col gap-1'
+                      ]"
+                    >
+                      <template
+                        v-for="(subItem, subIndex) in item.items"
+                        :key="subIndex"
+                      >
+                        <q-item
+                          v-ripple
+                          clickable
+                          class="dropdown-menu-item rounded-xl transition-all duration-250 p-2 text-slate-800"
+                          @click="navigateTo(subItem.href, subItem, item)"
+                        >
+                          <q-item-section side class="q-pr-xs">
+                            <div class="glow-dot" />
+                          </q-item-section>
+
+                          <q-item-section>
+                            <q-item-label class="text-weight-bold text-slate-800 text-body2 leading-snug">
+                              {{ subItem.label }}
+                            </q-item-label>
+                          </q-item-section>
+                        </q-item>
+                      </template>
+                    </div>
+                  </div>
                 </q-card>
-              </div>
+                </div>
+              </transition>
             </div>
           </template>
         </div>
 
-        <!-- Mobile Menu Button -->
-        <div class="lg:hidden">
+        <!-- Mobile Menu Button (Cool Black Hamburger) -->
+        <div class="lg:hidden flex items-center">
           <q-btn
             flat
-            round
-            :color="`${store.visible?'white':'primary'}`"
-            :icon="mobileMenuOpen ? 'mdi-close' : 'mdi-menu'"
+            dense
+            color="dark"
+            size="md"
+            :icon="mobileMenuOpen ? 'close' : 'menu_open'"
+            class="mobile-hamburger-btn p-2"
             @click="mobileMenuOpen = !mobileMenuOpen"
           />
         </div>
       </div>
 
-      <!-- drawer for mobile -->
+      <!-- Mobile Drawer (Intact) -->
       <div
         v-if="mobileMenuOpen"
         class="lg:hidden"
@@ -253,6 +326,7 @@
           v-model="mobileMenuOpen"
           :logo="logo"
           :menus="menus"
+          :menu-items="menuItems"
           :route="route.name"
         />
       </div>
@@ -408,11 +482,12 @@ const handleDropdownMouseLeave = (index) => {
     clearTimeout(closeTimeout.value)
   }
 
+  // Delay harus >= durasi leave animation (180ms) agar smooth
   closeTimeout.value = setTimeout(() => {
     if (!isHoveringParentItem.value) {
       closeDropdown(index)
     }
-  }, 300)
+  }, 220)
 }
 
 // Tambahkan watch untuk memonitor perubahan
@@ -690,9 +765,51 @@ const second = computed(() => {
   return sec
 })
 
+const activeNestedSubMap = ref({})
+
+function hasAnyNestedSubmenu(menuItem) {
+  return menuItem && menuItem.items && menuItem.items.some(sub => sub?.submenu && sub?.submenu?.length > 0)
+}
+
+function getFirstNestedIndex(menuItem) {
+  if (!menuItem || !menuItem.items) return 0
+  const idx = menuItem.items.findIndex(s => s?.submenu && s?.submenu?.length > 0)
+  return idx >= 0 ? idx : 0
+}
+
+function getActiveNestedItem(menuIndex, menuItem) {
+  if (!menuItem || !menuItem.items || menuItem.items.length === 0) return null
+  const savedIdx = activeNestedSubMap.value[menuIndex]
+  const activeIdx = savedIdx !== undefined ? savedIdx : getFirstNestedIndex(menuItem)
+  return menuItem.items[activeIdx] || menuItem.items[0] || null
+}
+
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.header-top-bar {
+  background: linear-gradient(90deg, var(--q-primary) 0%, var(--q-secondary) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.top-social-btn {
+  color: white !important;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-2px);
+  }
+}
+
+.pulse-dot-sm {
+  width: 6px;
+  height: 6px;
+  background-color: #00f2fe;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #00f2fe;
+}
+
 .desktop-nav {
   display: none;
 }
@@ -704,241 +821,138 @@ const second = computed(() => {
   }
 }
 
-// Add or update these styles
-.relative.group {
-  position: relative !important;
-  overflow: visible !important;
-}
-
-.q-list {
-  overflow: visible !important;
-}
-
-.q-menu {
-  overflow: visible !important;
-}
-
-// Enhanced dropdown animation
-.animate-slide-down {
-  animation: slideDown 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes slideDown {
-  0% {
-    opacity: 0;
-    transform: translateY(-10px) scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-// Enhanced shadow
-.q-card {
-  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1),
-              0 4px 6px -2px rgba(0, 0, 0, 0.05),
-              0 0 15px rgba(0, 0, 0, 0.1) !important;
-}
-
-// Submenu animation
-.absolute.left-full {
-  opacity: 0;
-  transition: opacity 0.2s ease;
-
-  &[style*="display: block"] {
-    opacity: 1;
-  }
-}
-
-/* Ensure consistent spacing and alignment */
-.flex-grow {
-  flex-grow: 1;
-}
-
-.relative {
+.futuristic-nav-item {
   position: relative;
-}
-
-.absolute {
-  position: absolute;
-}
-
-/* Ensure proper z-index stacking */
-.z-50 {
-  z-index: 50;
-}
-
-.menu__item {
-  position: relative;
-  margin-right: 10px;
-  font-size: 14px;
-  padding: 2px 10px;
-  text-decoration: none;
-
-  &::before {
-    content: "";
-    position: absolute;
-    border-radius: 15px;
-    background-color: v-bind(prim);
-    // top: 30px;
-    /* bottom: -3px; */
-    left: 10px;
-    width: 0px;
-    height: 2px;
-    opacity: 0;
-    transition: all 0.3s ease;
-  }
-  &:hover {
-      &::before {
-        width: 30px;
-        opacity: 1
-      }
-    }
-}
-
-.q-item.q-router-link--active, .q-item--active {
-    color: white;
-}
-a.router-link-active {
-  background-color: v-bind(second);
-  border-radius: 5px;
-  transition: all 0.3s ease;
-}
-a.active {
-  background-color: v-bind(second);
-  border-radius: 5px;
-  transition: all 0.3s ease;
-}
-
-.q-item {
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-}
-
-.group:hover .group-hover\:opacity-100 {
-  opacity: 1;
-}
-
-.rotate-90 {
-  transform: rotate(90deg);
-}
-
-.overflow-visible {
-  overflow: visible !important;
-}
-
-.group {
-  position: relative;
-}
-
-.group:hover .submenu {
-  display: block;
-}
-
-/* Animasi untuk submenu */
-.submenu-enter-active,
-.submenu-leave-active {
-  transition: opacity 0.3s, transform 0.3s;
-}
-
-.submenu-enter-from,
-.submenu-leave-to {
-  opacity: 0;
-  transform: translateX(-10px);
-}
-
-/* Perbaikan posisi submenu */
-.absolute.left-full {
-  position: absolute;
-  left: 100%;
-}
-
-.menu-item {
-  position: relative;
+  border-radius: 20px !important;
+  padding: 6px 14px !important;
+  transition: color 0.25s ease, background 0.25s ease !important;
   overflow: hidden;
 
-  &:hover {
-    background: rgba(0, 0, 0, 0.03);
-
-    .circle-icon {
-      &::after {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    .q-icon {
-      opacity: 1 !important;
-    }
-  }
-
-  &::before {
+  // Elegant underline sweep
+  &::after {
     content: '';
     position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(120deg, transparent 0%, transparent 50%, rgba(0, 0, 0, 0.03) 50%);
-    transform: translateX(-100%);
-    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: calc(100% - 24px);
+    height: 2px;
+    background: linear-gradient(90deg, #0284c7, #06b6d4);
+    border-radius: 4px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: center;
   }
 
-  &:hover::before {
-    transform: translateX(0);
+  &:hover {
+    background: rgba(2, 132, 199, 0.07) !important;
+    color: #0284c7 !important;
+
+    &::after {
+      transform: translateX(-50%) scaleX(1);
+    }
   }
 }
 
-.circle-icon {
-  width: 16px;
-  height: 16px;
-  border: 2px solid var(--q-primary);
-  border-radius: 50%;
-  position: relative;
-  transition: all 0.3s ease;
+.active-nav-link {
+  background: rgba(2, 132, 199, 0.1) !important;
+  color: #0284c7 !important;
 
   &::after {
     content: '';
     position: absolute;
-    top: 50%;
+    bottom: 5px;
     left: 50%;
-    width: 8px;
-    height: 8px;
-    background-color: var(--q-primary);
-    border-radius: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: translateX(-50%) scaleX(1);
+    width: calc(100% - 24px);
+    height: 2px;
+    background: linear-gradient(90deg, #0284c7, #06b6d4);
+    border-radius: 4px;
   }
 }
 
-.relative.group {
-  position: relative;
-  overflow: visible !important;
+.glass-dropdown-card {
+  background: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 20px !important;
+  box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.18) !important;
 }
 
-.submenu-container {
-  position: absolute;
-  left: 100%;
+.dropdown-scroll-body {
+  max-height: calc(78vh - 80px);
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* Custom slim scrollbar */
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(241, 245, 249, 0.6);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+    &:hover {
+      background: #0284c7;
+    }
+  }
+}
+
+.dropdown-menu-item {
+  transition: all 0.25s ease;
+
+  &:hover {
+    background: rgba(2, 132, 199, 0.08) !important;
+
+    .glow-dot {
+      transform: scale(1.4);
+      background-color: #0284c7;
+      box-shadow: 0 0 10px #0284c7;
+    }
+  }
+}
+
+.glow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #94a3b8;
+  transition: all 0.3s ease;
+}
+
+// Dropdown — Vue transition ultra-smooth
+.dropdown-fade-enter-active {
+  will-change: opacity, transform;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease-out,
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dropdown-fade-leave-active {
+  will-change: opacity, transform;
+  pointer-events: none;
+  transition:
+    opacity 0.15s ease-in,
+    transform 0.18s ease-in;
+}
+.dropdown-fade-enter-from {
   opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-
-  &[style*="display: block"] {
-    opacity: 1;
-    visibility: visible;
-  }
+  transform: translateY(-8px);
 }
-
-// Pastikan parent containers memiliki overflow visible
-.q-menu {
-  overflow: visible !important;
+.dropdown-fade-enter-to {
+  opacity: 1;
+  transform: translateY(0);
 }
-
-.q-list {
-  overflow: visible !important;
+.dropdown-fade-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+.dropdown-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-5px);
 }
 
 .submenu-container {
@@ -946,151 +960,17 @@ a.active {
   min-width: 200px;
 }
 
-.menu-item {
-  &:hover {
-    background: rgba(0, 0, 0, 0.03);
+.mobile-hamburger-btn {
+  color: #0f172a !important;
+  background: rgba(15, 23, 42, 0.06) !important;
+  border: 1px solid rgba(15, 23, 42, 0.15) !important;
+  border-radius: 14px !important;
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
 
-    .circle-icon {
-      &::after {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    .q-icon {
-      opacity: 1 !important;
-    }
+  &:hover, &:active {
+    background: rgba(15, 23, 42, 0.12) !important;
+    transform: scale(1.08);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15) !important;
   }
-}
-
-.relative.group {
-  position: relative !important;
-  overflow: visible !important;
-}
-
-.q-list {
-  overflow: visible !important;
-}
-
-/* Ensure proper z-index stacking */
-.absolute.left-full {
-  z-index: 1000;
-}
-
-/* Add hover area padding */
-.menu-item {
-  padding-right: 2rem;
-  position: relative;
-
-  &::after {
-    content: '';
-    position: absolute;
-    right: -20px; /* Create hover area to reach submenu */
-    top: 0;
-    height: 100%;
-    width: 20px;
-  }
-}
-
-/* Tambahkan atau update CSS berikut */
-.submenu-container {
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-
-  &:hover,
-  &[v-show]:not([v-show="false"]) {
-    pointer-events: auto;
-    opacity: 1;
-    visibility: visible;
-  }
-}
-
-/* Pastikan parent containers memiliki overflow visible */
-.q-menu,
-.q-list,
-.relative.group,
-.overflow-visible {
-  overflow: visible !important;
-}
-
-/* Pastikan z-index benar */
-.z-50 {
-  z-index: 9999 !important;
-}
-
-.dropdown-wrapper {
-  position: relative !important;
-  overflow: visible !important;
-}
-
-/* Update hover area untuk mencegah submenu menghilang saat mouse berpindah */
-.menu-item {
-  position: relative;
-  z-index: 1;
-  padding-right: 2rem;
-
-  &::after {
-    content: '';
-    position: absolute;
-    right: -20px; /* Area hover untuk mencapai submenu */
-    top: 0;
-    height: 100%;
-    width: 20px;
-  }
-
-  &:hover {
-    z-index: 2;
-  }
-}
-
-/* Tambahkan style untuk dropdown wrapper */
-.dropdown-wrapper {
-  &:hover {
-    .submenu-container {
-      pointer-events: auto;
-      opacity: 1;
-      visibility: visible;
-    }
-  }
-}
-
-/* Update style untuk q-card dalam submenu */
-.submenu-container .q-card {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-              0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
-  background: white !important;
-  display: block !important;
-}
-
-/* Pastikan parent menu item memiliki z-index yang tepat */
-.menu-item {
-  position: relative;
-  z-index: 1;
-
-  &:hover {
-    z-index: 2;
-  }
-}
-
-/* Tambahkan style untuk memastikan submenu tetap terlihat */
-.absolute.left-full {
-  position: absolute !important;
-  left: 100% !important;
-  top: 0 !important;
-  display: block !important;
-  visibility: visible !important;
-}
-
-/* Reset opacity jika sebelumnya ada */
-.opacity-0 {
-  opacity: 1 !important;
-}
-
-/* Tambahkan debug style untuk membantu visualisasi (bisa dihapus nanti) */
-.submenu-container {
-  border: 1px solid rgba(0,0,0,0.1);
-  background: white;
 }
 </style>

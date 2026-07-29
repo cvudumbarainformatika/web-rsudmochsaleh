@@ -148,7 +148,17 @@ export default configure(function () {
     // === Dev Server ===
     devServer: {
       port: 9001,
-      open: true
+      open: true,
+      proxy: {
+        '/api': {
+          target: 'https://rsud.probolinggokota.go.id',
+          changeOrigin: true
+        },
+        '/storage': {
+          target: 'https://rsud.probolinggokota.go.id',
+          changeOrigin: true
+        }
+      }
     },
 
     // === Quasar Framework Config ===

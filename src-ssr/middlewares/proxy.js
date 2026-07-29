@@ -2,7 +2,7 @@ import { defineSsrMiddleware } from '#q-app/wrappers'
 import { createProxyMiddleware } from 'http-proxy-middleware'
 
 export default defineSsrMiddleware(({ app }) => {
-  const target = 'http://api-webrsud-web'
+  const target = process.env.API_TARGET || 'http://api-webrsud-web'
 
   // Proxy for API
   app.use('/api', createProxyMiddleware({

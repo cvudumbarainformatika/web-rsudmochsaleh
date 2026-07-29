@@ -1,15 +1,15 @@
 <template>
-  <div :class="admin?'q-px-md bg-grey-3':'container-padding bg-grey-3'">
-    <div class="q-my-lg q-py-lg">
-      <div class="row justify-center q-col-gutter-lg relative-position q-mt-lg">
+  <div :class="admin ? 'q-px-md bg-white' : 'container-padding section-container light-grid-bg'">
+    <div class="q-py-xl">
+      <div class="row justify-center q-col-gutter-lg relative-position">
         <div
           v-for="(item, i) in lists"
           :key="i"
           class="col-12 col-md-3"
-          :class="admin?'cursor-pointer':''"
+          :class="admin ? 'cursor-pointer' : ''"
         >
-          <div class="feature-item q-pa-lg c-p">
-            <div class="icon-x text-primary">
+          <div class="feature-item glass-card-light hover-lift q-pa-lg">
+            <div class="icon-x text-teal-8 bg-teal-1">
               <q-icon
                 v-if="!store.loading"
                 :name="item.icon"
@@ -19,10 +19,10 @@
                 type="circle"
               />
             </div>
-            <div class="text-h6 bold q-mb-lg">
+            <div class="text-h6 bold q-mb-md">
               <span
                 v-if="!store.loading"
-                class="text-grey-9"
+                class="text-slate-900 text-weight-bold"
               >
                 {{ item.name }}
                 <q-popup-edit
@@ -53,7 +53,7 @@
             </div>
             <div
               v-if="!store.loading"
-              class="text-grey-9"
+              class="text-slate-600 text-subtitle2 font-normal"
             >
               {{ item.desc }}
               <q-popup-edit
@@ -91,7 +91,7 @@
       v-if="admin"
       class="q-py-lg"
     >
-      <q-separator class="q-my-md" />
+      <q-separator class="q-my-md opacity-20" />
       <app-btn
         label="Simpan Perubahan"
         type="button"
@@ -118,95 +118,39 @@ const lists = computed(() => store.section_two)
 </script>
 
 <style lang="scss" scoped>
-.feature-item {
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-    transition: all .5s ease;
-
-    .icon-x {
-        height: 60px;
-        width: 60px;
-        margin: 0 auto 30px;
-        text-align: center;
-        font-size: 50px;
-        // background-color: $yellow;
-        position: relative;
-        z-index: 1;
-        transition: all .5s ease;
-        // i.q-icon {
-        //     margin-top:-40px;
-        //     transition: all .3s ease;
-        // }
-
-        &::before{
-            content: "";
-            position: absolute;
-            left: 100%;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: $grey-7;
-            transition: all .5s ease;
-            z-index: -1;
-            opacity: 0;
-        }
-    }
-
-    // background-color: $green;
-    &::before {
-        content: "";
-        position: absolute;
-        z-index: -1;
-        border-radius: 50%;
-        background-color: $red;
-        height: 20px;
-        width: 20px;
-        left: -10px;
-        top: 40px;
-        opacity: 0;
-        transition: all .5s ease;
-    }
-    &::after {
-        content: "";
-        position: absolute;
-        z-index: -1;
-        border-radius: 50%;
-        height: 20px;
-        width: 20px;
-        background-color: $grey;
-        right: -30px;
-        top: 80px;
-        opacity: 0;
-        transition: all .5s ease;
-    }
-    &:hover {
-        box-shadow: 0 0 0px 0px rgb(0 0 0 / 20%), 0 2px 10px rgb(0 0 0 / 10%);
-        &::after {
-            transform: translateX(-20px);
-            opacity:1
-        }
-        &::before {
-            transform: translateX(20px);
-            opacity:1
-        }
-        .icon-x {
-            color:#fff !important;
-            font-size: 35px;
-            // i.q-icon {
-            // // transform: scale(20);
-            //     margin-top:0px;
-            //     // transition: all .3s ease;
-            // }
-            &::before {
-                left: 0;
-                border-radius: 50%;
-                opacity: 1;
-            }
-        }
-    }
-
+.section-container {
+  position: relative;
 }
 
+.feature-item {
+  text-align: center;
+  position: relative;
+  border-radius: 24px !important;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .icon-x {
+    height: 70px;
+    width: 70px;
+    margin: 0 auto 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    border-radius: 50%;
+    transition: all 0.4s ease;
+  }
+
+  &:hover {
+    .icon-x {
+      background: linear-gradient(135deg, #00b4db, #0083b0);
+      color: #ffffff !important;
+      transform: scale(1.1);
+      box-shadow: 0 0 25px rgba(0, 180, 219, 0.4);
+    }
+  }
+}
 </style>
