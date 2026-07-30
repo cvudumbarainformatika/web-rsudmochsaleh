@@ -1,44 +1,41 @@
 <template>
-  <footer class="footer-section text-slate-300">
-    <!-- Top Glow Accent Line -->
-    <div class="footer-glow-line" />
-
-    <div class="container-padding py-12 md:py-16">
-      <div class="row q-col-gutter-lg">
-        
-        <!-- KOLOM 1: Brand & Kontak Utama -->
-        <div class="col-12 col-md-4 col-lg-4">
-          <div class="footer-brand-wrap">
-            <div class="flex items-center gap-3 q-mb-md">
-              <img
-                :src="logo"
-                alt="Logo RSUD"
-                class="footer-logo"
-              />
-              <img
-                src="/images/logos/logo-pemkot.png"
-                alt="Logo Pemkot"
-                class="footer-logo pemkot-logo"
-              />
+  <footer class="footer-wrapper">
+    <div class="container-padding content-container">
+      
+      <!-- 3 Columns Cards Row -->
+      <div class="row q-col-gutter-lg q-pb-xl">
+        <!-- Hospital Info -->
+        <div class="col-md-4 col-lg-4 col-xl-4 col-sm-12 col-xs-12">
+          <div class="footer-card glass-card p-6 rounded-2xl flex column justify-between h-full">
+            <div>
+              <div class="flex items-center gap-3 q-mb-md">
+                <img
+                  :src="logo"
+                  alt="Logo RSUD"
+                  class="footer-logo"
+                />
+                <img
+                  src="/images/logos/logo-pemkot.png"
+                  alt="Logo Pemkot"
+                  class="footer-logo pemkot-logo"
+                />
+              </div>
+              <h3 class="footer-title text-white text-weight-bolder leading-tight q-mb-xs">
+                {{ store.header.title || 'UOBK RSUD DOKTER MOHAMAD SALEH' }}
+              </h3>
+              <p class="text-slate-200 text-body2 leading-relaxed q-mb-lg">
+                {{ store.header.alamat || 'Jl. Mayjen Panjaitan No.65 Kota Probolinggo' }}
+              </p>
             </div>
-            <h3 class="footer-title text-white text-weight-bolder leading-tight q-mb-xs">
-              {{ store.header.title || 'UOBK RSUD DOKTER MOHAMAD SALEH' }}
-            </h3>
-            <div class="footer-subtitle text-teal-4 text-weight-bold text-caption uppercase tracking-wider q-mb-md">
-              Kota Probolinggo
-            </div>
-            <p class="footer-desc text-slate-400 text-body2 leading-relaxed q-mb-lg">
-              {{ store.header.alamat || 'Jl. Mayjen Panjaitan No.65 Kota Probolinggo' }}
-            </p>
             
-            <!-- Sosmed Buttons -->
-            <div class="flex gap-2">
+            <!-- Social Media buttons -->
+            <div class="flex q-gutter-sm">
               <q-btn
                 v-if="store.header.link_fb"
                 dense flat round
                 icon="ti-facebook"
                 size="md"
-                class="social-icon-btn"
+                class="social-btn"
                 :href="store.header.link_fb"
                 target="_blank"
               />
@@ -47,7 +44,7 @@
                 dense flat round
                 icon="ti-instagram"
                 size="md"
-                class="social-icon-btn"
+                class="social-btn"
                 :href="store.header.link_instagram"
                 target="_blank"
               />
@@ -56,7 +53,7 @@
                 dense flat round
                 icon="ti-youtube"
                 size="md"
-                class="social-icon-btn"
+                class="social-btn"
                 :href="store.header.link_youtube"
                 target="_blank"
               />
@@ -65,7 +62,7 @@
                 dense flat round
                 icon="ti-tumblr-alt"
                 size="md"
-                class="social-icon-btn"
+                class="social-btn"
                 :href="store.header.link_tiktok"
                 target="_blank"
               />
@@ -73,106 +70,102 @@
           </div>
         </div>
 
-        <!-- KOLOM 2: Hubungi Kami -->
-        <div class="col-12 col-sm-6 col-md-2.5 col-lg-2.5">
-          <div class="footer-links-col">
+        <!-- Contact Us -->
+        <div class="col-md-4 col-lg-4 col-xl-4 col-sm-12 col-xs-12">
+          <div class="footer-card glass-card p-6 rounded-2xl h-full">
             <h4 class="column-heading text-white text-weight-bold tracking-wider uppercase q-mb-lg">
               Hubungi Kami
             </h4>
-            <ul class="contact-list">
-              <li class="flex items-start gap-2.5 q-mb-md">
-                <q-icon name="call" size="18px" class="text-teal-4 q-mt-xs" />
+            <div class="flex column q-gutter-md">
+              <div class="contact-item flex items-start gap-3 text-slate-100">
+                <q-icon name="call" class="text-teal-3 q-mt-xs" size="20px" />
                 <div>
-                  <span class="text-xs text-slate-500 block">Telepon</span>
-                  <span class="text-body2 text-slate-300 font-medium block">{{ store.header.phone || '(0335) 433119' }}</span>
+                  <span class="text-xs text-slate-300 block">Telepon</span>
+                  <span class="text-body2 text-white text-weight-medium">{{ store.header.phone || '(0335) 433119' }}</span>
                 </div>
-              </li>
-              <li class="flex items-start gap-2.5 q-mb-md">
-                <q-icon name="email" size="18px" class="text-teal-4 q-mt-xs" />
+              </div>
+              
+              <div class="contact-item flex items-start gap-3 text-slate-100">
+                <q-icon name="email" class="text-teal-3 q-mt-xs" size="20px" />
                 <div>
-                  <span class="text-xs text-slate-500 block">Email Resmi</span>
-                  <span class="text-body2 text-slate-300 font-medium break-all block">{{ store.header.email || 'rsud@probolinggokota.go.id' }}</span>
+                  <span class="text-xs text-slate-300 block">Email Resmi</span>
+                  <span class="text-body2 text-white text-weight-medium break-all">{{ store.header.email || 'rsud@probolinggokota.go.id' }}</span>
                 </div>
-              </li>
-            </ul>
+              </div>
+              
+              <div
+                class="contact-item flex items-start gap-3 cursor-pointer text-slate-100 hover-teal"
+                @click="goToLink(store.header.link_map)"
+              >
+                <q-icon name="place" class="text-teal-3 q-mt-xs" size="20px" />
+                <div>
+                  <span class="text-xs text-slate-300 block">Lokasi</span>
+                  <span class="text-body2 text-white text-weight-bold underline decoration-teal-4">Lihat di Google Maps</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- KOLOM 3: Link Terkait -->
-        <div class="col-12 col-sm-6 col-md-2.5 col-lg-2.5">
-          <div class="footer-links-col">
+        <!-- Related Links -->
+        <div class="col-md-4 col-lg-4 col-xl-4 col-sm-12 col-xs-12">
+          <div class="footer-card glass-card p-6 rounded-2xl h-full">
             <h4 class="column-heading text-white text-weight-bold tracking-wider uppercase q-mb-lg">
               Link Terkait
             </h4>
-            <div class="flex flex-col gap-3">
+            <div class="flex column q-gutter-sm">
               <a
                 href="https://probolinggokota.go.id"
                 target="_blank"
-                class="footer-link-item flex items-center gap-1 text-slate-400 hover:text-teal-4 transition-colors duration-250"
+                class="link-item flex items-center gap-2 text-slate-200 hover:text-white"
               >
-                <q-icon name="chevron_right" size="16px" class="text-teal-5" />
-                Pemkot Probolinggo
+                <q-icon name="chevron_right" size="18px" class="text-teal-3" />
+                <span>Pemkot Probolinggo</span>
               </a>
               <a
                 href="https://diskominfo.probolinggokota.go.id"
                 target="_blank"
-                class="footer-link-item flex items-center gap-1 text-slate-400 hover:text-teal-4 transition-colors duration-250"
+                class="link-item flex items-center gap-2 text-slate-200 hover:text-white"
               >
-                <q-icon name="chevron_right" size="16px" class="text-teal-5" />
-                Diskominfo Kota
+                <q-icon name="chevron_right" size="18px" class="text-teal-3" />
+                <span>Diskominfo Kota</span>
               </a>
               <a
                 href="https://www.lapor.go.id/"
                 target="_blank"
-                class="footer-link-item flex items-center gap-1 text-slate-400 hover:text-teal-4 transition-colors duration-250"
+                class="link-item flex items-center gap-2 text-slate-200 hover:text-white"
               >
-                <q-icon name="chevron_right" size="16px" class="text-teal-5" />
-                LAPOR.GO.ID
+                <q-icon name="chevron_right" size="18px" class="text-teal-3" />
+                <span>LAPOR.GO.ID</span>
               </a>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- KOLOM 4: Peta Lokasi (Sekarang di dalam grid footer) -->
-        <div class="col-12 col-md-3 col-lg-3">
-          <div class="footer-links-col">
-            <h4 class="column-heading text-white text-weight-bold tracking-wider uppercase q-mb-md">
-              Lokasi Kami
-            </h4>
-            
-            <div class="footer-map-card overflow-hidden rounded-xl border border-slate-800 shadow-lg q-mb-sm">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d835.2113550381034!2d113.21003672914748!3d-7.745245670780843!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7ad951d2eefe7%3A0x84d2e3e5a3dce896!2sRSUD%20dr.%20Mohamad%20Saleh!5e1!3m2!1sid!2sid!4v1673713586077!5m2!1sid!2sid"
-                width="100%"
-                height="130"
-                style="border:0; display:block;"
-                allowfullscreen=""
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-              />
-            </div>
-            
-            <q-btn
-              flat no-caps
-              size="sm"
-              icon="directions"
-              label="Petunjuk Arah Maps"
-              class="text-teal-4 btn-directions p-0"
-              @click="goToLink(store.header.link_map || 'https://maps.google.com')"
-            />
-          </div>
+      <!-- Google Map Section (Neat and Cohesive Glass Frame) -->
+      <div class="map-card-wrapper q-mb-xl">
+        <div class="map-frame rounded-2xl overflow-hidden shadow-2xl">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d835.2113550381034!2d113.21003672914748!3d-7.745245670780843!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7ad951d2eefe7%3A0x84d2e3e5a3dce896!2sRSUD%20dr.%20Mohamad%20Saleh!5e1!3m2!1sid!2sid!4v1673713586077!5m2!1sid!2sid"
+            width="100%"
+            height="260"
+            style="border:0; display:block;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          />
         </div>
-
       </div>
 
       <!-- Footer Bottom Copyright -->
-      <div class="footer-bottom border-t border-slate-800/60 pt-6 mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+      <div class="footer-bottom flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-300">
         <div>
-          &copy; {{ new Date().getFullYear() }} RSUD dr. Mohamad Saleh Kota Probolinggo.
+          &copy; {{ new Date().getFullYear() }} RSUD dr. Mohamad Saleh Kota Probolinggo. All rights reserved.
         </div>
         <div class="flex gap-4">
-          <span class="hover:text-slate-400 cursor-pointer">Syarat & Ketentuan</span>
-          <span class="hover:text-slate-400 cursor-pointer">Kebijakan Privasi</span>
+          <span class="hover:text-white cursor-pointer transition-colors duration-200">Syarat & Ketentuan</span>
+          <span class="hover:text-white cursor-pointer transition-colors duration-200">Kebijakan Privasi</span>
         </div>
       </div>
     </div>
@@ -199,27 +192,28 @@ function goToLink(val) {
 </script>
 
 <style lang="scss" scoped>
-.footer-section {
-  background: #090d16;
+.footer-wrapper {
   position: relative;
+  background: linear-gradient(135deg, var(--q-primary) 0%, var(--q-secondary) 100%);
+  color: #ffffff;
   overflow: hidden;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.footer-glow-line {
-  height: 2px;
-  width: 100%;
-  background: linear-gradient(90deg, #0d9488 0%, #06b6d4 50%, #0d9488 100%);
-  opacity: 0.8;
+.content-container {
+  padding-top: 4rem;
+  padding-bottom: 2rem;
+  z-index: 10;
+  position: relative;
 }
 
 .footer-logo {
-  height: 44px;
+  height: 48px;
   width: auto;
   object-fit: contain;
 
   &.pemkot-logo {
-    height: 38px;
+    height: 42px;
   }
 }
 
@@ -231,56 +225,72 @@ function goToLink(val) {
 .column-heading {
   font-size: 0.82rem;
   letter-spacing: 0.08em;
-  border-bottom: 2px solid rgba(13, 148, 136, 0.15);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
   padding-bottom: 6px;
   display: inline-block;
 }
 
-.contact-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.footer-card {
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  height: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    border-color: rgba(255, 255, 255, 0.2) !important;
+  }
 }
 
-.footer-link-item {
+.social-btn {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.3s ease !important;
+
+  &:hover {
+    background: #ffffff !important;
+    color: var(--q-primary) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(255, 255, 255, 0.25) !important;
+  }
+}
+
+.link-item {
   text-decoration: none;
   font-size: 0.88rem;
+  padding: 4px 0;
   transition: all 0.25s ease;
-  
+
   &:hover {
     transform: translateX(4px);
   }
 }
 
-.social-icon-btn {
-  background: rgba(255, 255, 255, 0.03) !important;
-  color: #94a3b8 !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  width: 38px;
-  height: 38px;
-  transition: all 0.25s ease !important;
-
-  &:hover {
-    background: rgba(13, 148, 136, 0.1) !important;
-    color: #0d9488 !important;
-    border-color: #0d9488 !important;
-    transform: translateY(-2px);
+.hover-teal:hover {
+  .underline {
+    color: #26a69a !important;
   }
 }
 
-.footer-map-card {
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  
-  &:hover {
-    border-color: rgba(13, 148, 136, 0.4);
-    box-shadow: 0 4px 20px rgba(13, 148, 136, 0.1);
-  }
+.map-card-wrapper {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 8px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
-.btn-directions {
-  transition: color 0.25s ease;
-  &:hover {
-    color: #06b6d4 !important;
-  }
+.map-frame {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 1.5rem;
 }
 </style>
