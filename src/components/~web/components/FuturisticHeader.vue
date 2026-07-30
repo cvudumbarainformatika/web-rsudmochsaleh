@@ -120,11 +120,7 @@
                 <div
                   v-if="item.dropdown && activeDropdown === index"
                   class="absolute top-full transform-gpu z-50 overflow-visible pt-2"
-                  :class="[
-                    hasAnyNestedSubmenu(item)
-                      ? 'w-[720px] right-0'
-                      : (item.items && item.items.length > 8 ? 'w-[680px] right-0' : 'w-80 left-0')
-                  ]"
+                  :class="getDropdownClass(index, item)"
                 >
                   <q-card
                     class="glass-dropdown-card shadow-24 rounded-2xl border-light overflow-hidden"
@@ -784,6 +780,18 @@ function getActiveNestedItem(menuIndex, menuItem) {
   return menuItem.items[activeIdx] || menuItem.items[0] || null
 }
 
+function getDropdownClass(index, item) {
+  const isNested = hasAnyNestedSubmenu(item)
+  const isLarge = item.items && item.items.length > 8
+
+  if (isNested) {
+    return index <= 3 ? 'w-[720px] left-0' : 'w-[720px] right-0'
+  }
+  if (isLarge) {
+    return index <= 3 ? 'w-[680px] left-0' : 'w-[680px] right-0'
+  }
+  return index >= 5 ? 'w-80 right-0' : 'w-80 left-0'
+}
 </script>
 
 <style lang="scss" scoped>
