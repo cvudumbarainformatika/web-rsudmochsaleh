@@ -1,73 +1,51 @@
 <template>
-  <q-page>
-    <!-- <TabPpid
-      v-model="store.tab"
-      :items="store.items"
-    /> -->
-
-    <!-- <q-separator /> -->
+  <q-page class="ppid-page py-6">
+    <app-loading v-if="store.loading" />
 
     <q-tab-panels
+      v-else
       v-model="store.tab"
       animated
       vertical
       swipeable
-      class="q-pt-lg q-mt-lg"
+      class="custom-tab-panels bg-transparent"
     >
-      <q-tab-panel name="all">
-        <app-text-judul judul="Ppid" />
-        <q-separator />
-        <div class="content">
+      <!-- Panel 1: List Semua Menu PPID -->
+      <q-tab-panel name="all" class="panel-padding-none">
+        <div class="panel-header q-mb-lg">
+          <app-text-judul judul="PPID Rumah Sakit" />
+        </div>
+        <div class="content-box">
           <ListBigPpid
             :items="store.items"
             @click="clickList"
           />
         </div>
       </q-tab-panel>
+
+      <!-- Panel 2: Detail PPID -->
       <q-tab-panel
         v-for="(item, n) in store.items"
         :key="n"
         :name="item.nama"
+        class="panel-padding-none"
       >
-        <app-text-judul :judul="item.nama" />
-        <q-separator />
-        <div class="content">
-          <!-- <div
-            v-if="item.thumbnail"
-            class="row q-col-gutter-lg"
-          >
-            <div class="col-md-7 col-lg-7 col-xl-7 col-xs-12 col-sm-12">
-              <app-editor
-                v-model="item.content"
-                :edited="false"
-              />
-            </div>
-            <div class="col-md-5 col-lg-5 col-xl-5 col-xs-12 col-sm-12">
-              <div class="q-py-md">
-                <q-img
-                  :ratio="1"
-                  :src="pathImg + item.thumbnail"
-                  img-class="my-pict-style"
-                  class="my-pict-style"
-                />
-              </div>
-            </div>
-          </div>
-          <div v-else>
-            <app-editor
-              v-model="item.content"
-              :edited="false"
+        <div class="panel-header q-mb-md">
+          <app-text-judul :judul="item.nama" />
+        </div>
+
+        <div class="content-box">
+          <!-- Featured Image (Bila Ada) -->
+          <div v-if="item.thumbnail" class="featured-image-wrap q-mb-lg">
+            <q-img
+              :src="pathImg + item.thumbnail"
+              class="featured-image-main rounded-2xl shadow-md"
+              alt="thumbnail Rsud dr mohamad saleh"
             />
-          </div> -->
-          <div v-if="item.thumbnail">
-            <div class="q-py-md">
-              <q-img
-                :src="pathImg + item.thumbnail"
-                alt="thumbnail Rsud dr mohamad saleh"
-              />
-            </div>
           </div>
-          <div class="q-mb-xl">
+
+          <!-- Deskripsi Content Utama -->
+          <div class="content-description-card q-mb-xl">
             <app-editor
               v-model="item.content"
               :edited="false"
@@ -76,6 +54,8 @@
         </div>
       </q-tab-panel>
     </q-tab-panels>
+
+    <div class="q-mb-xl" />
   </q-page>
 </template>
 
@@ -84,9 +64,7 @@ import { usePpidWeb } from 'src/stores/web/ppid'
 import { onMounted } from 'vue'
 import { pathImg } from 'src/boot/axios'
 import ListBigPpid from './ListBigPpid.vue'
-// import TabPpid from './TabPpid.vue'
-// import TabPpid from './TabPpid.vue'
-// const tab = ref('all')
+
 const store = usePpidWeb()
 
 onMounted(() => {
@@ -100,19 +78,50 @@ function clickList(val) {
 </script>
 
 <style lang="scss" scoped>
-
-.border__tab {
-  border:1px solid $grey-4;
-}
-.q-tab-panel {
-  padding: 0px !important;
+.ppid-page {
+  min-height: 100vh;
 }
 
-.sotel {
-  border-radius: 5px 0px;
+.custom-tab-panels {
+  background: transparent !important;
 }
 
-.my-pict-style {
-    border-radius:  30% 10px 30% 10px ;
+.panel-padding-none {
+  padding: 0 !important;
+}
+
+.panel-header {
+  border-bottom: 2px solid rgba(13, 148, 136, 0.1);
+  padding-bottom: 12px;
+}
+
+.content-box {
+  background: white;
+  border-radius: 24px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow: 0 4px 30px rgba(15, 23, 42, 0.04);
+  padding: 1.5rem;
+  
+  @media (min-width: 768px) {
+    padding: 2.25rem;
+  }
+}
+
+.featured-image-wrap {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+}
+
+.featured-image-main {
+  width: 100%;
+  max-height: 450px;
+  display: block;
+}
+
+.content-description-card {
+  color: #334155;
+  line-height: 1.75;
 }
 </style>
