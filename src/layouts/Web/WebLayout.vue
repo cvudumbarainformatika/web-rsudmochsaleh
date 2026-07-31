@@ -65,12 +65,25 @@
         leave-active-class="animated fadeOut"
       >
         <q-page-sticky
-          v-if="store.btnScrollTop"
           position="bottom-right"
           :offset="[30, 30]"
           style="z-index: 100;"
+          class="flex items-center gap-2"
         >
           <q-btn
+            fab
+            icon="accessibility_new"
+            color="teal-8"
+            glossy
+            class="q-mr-xs shadow-lg"
+            @click="storeAccessibility.toggleWidget()"
+          >
+            <q-tooltip anchor="top middle" self="bottom middle">
+              Menu Aksesibilitas Web RSUD
+            </q-tooltip>
+          </q-btn>
+          <q-btn
+            v-if="store.btnScrollTop"
             fab
             icon="keyboard_arrow_up"
             color="primary"
@@ -82,6 +95,7 @@
     </q-page-container>
 
     <!-- Footer juga full width untuk background -->
+    <AccessibilityWidget />
     <app-footer />
   </q-layout>
 </template>
@@ -92,7 +106,11 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { scroll, date, useQuasar } from 'quasar'
 
 import HeaderWeb from 'src/components/~web/components/FuturisticHeader.vue'
+import AccessibilityWidget from 'src/components/~web/components/AccessibilityWidget.vue'
 import AppFooter from 'src/components/~global/AppFooter.vue'
+import { useAccessibilityStore } from 'src/stores/web/accessibility'
+
+const storeAccessibility = useAccessibilityStore()
 
 // import { useSeo } from 'src/composables/useSeo'
 const { getScrollTarget, setVerticalScrollPosition } = scroll
