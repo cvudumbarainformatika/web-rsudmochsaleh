@@ -76,6 +76,30 @@ export default {
       ]
     },
     {
+      path: '/admin/interaksi',
+      component: () => import('pages/Admin/Interaksi/IndexPage.vue'),
+      children: [
+        { path: '', name: 'admin.interaksi', component: () => import('src/pages/Admin/Interaksi/TablePage.vue') },
+        {
+          path: '/admin/interaksi/form/:id?',
+          name: 'form.interaksi',
+          component: () => import('pages/Admin/Interaksi/FormPage.vue')
+        }
+      ]
+    },
+    {
+      path: '/admin/antrian-online',
+      component: () => import('pages/Admin/AntrianOnline/IndexPage.vue'),
+      children: [
+        { path: '', name: 'admin.antrian-online', component: () => import('src/pages/Admin/AntrianOnline/TablePage.vue') },
+        {
+          path: '/admin/antrian-online/form/:id?',
+          name: 'form.antrian-online',
+          component: () => import('pages/Admin/AntrianOnline/FormPage.vue')
+        }
+      ]
+    },
+    {
       path: '/admin/ppid',
       component: () => import('pages/Admin/Ppid/IndexPage.vue'),
       children: [

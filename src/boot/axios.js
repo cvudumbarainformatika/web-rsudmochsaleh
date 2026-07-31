@@ -7,13 +7,18 @@ import { setCssVar } from 'quasar'
 
 
 const isServer = typeof window === 'undefined'
-const DEFAULT_API_URL = process.env.DEV ? 'https://rsud.probolinggokota.go.id/api' : '/api'
-const INTERNAL_API_URL = 'http://api-webrsud-web/api'
+
+// TENTUKAN URL API LOKAL ANDA DI SINI
+// const LOCAL_API = 'http://localhost:8000'
+const LOCAL_API = 'http://localhost:8123'
+
+const DEFAULT_API_URL = process.env.DEV ? `${LOCAL_API}/api` : '/api'
+const INTERNAL_API_URL = process.env.DEV ? `${LOCAL_API}/api` : 'http://api-webrsud-web/api'
 
 const SERV = isServer ? INTERNAL_API_URL : DEFAULT_API_URL
-const SERV_STORAGE = isServer
-  ? 'http://api-webrsud-web/storage'
-  : (process.env.DEV ? 'https://rsud.probolinggokota.go.id/storage' : '/storage')
+const SERV_STORAGE = process.env.DEV
+  ? `${LOCAL_API}/storage`
+  : (isServer ? 'http://api-webrsud-web/storage' : '/storage')
 const SERVER = SERV
 
 const api = axios.create({ baseURL: SERVER })

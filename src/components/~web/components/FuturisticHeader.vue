@@ -1,13 +1,10 @@
 <template>
   <header
-    class="w-full z-50 transition-all duration-500"
-    :class="{'glass-nav-fixed fixed-top': fixed, 'glass-nav relative': !fixed}"
+    class="w-full z-50 transition-all duration-300 enterprise-sticky-header"
+    :class="{'glass-nav-fixed': isScrolled, 'glass-nav': !isScrolled}"
   >
-    <!-- Futuristic Top Utility Bar -->
-    <div
-      v-if="!store.visible"
-      class="header-top-bar"
-    >
+    <!-- Top Utility Bar (Selalu Ada & Stabil - Tanpa v-if yang Membuat Halaman Meloncat) -->
+    <div class="header-top-bar">
       <div class="container-padding flex items-center justify-between py-2 text-white">
         <div class="flex items-center gap-3">
           <div class="flex items-center gap-2 bg-white-10 q-px-sm q-py-xs rounded-full">
@@ -68,7 +65,7 @@
       </div>
     </div>
 
-    <!-- Main Futuristic Navbar -->
+    <!-- Main Futuristic Navbar (Tampil Utuh Pada Layar 1300px - Breakpoint gt-sm) -->
     <nav class="mx-auto px-4 container-padding w-full">
       <div class="flex items-center justify-between h-16 md:h-20 w-full">
         <!-- Logo (Desktop & Mobile) -->
@@ -80,7 +77,7 @@
           >
         </div>
 
-        <!-- Desktop Navigation (Futuristic & Sleek) -->
+        <!-- Desktop Navigation (Selalu Tampak di Layar 1300px / Breakpoint gt-sm) -->
         <div class="desktop-nav flex-grow justify-end items-center gap-1">
           <template
             v-for="(item, index) in menuItems"
@@ -97,33 +94,29 @@
                 no-caps
                 class="futuristic-nav-item"
                 :class="{
-                  'active-nav-link': route.path === item.href,
-                  'text-slate-800': !fixed,
-                  'text-slate-900': fixed
+                  'active-nav-link': isLinkActive(item),
+                  'text-slate-800': true
                 }"
                 @click="item.dropdown ? toggleDropdown(index) : navigateTo(item.href, item)"
               >
-                <div class="text-weight-bold text-subtitle2 flex items-center gap-1">
+                <div class="font-bold text-xs tracking-tight">
                   {{ item.label }}
-                  <q-icon
-                    v-if="item.dropdown"
-                    name="keyboard_arrow_down"
-                    size="18px"
-                    class="transition-transform duration-300"
-                    :class="{'rotate-180': activeDropdown === index}"
-                  />
                 </div>
               </q-btn>
 
               <!-- Dropdown Content (Futuristic Glass Card & Split-View Mega Menu) -->
               <transition name="dropdown-fade">
                 <div
-                  v-if="item.dropdown && activeDropdown === index"
+                  v-if="item.dropdown && activeDropdown === index && item.items && item.items.length > 0"
                   class="absolute top-full transform-gpu z-50 overflow-visible pt-2"
-                  :class="getDropdownClass(index, item)"
+                  :class="[
+                    hasAnyNestedSubmenu(item)
+                      ? 'w-[720px] right-0'
+                      : (item.items && item.items.length > 8 ? 'w-[680px] right-0' : 'w-80 left-0')
+                  ]"
                 >
                   <q-card
-                    class="glass-dropdown-card shadow-24 rounded-2xl border-light overflow-hidden"
+                    class="glass-dropdown-card shadow-24 animate-slide-down rounded-2xl border-light overflow-hidden"
                   >
                   <!-- CASE 1: Split-View 2-Panel for Nested Submenus (e.g. PPID / Profil) -->
                   <div
@@ -235,7 +228,7 @@
                           </q-item>
                         </div>
 
-                        <!-- Direct Link Info Card (If no submenus) -->
+                        <!-- Direct Link Info Card -->
                         <div v-else class="flex flex-center text-center p-6 h-full">
                           <div>
                             <q-icon name="touch_app" size="36px" class="text-teal-7 q-mb-xs" />
@@ -262,7 +255,7 @@
                     </div>
                   </div>
 
-                  <!-- CASE 2: Standard / Mega Grid for Non-nested Dropdowns (e.g. Pokja / Pelayanan) -->
+                  <!-- CASE 2: Standard Mega Grid -->
                   <div v-else class="dropdown-scroll-body p-2">
                     <div
                       :class="[
@@ -299,8 +292,8 @@
           </template>
         </div>
 
-        <!-- Mobile Menu Button (Cool Black Hamburger) -->
-        <div class="lg:hidden flex items-center">
+        <!-- Mobile Menu Button (Hanya Muncul Pada HP / Layar di Bawah 768px) -->
+        <div class="mobile-hamburger-wrap flex items-center">
           <q-btn
             flat
             dense
@@ -313,10 +306,10 @@
         </div>
       </div>
 
-      <!-- Mobile Drawer (Intact) -->
+      <!-- Mobile Drawer -->
       <div
         v-if="mobileMenuOpen"
-        class="lg:hidden"
+        class="mobile-drawer-wrap"
       >
         <mobileDrawer
           v-model="mobileMenuOpen"
@@ -365,7 +358,9 @@ import { usePengaduanWeb } from 'src/stores/web/pengaduan'
 import { usePokjaWeb } from 'src/stores/web/pokja'
 import { usePpidWeb } from 'src/stores/web/ppid'
 import { useProfilWeb } from 'src/stores/web/profil'
-import { ref, onMounted, computed, watch } from 'vue'
+import { useInteraksiWeb } from 'src/stores/web/interaksi'
+import { useAntrianOnlineWeb } from 'src/stores/web/antrianOnline'
+import { ref, onMounted, computed, watch, onBeforeUnmount, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 import TabPelayanan from 'src/pages/Web/v1/Pelayanan/TabPelayanan.vue'
@@ -376,16 +371,20 @@ import TabPokja from 'src/pages/Web/v1/Pokja/TabPokja.vue'
 import mobileDrawer from '../mobileDrawer.vue'
 
 defineProps({
-
   fixed: {
     type: Boolean,
     default: false
   }
 })
 
-// console.log(props.transparent)
-
 const store = useAppStore()
+const storePelayanan = usePelayananWeb()
+const storeProfil = useProfilWeb()
+const storePpid = usePpidWeb()
+const storePokja = usePokjaWeb()
+const storePengaduan = usePengaduanWeb()
+const storeInteraksi = useInteraksiWeb()
+const storeAntrianOnline = useAntrianOnlineWeb()
 
 const logo = computed(() => {
   if (store.logo === null) {
@@ -397,17 +396,20 @@ const logo = computed(() => {
 const router = useRouter()
 const route = useRoute()
 const activeDropdown = ref(null)
-const activeSubmenu = ref(null)
 const mobileMenuOpen = ref(false)
 const hoveredSubmenu = ref(null)
 const closeTimeout = ref(null)
 const isHoveringDropdown = ref(false)
 const isHoveringParentItem = ref(false)
+const isScrolled = ref(false)
+
+function handleScroll() {
+  if (typeof window !== 'undefined') {
+    isScrolled.value = window.scrollY > 20
+  }
+}
 
 const navigateTo = (href, item, parentItem) => {
-  // console.log('Navigating to:', href, item, parentItem)
-  // console.log('item:', item)
-  // console.log('parentItem:', parentItem)
   if (href?.startsWith('/')) {
     router?.push(href)
     if (parentItem?.label === 'Profil') {
@@ -422,20 +424,16 @@ const navigateTo = (href, item, parentItem) => {
       storePelayanan.setTab(item?.label)
     }
   } else {
-    if (process.env.CLIENT) {
+    if (process.env.CLIENT && href) {
       window.location.href = href
     }
   }
   mobileMenuOpen.value = false
   activeDropdown.value = null
-  activeSubmenu.value = null
 }
 
 const closeDropdown = (index) => {
-  // console.log('Attempting to close dropdown:', index)
-  // Hanya tutup jika tidak ada yang di-hover
   if (!isHoveringDropdown.value && !isHoveringParentItem.value) {
-    // console.log('Closing dropdown:', index)
     activeDropdown.value = null
     hoveredSubmenu.value = null
   }
@@ -445,23 +443,7 @@ const toggleDropdown = (index) => {
   activeDropdown.value = activeDropdown.value === index ? null : index
 }
 
-const handleParentItemEnter = (subIndex) => {
-  hoveredSubmenu.value = subIndex
-  isHoveringParentItem.value = true
-}
-
-const handleParentItemLeave = () => {
-  isHoveringParentItem.value = false
-  // Hanya tutup jika mouse sudah tidak di area submenu
-  setTimeout(() => {
-    if (!isHoveringParentItem.value) {
-      hoveredSubmenu.value = null
-    }
-  }, 100)
-}
-
 const handleDropdownMouseEnter = (index) => {
-  // console.log('Dropdown enter:', index)
   isHoveringDropdown.value = true
   if (closeTimeout.value) {
     clearTimeout(closeTimeout.value)
@@ -471,14 +453,10 @@ const handleDropdownMouseEnter = (index) => {
 }
 
 const handleDropdownMouseLeave = (index) => {
-  // console.log('Dropdown leave:', index)
   isHoveringDropdown.value = false
-
   if (closeTimeout.value) {
     clearTimeout(closeTimeout.value)
   }
-
-  // Delay harus >= durasi leave animation (180ms) agar smooth
   closeTimeout.value = setTimeout(() => {
     if (!isHoveringParentItem.value) {
       closeDropdown(index)
@@ -486,18 +464,14 @@ const handleDropdownMouseLeave = (index) => {
   }, 220)
 }
 
-// Tambahkan watch untuk memonitor perubahan
-watch(hoveredSubmenu, (newVal) => {
-  // console.log('watch:', newVal)
-})
-
-// ini untuk desktop
-const menuItems = [
+// 8 Menu Asli Persis Bawaan Aplikasi (Hanya Menu Resmi)
+const menuItems = reactive([
   { label: 'Beranda', href: '/' },
-  { label: 'Berita', href: '/berita' },
+  { label: 'Berita', href: '/berita/all' },
   {
     label: 'Pelayanan',
     dropdown: true,
+    href: '/pelayanan',
     items: [
       {
         label: 'Rawat Inap',
@@ -520,6 +494,7 @@ const menuItems = [
   {
     label: 'Profil',
     dropdown: true,
+    href: '/profil',
     items: [
       { label: 'Sejarah', href: '/profil/sejarah' },
       { label: 'Visi Misi', href: '/profil/visi-misi' },
@@ -529,6 +504,7 @@ const menuItems = [
   {
     label: 'PPID',
     dropdown: true,
+    href: '/ppid',
     items: [
       { label: 'Profil PPID', href: '/ppid/profil' },
       { label: 'Informasi Publik', href: '/ppid/informasi' },
@@ -538,6 +514,7 @@ const menuItems = [
   {
     label: 'Pokja Akreditasi',
     dropdown: true,
+    href: '/pokja',
     items: [
       { label: 'ARK', href: '/pokja/ark' },
       { label: 'PMKP', href: '/pokja/pmkp' },
@@ -545,17 +522,20 @@ const menuItems = [
     ]
   },
   {
-    label: 'Pengaduan',
+    label: 'Interaksi',
     dropdown: true,
-    items: [
-      { label: 'Form Pengaduan', href: '/pengaduan/form' },
-      { label: 'Tracking', href: '/pengaduan/tracking' }
-    ]
+    href: '/interaksi',
+    items: []
+  },
+  {
+    label: 'Antrian Online',
+    dropdown: true,
+    href: '/antrian-online',
+    items: []
   },
   { label: 'Buku Tamu', href: '/buku-tamu' }
-]
+])
 
-// ini untuk mobile
 const menus = ref([
   { name: 'beranda', url: 'beranda', title: 'Beranda', active: false },
   { name: 'berita', url: 'berita/all', title: 'Berita', active: false },
@@ -564,202 +544,150 @@ const menus = ref([
   { name: 'ppid', url: 'ppid', title: 'PPID', active: false },
   { name: 'pokja', url: 'pokja', title: 'Pokja Akreditasi', active: false },
   { name: 'pengaduan', url: 'pengaduan', title: 'Pengaduan', active: false },
+  { name: 'interaksi', url: 'interaksi', title: 'Interaksi', active: false },
+  { name: 'antrian-online', url: 'antrian-online', title: 'Antrian Online', active: false },
   { name: 'buku-tamu', url: 'buku-tamu', title: 'Buku Tamu', active: false }
 ])
 
-const storePelayanan = usePelayananWeb()
-const storeProfil = useProfilWeb()
-const storePpid = usePpidWeb()
-const storePokja = usePokjaWeb()
-const storePengaduan = usePengaduanWeb()
-
-onMounted(() => {
-  Promise.all([
-    store.getAppHeader(),
-    storePelayanan.getMenu(),
-    storeProfil.getData(),
-    storePpid.getData(),
-    storePokja.getMenu(),
-    storePengaduan.getMenu()
-  ])
-
-  // console.log('header Web..', route.matched[2])
-
-  handleRouteAwal()
-  // handlePpidMenu()
-})
-
-// eslint-disable-next-line no-unused-vars
-const handleRouteAwal = () => {
-  const path = route?.matched[2]?.path ?? null
-  const page = route?.matched[1]?.path
-  const fullPath = route?.fullPath
-  const noSub = path?.includes('/submenu')
-  // const paramsPage = route?.params?.page
-
-  if (!noSub) { // jika tidak ada submenu
-    // console.log('page tanpa submenu', noSub, fullPath, page)
-    // console.log('page tanpa submenu route', fullPath)
-    if (page === '/ppid') {
-      handlePpidMenu(fullPath)
-    }
-    if (page === '/profil') {
-      handleProfileMenu(fullPath)
-    }
-    if (page === '/pelayanan') {
-      handlePelayananMenu(fullPath)
-    }
-    if (page === '/pokja') {
-      handlePokjaMenu(fullPath)
-    }
-    if (page === '/pengaduan') {
-      handlePengaduanMenu(fullPath)
-    }
-  }
+function isLinkActive(item) {
+  if (item.href && route.path === item.href) return true
+  if (item.items && item.items.some(sub => route.path.startsWith(sub.href))) return true
+  return false
 }
 
 const handlePelayananMenu = (path) => {
   const pelayanan = storePelayanan.menus
-  const newPel = pelayanan?.map(x => {
-    return {
-      label: x?.nama,
-      submenu: x?.submenu.length
-        ? x?.submenu?.map(y => {
-          return {
-            label: y.nama,
-            href: '/pelayanan/submenu/' + y.slug
-          }
-        })
-        : [],
-      href: '/pelayanan/' + x.slug
-    }
-  })
-  // console.log('pelayanan xxxx', newPel)
-  const x = menuItems.find(x => x.label === 'Pelayanan').items = newPel
+  if (!pelayanan || pelayanan.length === 0) return
+  const newPel = pelayanan.map(x => ({
+    label: x?.nama,
+    submenu: x?.submenu?.length
+      ? x.submenu.map(y => ({ label: y.nama, href: '/pelayanan/submenu/' + y.slug }))
+      : [],
+    href: '/pelayanan/' + x.slug
+  }))
+  const target = menuItems.find(x => x.label === 'Pelayanan')
+  if (target) target.items = newPel
   if (path) {
-    const page = x?.find(y => y.href === route.fullPath)?.label || null
+    const page = newPel?.find(y => y.href === route.fullPath)?.label || null
     if (page) storePelayanan.setTab(page)
   }
 }
+
 const handleProfileMenu = (path) => {
   const menus = storeProfil.items
-  const newPel = menus?.map(x => {
-    return {
-      label: x?.nama,
-      submenu: x?.submenu?.length
-        ? x?.submenu?.map(y => {
-          return {
-            label: y.nama,
-            href: '/profil/submenu/' + y.slug
-          }
-        })
-        : [],
-      href: '/profil/' + x.slug
-    }
-  })
-  // console.log('profil xxxx', newPel)
-  const x = menuItems.find(x => x.label === 'Profil').items = newPel
-
+  if (!menus || menus.length === 0) return
+  const newPel = menus.map(x => ({
+    label: x?.nama,
+    submenu: x?.submenu?.length
+      ? x.submenu.map(y => ({ label: y.nama, href: '/profil/submenu/' + y.slug }))
+      : [],
+    href: '/profil/' + x.slug
+  }))
+  const target = menuItems.find(x => x.label === 'Profil')
+  if (target) target.items = newPel
   if (path) {
-    const page = x?.find(y => y.href === route.fullPath)?.label || null
+    const page = newPel?.find(y => y.href === route.fullPath)?.label || null
     if (page) storeProfil.setTab(page)
   }
 }
+
 const handlePpidMenu = (path) => {
   const menus = storePpid.items
-  const newPel = menus?.map(x => {
-    return {
-      label: x?.nama,
-      submenu: x?.submenu.length
-        ? x?.submenu?.map(y => {
-          return {
-            label: y.nama,
-            href: '/ppid/submenu/' + y.slug
-          }
-        })
-        : [],
-      href: '/ppid/' + x.slug
-    }
-  })
-  // console.log('ppid xxxx', newPel)
-  const x = menuItems.find(x => x.label === 'PPID').items = newPel
-  // console.log('ppid tac', x)
-  // console.log('path', path)
+  if (!menus || menus.length === 0) return
+  const newPel = menus.map(x => ({
+    label: x?.nama,
+    submenu: x?.submenu?.length
+      ? x.submenu.map(y => ({ label: y.nama, href: '/ppid/submenu/' + y.slug }))
+      : [],
+    href: '/ppid/' + x.slug
+  }))
+  const target = menuItems.find(x => x.label === 'PPID')
+  if (target) target.items = newPel
   if (path) {
-    const page = x?.find(y => y.href === route.fullPath)?.label || null
-    // console.log('ppid page', page)
-
+    const page = newPel?.find(y => y.href === route.fullPath)?.label || null
     if (page) storePpid.setTab(page)
   }
 }
+
 const handlePokjaMenu = (path) => {
   const menus = storePokja.menus
-  const newPel = menus?.map(x => {
-    return {
-      label: x?.nama,
-      submenu: x?.submenu.length
-        ? x?.submenu?.map(y => {
-          return {
-            label: y.nama,
-            href: '/pokja/submenu/' + y.slug
-          }
-        })
-        : [],
-      href: '/pokja/' + x.slug
-    }
-  })
-  // console.log('pelayanan xxxx', newPel)
-  const x = menuItems.find(x => x.label === 'Pokja Akreditasi').items = newPel
+  if (!menus || menus.length === 0) return
+  const newPel = menus.map(x => ({
+    label: x?.nama,
+    submenu: x?.submenu?.length
+      ? x.submenu.map(y => ({ label: y.nama, href: '/pokja/submenu/' + y.slug }))
+      : [],
+    href: '/pokja/' + x.slug
+  }))
+  const target = menuItems.find(x => x.label === 'Pokja Akreditasi')
+  if (target) target.items = newPel
   if (path) {
-    const page = x?.find(y => y.href === route.fullPath)?.label || null
+    const page = newPel?.find(y => y.href === route.fullPath)?.label || null
     if (page) storePokja.setTab(page)
   }
 }
+
 const handlePengaduanMenu = (path) => {
   const menus = storePengaduan.menus
-  const newPel = menus?.map(x => {
-    return {
-      label: x?.nama,
-      submenu: x?.submenu.length
-        ? x?.submenu?.map(y => {
-          return {
-            label: y.nama,
-            href: '/pengaduan/submenu/' + y.slug
-          }
-        })
-        : [],
-      href: '/pengaduan/' + x.slug
-    }
-  })
-  // console.log('pelayanan xxxx', newPel)
-  const x = menuItems.find(x => x.label === 'Pengaduan').items = newPel
+  if (!menus || menus.length === 0) return
+  const newPel = menus.map(x => ({
+    label: x?.nama,
+    submenu: x?.submenu?.length
+      ? x.submenu.map(y => ({ label: y.nama, href: '/pengaduan/submenu/' + y.slug }))
+      : [],
+    href: '/pengaduan/' + x.slug
+  }))
+  const target = menuItems.find(x => x.label === 'Pengaduan')
+  if (target) target.items = newPel
   if (path) {
-    const page = x?.find(y => y.href === route.fullPath)?.label || null
+    const page = newPel?.find(y => y.href === route.fullPath)?.label || null
     if (page) storePengaduan.setTab(page)
   }
 }
 
-watch(() => storePelayanan.menus, handlePelayananMenu)
-watch(() => storeProfil.items, handleProfileMenu)
-watch(() => storePpid.items, handlePpidMenu)
-watch(() => storePokja.menus, handlePokjaMenu)
-watch(() => storePengaduan.menus, handlePengaduanMenu)
-
-const prim = computed(() => {
-  let pri = '#F2E3C6'
-  if (store.themes.length > 0) {
-    pri = store.themes[0].value
+watch(() => storePelayanan.menus, () => handlePelayananMenu(route.fullPath))
+watch(() => storeProfil.items, () => handleProfileMenu(route.fullPath))
+const handleInteraksiMenu = (path) => {
+  const menus = storeInteraksi.items
+  if (!menus || menus.length === 0) return
+  const newPel = menus.map(x => ({
+    label: x?.nama,
+    submenu: x?.submenu?.length
+      ? x.submenu.map(y => ({ label: y.nama, href: '/interaksi/submenu/' + y.slug }))
+      : [],
+    href: '/interaksi/' + x.slug
+  }))
+  const target = menuItems.find(x => x.label === 'Interaksi')
+  if (target) target.items = newPel
+  if (path) {
+    const page = newPel?.find(y => y.href === route.fullPath)?.label || null
+    if (page) storeInteraksi.setTab(page)
   }
-  return pri
-})
+}
 
-const second = computed(() => {
-  let sec = '#06b8b8'
-  if (store.themes.length > 0) {
-    sec = store.themes[1].value
+const handleAntrianOnlineMenu = (path) => {
+  const menus = storeAntrianOnline.items
+  if (!menus || menus.length === 0) return
+  const newPel = menus.map(x => ({
+    label: x?.nama,
+    submenu: x?.submenu?.length
+      ? x.submenu.map(y => ({ label: y.nama, href: '/antrian-online/submenu/' + y.slug }))
+      : [],
+    href: '/antrian-online/' + x.slug
+  }))
+  const target = menuItems.find(x => x.label === 'Antrian Online')
+  if (target) target.items = newPel
+  if (path) {
+    const page = newPel?.find(y => y.href === route.fullPath)?.label || null
+    if (page) storeAntrianOnline.setTab(page)
   }
-  return sec
-})
+}
+
+watch(() => storeInteraksi.items, () => handleInteraksiMenu(route.fullPath))
+watch(() => storeAntrianOnline.items, () => handleAntrianOnlineMenu(route.fullPath))
+watch(() => storePpid.items, () => handlePpidMenu(route.fullPath))
+watch(() => storePokja.menus, () => handlePokjaMenu(route.fullPath))
+watch(() => storePengaduan.menus, () => handlePengaduanMenu(route.fullPath))
 
 const activeNestedSubMap = ref({})
 
@@ -780,30 +708,66 @@ function getActiveNestedItem(menuIndex, menuItem) {
   return menuItem.items[activeIdx] || menuItem.items[0] || null
 }
 
-function getDropdownClass(index, item) {
-  const isNested = hasAnyNestedSubmenu(item)
-  const isLarge = item.items && item.items.length > 8
+const handleRouteAwal = () => {
+  const path = route?.matched[2]?.path ?? null
+  const page = route?.matched[1]?.path
+  const fullPath = route?.fullPath
+  const noSub = path?.includes('/submenu')
 
-  if (isNested) {
-    return index <= 3 ? 'w-[720px] left-0' : 'w-[720px] right-0'
+  if (!noSub) {
+    if (page === '/ppid') handlePpidMenu(fullPath)
+    if (page === '/profil') handleProfileMenu(fullPath)
+    if (page === '/pelayanan') handlePelayananMenu(fullPath)
+    if (page === '/pokja') handlePokjaMenu(fullPath)
+    if (page === '/pengaduan') handlePengaduanMenu(fullPath)
+    if (page === '/interaksi') handleInteraksiMenu(fullPath)
+    if (page === '/antrian-online') handleAntrianOnlineMenu(fullPath)
   }
-  if (isLarge) {
-    return index <= 3 ? 'w-[680px] left-0' : 'w-[680px] right-0'
-  }
-  return index >= 5 ? 'w-80 right-0' : 'w-80 left-0'
 }
+
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    window.addEventListener('scroll', handleScroll)
+  }
+  Promise.all([
+    store.getAppHeader(),
+    storePelayanan.getMenu(),
+    storeProfil.getData(),
+    storePpid.getData(),
+    storePokja.getMenu(),
+    storePengaduan.getMenu(),
+    storeInteraksi.getData(),
+    storeAntrianOnline.getData()
+  ]).then(() => {
+    handleRouteAwal()
+  })
+})
+
+onBeforeUnmount(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('scroll', handleScroll)
+  }
+})
 </script>
 
 <style lang="scss" scoped>
+// Kunci Posisi Header Sticky Tanpa Loncat (0% Layout Shift)
+.enterprise-sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: white;
+}
+
+// Skema Pewarnaan Asli Gradasi Primary ke Secondary
 .header-top-bar {
-  background: linear-gradient(90deg, var(--q-primary) 0%, var(--q-secondary) 100%);
+  background: linear-gradient(135deg, var(--q-primary) 0%, var(--q-secondary) 100%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .top-social-btn {
   color: white !important;
   transition: all 0.3s ease;
-
   &:hover {
     background: rgba(255, 255, 255, 0.2) !important;
     transform: translateY(-2px);
@@ -818,64 +782,49 @@ function getDropdownClass(index, item) {
   box-shadow: 0 0 8px #00f2fe;
 }
 
+// Breakpoint Desktop Navbar: Tampil Penuh di Layar Desktop (>= 768px / 1300px)
 .desktop-nav {
-  display: none;
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 767px) {
+    display: none !important;
+  }
 }
 
-@media (min-width: 1024px) {
-  .desktop-nav {
-    display: flex;
-    align-items: center;
+// Hamburger Mobile Button: Hanya Tampil Pada HP (< 768px)
+.mobile-hamburger-wrap {
+  display: none;
+
+  @media (max-width: 767px) {
+    display: flex !important;
   }
 }
 
 .futuristic-nav-item {
   position: relative;
-  border-radius: 20px !important;
-  padding: 6px 14px !important;
-  transition: color 0.25s ease, background 0.25s ease !important;
-  overflow: hidden;
+  border-radius: 14px !important;
+  padding: 4px 8px !important;
+  min-height: 32px !important;
+  font-size: 0.78rem !important;
+  transition: all 0.3s ease;
 
-  // Elegant underline sweep
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 5px;
-    left: 50%;
-    transform: translateX(-50%) scaleX(0);
-    width: calc(100% - 24px);
-    height: 2px;
-    background: linear-gradient(90deg, #0284c7, #06b6d4);
-    border-radius: 4px;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    transform-origin: center;
+  :deep(.q-btn__content) {
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+    padding: 0 !important;
+    min-height: auto !important;
   }
 
   &:hover {
-    background: rgba(2, 132, 199, 0.07) !important;
-    color: #0284c7 !important;
-
-    &::after {
-      transform: translateX(-50%) scaleX(1);
-    }
+    background: rgba(13, 148, 136, 0.08) !important;
+    color: #0d9488 !important;
   }
 }
 
 .active-nav-link {
-  background: rgba(2, 132, 199, 0.1) !important;
-  color: #0284c7 !important;
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 5px;
-    left: 50%;
-    transform: translateX(-50%) scaleX(1);
-    width: calc(100% - 24px);
-    height: 2px;
-    background: linear-gradient(90deg, #0284c7, #06b6d4);
-    border-radius: 4px;
-  }
+  background: rgba(13, 148, 136, 0.12) !important;
+  color: #0d9488 !important;
 }
 
 .glass-dropdown-card {
@@ -892,7 +841,6 @@ function getDropdownClass(index, item) {
   overflow-y: auto;
   overflow-x: hidden;
 
-  /* Custom slim scrollbar */
   &::-webkit-scrollbar {
     width: 5px;
   }
@@ -904,7 +852,7 @@ function getDropdownClass(index, item) {
     background: #cbd5e1;
     border-radius: 10px;
     &:hover {
-      background: #0284c7;
+      background: #0d9488;
     }
   }
 }
@@ -913,12 +861,12 @@ function getDropdownClass(index, item) {
   transition: all 0.25s ease;
 
   &:hover {
-    background: rgba(2, 132, 199, 0.08) !important;
+    background: rgba(13, 148, 136, 0.08) !important;
 
     .glow-dot {
       transform: scale(1.4);
-      background-color: #0284c7;
-      box-shadow: 0 0 10px #0284c7;
+      background-color: #0d9488;
+      box-shadow: 0 0 10px #0d9488;
     }
   }
 }
@@ -931,54 +879,18 @@ function getDropdownClass(index, item) {
   transition: all 0.3s ease;
 }
 
-// Dropdown — Vue transition ultra-smooth
-.dropdown-fade-enter-active {
-  will-change: opacity, transform;
-  pointer-events: none;
-  transition:
-    opacity 0.2s ease-out,
-    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.dropdown-fade-leave-active {
-  will-change: opacity, transform;
-  pointer-events: none;
-  transition:
-    opacity 0.15s ease-in,
-    transform 0.18s ease-in;
-}
-.dropdown-fade-enter-from {
-  opacity: 0;
-  transform: translateY(-8px);
-}
-.dropdown-fade-enter-to {
-  opacity: 1;
-  transform: translateY(0);
-}
-.dropdown-fade-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-}
-.dropdown-fade-leave-to {
-  opacity: 0;
-  transform: translateY(-5px);
+.animate-slide-down {
+  animation: slideDown 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-.submenu-container {
-  pointer-events: auto;
-  min-width: 200px;
-}
-
-.mobile-hamburger-btn {
-  color: #0f172a !important;
-  background: rgba(15, 23, 42, 0.06) !important;
-  border: 1px solid rgba(15, 23, 42, 0.15) !important;
-  border-radius: 14px !important;
-  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
-
-  &:hover, &:active {
-    background: rgba(15, 23, 42, 0.12) !important;
-    transform: scale(1.08);
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15) !important;
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 </style>

@@ -7,7 +7,7 @@
       class="fixed-top"
     />
     <!-- banner -->
-    <app-banner-web />
+    <app-banner-web v-if="!route.path.includes('/submenu/')" />
     <!-- <div>
       <app-tab-header v-if="route.name==='berita'" />
     </div> -->

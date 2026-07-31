@@ -46,13 +46,25 @@
 
           <!-- Deskripsi Utama Content -->
           <div
-            v-if="item.content && item.content.length > 10"
+            v-if="item.content && !isEmptyContent(item.content)"
             class="content-description-card q-mb-xl"
           >
             <app-editor
               v-model="item.content"
               :edited="false"
             />
+          </div>
+
+          <!-- Empty State Placeholder -->
+          <div
+            v-if="isEmptyContent(item.content) && (!item.submenu || item.submenu.length === 0) && !item.thumbnail"
+            class="empty-state-wrap flex column items-center justify-center q-py-xl text-center"
+          >
+            <div class="empty-icon-circle flex items-center justify-center q-mb-md">
+              <q-icon name="folder_open" size="48px" class="text-slate-300" />
+            </div>
+            <h3 class="text-weight-bold text-slate-700 q-mb-xs" style="font-size: 1.1rem; margin: 0;">Belum Ada Informasi</h3>
+            <p class="text-slate-400 text-xs max-w-sm q-mt-xs q-mx-auto">Detail dokumen atau informasi untuk pelayanan ini belum dipublikasikan.</p>
           </div>
 
           <!-- SEKSI JIKA MEMILIKI SUB-LAYANAN (Contoh: Ruang VIP, Poli Gigi dll.) -->
@@ -123,6 +135,12 @@ import { useRoute, useRouter } from 'vue-router'
 const store = usePelayananWeb()
 const router = useRouter()
 const route = useRoute()
+
+const isEmptyContent = (html) => {
+  if (!html) return true
+  const clean = html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, '').trim()
+  return clean.length === 0
+}
 
 onMounted(() => {
   store.getData(route.name)
@@ -289,5 +307,21 @@ function getMedicalIcon(index) {
 
 .arrow-out {
   transition: all 0.3s ease;
+}
+
+// ── Empty State Styling ──
+.empty-state-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-icon-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.02);
+  border: 1px dashed rgba(15, 23, 42, 0.08);
 }
 </style>

@@ -292,6 +292,42 @@ export default {
       ]
     },
     {
+      path: '/interaksi',
+      component: () => import('pages/Web/TemplateIndex.vue'),
+      children: [
+        { path: '', redirect: '/interaksi/public' },
+        {
+          path: '/interaksi/submenu/:slug',
+          name: 'interaksi.submenu',
+          component: () => import('src/pages/Web/v1/Interaksi/PageSubmenu.vue')
+        },
+        {
+          path: '/interaksi/:page?',
+          name: 'interaksi',
+          component: () => import('src/pages/Web/v1/Interaksi/PageInteraksi.vue'),
+          meta: { title: 'Interaksi - RSUD Moh Saleh' }
+        }
+      ]
+    },
+    {
+      path: '/antrian-online',
+      component: () => import('pages/Web/TemplateIndex.vue'),
+      children: [
+        { path: '', redirect: '/antrian-online/public' },
+        {
+          path: '/antrian-online/submenu/:slug',
+          name: 'antrian-online.submenu',
+          component: () => import('src/pages/Web/v1/AntrianOnline/PageSubmenu.vue')
+        },
+        {
+          path: '/antrian-online/:page?',
+          name: 'antrian-online',
+          component: () => import('src/pages/Web/v1/AntrianOnline/PageAntrianOnline.vue'),
+          meta: { title: 'Antrian Online - RSUD Moh Saleh' }
+        }
+      ]
+    },
+    {
       path: '/buku-tamu',
       component: () => import('pages/Web/TemplateIndex.vue'),
       children: [
@@ -310,6 +346,30 @@ export default {
               {
                 property: 'og:title',
                 content: 'Buku Tamu - RSUD Moh Saleh'
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      path: '/jadwal-dokter',
+      component: () => import('pages/Web/TemplateIndex.vue'),
+      children: [
+        {
+          path: '',
+          name: 'jadwal-dokter',
+          component: () => import(/* webpackChunkName: "page-jadwal-dokter" */ 'pages/Web/v1/JadwalDokter/PageJadwalDokter.vue'),
+          meta: {
+            title: 'Jadwal Dokter - RSUD Moh Saleh',
+            metaTags: [
+              {
+                name: 'description',
+                content: 'Jadwal Praktik Dokter Spesialis RSUD Mohamad Saleh Kota Probolinggo'
+              },
+              {
+                property: 'og:title',
+                content: 'Jadwal Dokter - RSUD Moh Saleh'
               }
             ]
           }
