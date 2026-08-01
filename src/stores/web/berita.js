@@ -5,12 +5,15 @@ export const useBeritaWeb = defineStore('berita_web', {
   state: () => ({
     beranda: [],
     populars: [],
+    categories: [],
+    archives: [],
 
     beritas: [],
     meta: null,
     params: {
-      q: null,
+      q: '',
       category: 'all',
+      archive: 'Semua',
       page: 1,
       perPage: 8,
       orderBy: 'created_at',
@@ -62,25 +65,35 @@ export const useBeritaWeb = defineStore('berita_web', {
     }
   },
   actions: {
-    changeParams(hal, cat) {
+    changeParams(hal) {
       this.params.page = hal
-      this.params.category = 'all'
-      // // console.log('chamnge params', this.params)
-      this.getDataPagin(cat, 'loadMore')
+      this.getDataPagin(null, 'loadMore')
+    },
+    async getCategories() {
+      try {
+        const resp = await api.get('/v1/berita/web_categories')
+        this.categories = resp.data || []
+      } catch (e) {
+        console.error('Error fetching categories:', e)
+      }
+    },
+    async getArchives() {
+      try {
+        const resp = await api.get('/v1/berita/web_archives')
+        this.archives = resp.data || []
+      } catch (e) {
+        console.error('Error fetching archives:', e)
+      }
     },
     async getDataPagin(payload, loadmore) {
       const more = !((!loadmore || loadmore === 'undefined' || loadmore === null || loadmore === undefined))
-      // console.log('more', more)
       more ? this.loadingMore = true : this.loading = true
       if (!more) {
         this.params.page = 1
       }
-      // this.params.category = (!payload || payload === 'undefined' || payload === null || payload === undefined) ? 'all' : payload
-      this.params.category = 'all'
       try {
         const params = { params: this.params }
         await api.get('/v1/berita/berita_paginate', params).then((resp) => {
-          console.log('berita beranda paginate', resp)
           this.beritas = resp.data.data
           this.meta = resp.data
           this.isContent = false
@@ -88,7 +101,6 @@ export const useBeritaWeb = defineStore('berita_web', {
           this.loadingMore = false
         })
       } catch (error) {
-        // console.log(error)
         this.loading = false
         this.loadingMore = false
       }
