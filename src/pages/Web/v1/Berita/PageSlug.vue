@@ -104,6 +104,11 @@ function formatContentForTranslation(html) {
     .replace(/class="[^"]*notranslate[^"]*"/gi, '')
     .replace(/translate="no"/gi, '')
 
+  // Autolink: Konversi URL teks biasa (http/https) yang belum ber-tag <a> menjadi link yang dapat diklik
+  str = str.replace(/(^|[^"'>])(https?:\/\/[^\s<"']+)/gi, (match, prefix, url) => {
+    return `${prefix}<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`
+  })
+
   if (typeof document === 'undefined') return str
 
   const tempDiv = document.createElement('div')
@@ -186,9 +191,15 @@ a {
   font-size: 1.05rem;
   line-height: 1.85;
   color: #1e293b;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  overflow-x: hidden;
 
-  :deep(p) {
-    margin-bottom: 1.15rem;
+  :deep(p), :deep(div), :deep(span) {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    max-width: 100%;
   }
 
   :deep(strong), :deep(b) {
@@ -197,13 +208,15 @@ a {
   }
 
   :deep(a) {
-    color: #0d9488 !important;
+    color: #2563eb !important;
     text-decoration: underline !important;
-    font-weight: 700;
-    word-break: break-all;
+    font-weight: 700 !important;
+    word-break: break-all !important;
+    overflow-wrap: break-word !important;
+    transition: color 0.2s ease;
 
     &:hover {
-      color: #0891b2 !important;
+      color: #1d4ed8 !important;
     }
   }
 
@@ -239,6 +252,7 @@ a {
     th, td {
       border: 1px solid #cbd5e1;
       padding: 0.6rem 0.85rem;
+      word-break: break-word;
     }
 
     th {

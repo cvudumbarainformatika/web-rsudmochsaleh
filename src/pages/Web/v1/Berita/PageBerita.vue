@@ -162,7 +162,7 @@
                 </div>
                 <div class="col-12 col-sm-7">
                   <div class="flex items-center gap-2 text-xs text-slate-400 font-medium q-mb-xs">
-                    <span class="bg-teal-50 text-teal-700 font-bold px-2.5 py-0.5 rounded-full text-[10px] uppercase">
+                    <span class="bg-teal-50 text-teal-700 font-bold px-2.5 py-0.5 rounded-full text-[10px] uppercase truncate max-w-[200px] inline-block">
                       {{ getCategoryName(featuredNews) }}
                     </span>
                     <span>•</span>
@@ -200,7 +200,7 @@
                       class="w-full h-full hover:scale-105 transition-transform duration-500"
                       alt="Article Thumbnail"
                     />
-                    <span class="absolute top-2.5 left-2.5 bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">
+                    <span class="absolute top-2.5 left-2.5 bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase truncate max-w-[80%] z-10 pointer-events-none">
                       {{ getCategoryName(item) }}
                     </span>
                   </div>
@@ -373,16 +373,21 @@ function extractKategoriNames(item) {
 
 function getCategoryName(item) {
   const names = extractKategoriNames(item)
-  return names.length > 0 ? names.join(', ') : 'BERITA'
+  return names.length > 0 ? names[0] : 'BERITA'
 }
 
 function getExcerpt(html) {
   if (!html) return ''
-  if (typeof document === 'undefined') return ''
+  const cleanHtml = String(html)
+    .replace(/<\/(p|div|h[1-6]|li|td|tr|section|article)>/gi, ' ')
+    .replace(/<br\s*\/?>/gi, ' ')
+  if (typeof document === 'undefined') {
+    return cleanHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+  }
   const tmp = document.createElement('DIV')
-  tmp.innerHTML = html
+  tmp.innerHTML = cleanHtml
   const text = tmp.textContent || tmp.innerText || ''
-  return text.trim()
+  return text.replace(/\s+/g, ' ').trim()
 }
 
 function beritaClick(item) {

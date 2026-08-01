@@ -104,11 +104,16 @@ function getCategoryName(item) {
 
 function getExcerpt(html) {
   if (!html) return ''
-  if (typeof document === 'undefined') return ''
+  const cleanHtml = String(html)
+    .replace(/<\/(p|div|h[1-6]|li|td|tr|section|article)>/gi, ' ')
+    .replace(/<br\s*\/?>/gi, ' ')
+  if (typeof document === 'undefined') {
+    return cleanHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+  }
   const tmp = document.createElement('DIV')
-  tmp.innerHTML = html
+  tmp.innerHTML = cleanHtml
   const text = tmp.textContent || tmp.innerText || ''
-  return text.trim()
+  return text.replace(/\s+/g, ' ').trim()
 }
 
 function beritaClick(item) {
