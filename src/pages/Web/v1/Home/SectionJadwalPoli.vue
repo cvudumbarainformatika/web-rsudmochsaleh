@@ -180,6 +180,8 @@
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { api2 } from 'src/boot/axios'
+import doctorFemaleAvatar from 'src/assets/images/doctor-female.webp'
+import doctorMaleAvatar from 'src/assets/images/doctor-male.webp'
 
 const router = useRouter()
 const sectionRef = ref(null)
@@ -304,13 +306,31 @@ function formatTime(timeStr) {
   return `${parts[0]}:${parts[1]}`
 }
 
+function getDoctorAvatarWebp(item) {
+  const name = (formatDoctorName(item) || '').toLowerCase()
+  const kelamin = (item.pegawai?.kelamin || item.pegawai?.jenis_kelamin || '').toLowerCase()
+
+  if (kelamin.includes('p') || kelamin.includes('wanita') || kelamin.includes('perempuan') || kelamin === 'f') {
+    return doctorFemaleAvatar
+  }
+  if (kelamin.includes('l') || kelamin.includes('pria') || kelamin.includes('laki') || kelamin === 'm') {
+    return doctorMaleAvatar
+  }
+
+  if (/\b(hj|hajjah|ny|ibu|drg\.\s*hj|dr\.\s*hj|fitri|rahma|siti|dewi|tri|ani|endang|retno|diah|sri|indah|nur|dian|utami|wulan|puji|yuni|nita|lia|titi|wida|dina|rachel|maya|septi|kartika|anisa|agustina)\b/i.test(name)) {
+    return doctorFemaleAvatar
+  }
+
+  return doctorMaleAvatar
+}
+
 function getDoctorPhoto(item) {
   const nip = item.pegawai?.nip || item.pegawai?.nik
   const foto = item.pegawai?.foto
   if (nip && foto && foto.trim() !== '') {
     return `https://xenter.my.id/photo-kepegx/${nip}/${foto}`
   }
-  return getAvatarSvg(formatDoctorName(item))
+  return getDoctorAvatarWebp(item)
 }
 
 function handleImageError(event, item) {
@@ -328,7 +348,7 @@ function handleImageError(event, item) {
     return
   }
 
-  event.target.src = getAvatarSvg(formatDoctorName(item))
+  event.target.src = getDoctorAvatarWebp(item)
 }
 
 function getAvatarSvg(name) {
