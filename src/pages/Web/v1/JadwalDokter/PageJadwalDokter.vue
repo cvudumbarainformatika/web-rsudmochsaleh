@@ -302,7 +302,7 @@ function getDoctorPhoto(item) {
   const nip = item.pegawai?.nip || item.pegawai?.nik
   const foto = item.pegawai?.foto
   if (nip && foto && foto.trim() !== '') {
-    return `http://192.168.100.100/simpeg/foto/${nip}/${foto}`
+    return `https://xenter.my.id/photo-kepegx/${nip}/${foto}`
   }
   return getAvatarSvg(formatDoctorName(item))
 }
@@ -314,6 +314,11 @@ function handleImageError(event, item) {
 
   if (currentSrc.includes('192.168.100.100') && nip && foto) {
     event.target.src = `https://xenter.my.id/photo-kepegx/${nip}/${foto}`
+    return
+  }
+
+  if (currentSrc.includes('xenter.my.id') && nip && foto) {
+    event.target.src = `http://36.89.103.114:4542/simpeg/foto/${nip}/${foto}`
     return
   }
 
