@@ -74,7 +74,9 @@ const form = useLottieForm()
 const store = useLottieTable()
 
 // const anim = ref(null)
-const folder = import.meta.globEager('assets/lottie/*.json')
+const folder = typeof import.meta.glob === 'function'
+  ? import.meta.glob('assets/lottie/*.json', { eager: true })
+  : {}
 const items = ref([])
 
 const getFile = (file) => {

@@ -254,7 +254,7 @@ function setupObservers() {
         headerVisible.value = true
         obs.unobserve(headerEl)
       }
-    }, { threshold: 0.15 })
+    }, { threshold: 0.01, rootMargin: '150px 0px 100px 0px' })
     obs.observe(headerEl)
     observers.push(obs)
   }
@@ -265,10 +265,10 @@ function setupObservers() {
       if (entry.isIntersecting) {
         setTimeout(() => {
           visibleCards.value[i] = true
-        }, i * 70)
+        }, i * 20)
         obs.unobserve(el)
       }
-    }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' })
+    }, { threshold: 0.01, rootMargin: '150px 0px 100px 0px' })
     obs.observe(el)
     observers.push(obs)
   })
@@ -368,8 +368,8 @@ onBeforeUnmount(() => {
 // ── IntersectionObserver Scroll Reveal Animations ────────────────
 .reveal-card {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(24px);
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 
   &.is-visible {

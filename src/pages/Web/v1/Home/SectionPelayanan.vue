@@ -193,7 +193,7 @@ const setupObservers = () => {
   if (header) {
     const obs = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) { headerVisible.value = true; obs.unobserve(header) }
-    }, { threshold: 0.2 })
+    }, { threshold: 0.01, rootMargin: '150px 0px 100px 0px' })
     obs.observe(header)
     observers.push(obs)
   }
@@ -202,10 +202,10 @@ const setupObservers = () => {
   cards.forEach((el, i) => {
     const obs = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) {
-        setTimeout(() => { visibleCards.value[i] = true }, i * 80)
+        setTimeout(() => { visibleCards.value[i] = true }, i * 20)
         obs.unobserve(el)
       }
-    }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' })
+    }, { threshold: 0.01, rootMargin: '150px 0px 100px 0px' })
     obs.observe(el)
     observers.push(obs)
   })

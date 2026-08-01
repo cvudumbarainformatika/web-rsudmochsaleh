@@ -147,6 +147,17 @@ export default {
           component: () => import(/* webpackChunkName: "admin.user-form" */ 'pages/Admin/User/FormPage.vue')
         }
       ]
+    },
+    {
+      path: '/admin/buku-tamu',
+      component: () => import('pages/Admin/BukuTamu/IndexPage.vue'),
+      children: [
+        { path: '', name: 'admin.buku-tamu', component: () => import('pages/Admin/BukuTamu/TablePage.vue') },
+        {
+          path: '/admin/buku-tamu/form/:id?',
+          component: () => import('pages/Admin/BukuTamu/FormPage.vue')
+        }
+      ]
     }
   ]
 }
