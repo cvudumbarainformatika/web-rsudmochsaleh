@@ -3,8 +3,8 @@
     <app-loading v-if="store.loading" />
     <div v-else class="container-padding q-pt-lg">
 
-      <!-- Detail Berita View (jika slug bukan 'all') -->
-      <div v-if="route.params.slug !== 'all'">
+      <!-- Detail Berita View (jika slug ada dan bukan 'all') -->
+      <div v-if="isDetailPage">
         <PageSlug :key="route.params.slug" />
       </div>
 
@@ -204,6 +204,11 @@ const route = useRoute()
 const store = useBeritaWeb()
 const slide = ref(1)
 const searchQuery = ref('')
+
+const isDetailPage = computed(() => {
+  const slug = route.params.slug
+  return !!slug && slug !== 'all'
+})
 
 const current = computed({
   get: () => store.params.page,
