@@ -1,131 +1,90 @@
 <template>
-  <q-list
-    bordered
-    separator
-    class="bg-white rounded-borders"
-    dense
-  >
-    <template v-if="items.length > 0">
-      <template v-if="!loading">
-        <q-item
-          v-for="(item, n) in items"
-          :key="n"
-          v-ripple
-          clickable
-          @click="beritaClick(item)"
-        >
-          <q-item-section
-            avatar
-          >
-            <q-avatar
-              rounded
-              size="90px"
-            >
-              <q-img
-                :src="pathImg + item.thumbnail"
-                :ratio="1"
-                fit="cover"
-                class="rounded-borders"
-                alt="gambar thumbnail rsud dr mohamad saleh"
-              />
-            </q-avatar>
-          </q-item-section>
+  <div class="news-list-wrapper">
+    <!-- Skeleton Loading -->
+    <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div v-for="n in 6" :key="n" class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+        <q-skeleton height="180px" class="rounded-xl q-mb-md" />
+        <q-skeleton type="text" width="40%" class="q-mb-xs" />
+        <q-skeleton type="text" width="90%" class="q-mb-xs" />
+        <q-skeleton type="text" width="70%" />
+      </div>
+    </div>
 
-          <q-item-section top>
-            <q-item-label
-              lines="2"
-              class="f-12 text-weight-bold q-pt-xs"
-            >
-              {{ item.judul }}
-            </q-item-label>
-            <div class="flex items-center text-grey q-my-sm f-10">
-              <div class="flex items-center q-mr-sm">
-                <q-icon
-                  name="edit_calendar"
-                  class="q-pr-xs "
-                /> <div>{{ dateHuman(item.tanggal) }}</div>
-              </div>
-              <q-item-label
-                lines="2"
-                class="f-10 q-mt-sm"
-              >
-                <div v-html="item.content" />
-              </q-item-label>
-            </div>
-          </q-item-section>
-        </q-item>
-      </template>
-      <template v-else>
-        <div
-          v-for="(y, x) in y = items.length"
-          :key="x"
-          class="row flex-1"
-        >
-          <q-skeleton
-            size="90px"
-            square
-            animation="fade"
-            class="q-mb-sm q-mr-sm"
-          />
-          <div
-            class="flex-1"
+    <!-- News Grid -->
+    <div v-else-if="items && items.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        v-for="(item, index) in items"
+        :key="index"
+        class="news-card group bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
+        @click="beritaClick(item)"
+      >
+        <!-- Card Image Header -->
+        <div class="relative h-48 overflow-hidden bg-slate-100">
+          <q-img
+            :src="pathImg + item.thumbnail"
+            fit="cover"
+            class="w-full h-full transform group-hover:scale-105 transition-transform duration-500"
+            alt="Thumbnail berita"
           >
-            <q-skeleton
-              type="text"
-              square
-              width="40%"
-              animation="fade"
-            />
-            <q-skeleton
-              type="text"
-              square
-              height="10px"
-              width="10%"
-              animation="fade"
-              class="q-my-xs"
-            />
-            <q-skeleton
-              type="text"
-              square
-              height="12px"
-              width="95%"
-              animation="fade"
-            />
-            <q-skeleton
-              type="text"
-              square
-              height="12px"
-              width="90%"
-              animation="fade"
-            />
-            <q-skeleton
-              type="text"
-              square
-              height="12px"
-              width="60%"
-              animation="fade"
-            />
+            <template #error>
+              <div class="absolute-full flex flex-center bg-slate-200 text-slate-400">
+                <q-icon name="image" size="48px" />
+              </div>
+            </template>
+          </q-img>
+
+          <!-- Category Badge -->
+          <div class="absolute top-3 left-3 bg-teal-700/90 backdrop-blur-md text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-md uppercase tracking-wider">
+            {{ getCategoryName(item) }}
           </div>
         </div>
-      </template>
-    </template>
 
-    <template v-else>
-      <div class="q-pa-md">
-        Belum Ada List Berita
+        <!-- Card Body -->
+        <div class="p-5 flex-1 flex flex-col justify-between">
+          <div>
+            <!-- Date -->
+            <div class="flex items-center gap-1.5 text-slate-400 text-xs font-medium q-mb-xs">
+              <q-icon name="event" size="14px" class="text-teal-600" />
+              <span>{{ dateHuman(item.tanggal) }}</span>
+            </div>
+
+            <!-- Title -->
+            <h3 class="text-base font-bold text-slate-900 group-hover:text-teal-600 transition-colors line-clamp-2 leading-snug q-mb-sm margin-0">
+              {{ item.judul }}
+            </h3>
+
+            <!-- Excerpt (Stripped HTML) -->
+            <p class="text-slate-500 text-xs line-clamp-2 leading-relaxed margin-0">
+              {{ getExcerpt(item.content) }}
+            </p>
+          </div>
+
+          <!-- Card Footer -->
+          <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-teal-600">
+            <span>Baca Selengkapnya</span>
+            <q-icon name="arrow_forward" size="16px" class="transform group-hover:translate-x-1 transition-transform" />
+          </div>
+        </div>
       </div>
-    </template>
-  </q-list>
+    </div>
+
+    <!-- Empty State -->
+    <div v-else class="text-center py-12 bg-white rounded-2xl border border-slate-200 shadow-sm">
+      <q-icon name="article" size="56px" class="text-slate-300 q-mb-sm" />
+      <div class="text-base font-bold text-slate-700">Belum Ada Berita</div>
+      <p class="text-xs text-slate-400 margin-0">Tidak ada artikel berita yang ditemukan.</p>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { pathImg } from 'src/boot/axios'
 import { dateHuman } from 'src/modules/formatter'
 import { useBeritaWeb } from 'src/stores/web/berita'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
+
 const router = useRouter()
-// eslint-disable-next-line no-unused-vars
-const route = useRoute()
+
 defineProps({
   items: {
     type: Array,
@@ -139,22 +98,25 @@ defineProps({
 
 const store = useBeritaWeb()
 
+function getCategoryName(item) {
+  return item.kategori?.nama || item.kategori || 'BERITA'
+}
+
+function getExcerpt(html) {
+  if (!html) return ''
+  if (typeof document === 'undefined') return ''
+  const tmp = document.createElement('DIV')
+  tmp.innerHTML = html
+  const text = tmp.textContent || tmp.innerText || ''
+  return text.trim()
+}
+
 function beritaClick(item) {
-  // console.log(item)
-  // const page = route.params.page || 'all'
-  // const params = {
-  //   q: item.slug,
-  //   page
-  // }
-  // store.getContent(params).then(() => {
-  //   router.replace({ name: 'berita', params: { page: params.page }, query: { page: params.q } })
-  // })
   const slug = String(item.slug).replace(/^"+|"+$/g, '') || 'all'
   const params = {
     q: slug,
     slug
   }
-  // console.log('params', params)
   store.getContent(params).then(() => {
     router.replace({ name: 'berita-detail', params: { slug } })
   })
@@ -162,7 +124,7 @@ function beritaClick(item) {
 </script>
 
 <style lang="scss" scoped>
-.q-item {
-  padding: 2px 10px 2px 2px !important;
+.news-card {
+  height: 100%;
 }
 </style>
