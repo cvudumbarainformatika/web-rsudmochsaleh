@@ -100,3 +100,22 @@ html.acc-adhd-focus {
   z-index: 999999;
   transition: top 0.05s linear;
 }
+
+/* Hide Google Translate Top Banner & Tooltip Frame */
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame,
+.goog-te-balloon-frame,
+#goog-gt-tt {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}

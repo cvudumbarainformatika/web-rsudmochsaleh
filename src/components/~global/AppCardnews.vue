@@ -34,7 +34,7 @@
         <q-item-label
           lines="2"
         >
-          <div v-html="bigCardNews.content" />
+          <div ref="cardContentRef" />
         </q-item-label>
       </div>
     </q-card-section>
@@ -73,6 +73,22 @@ const route = useRoute()
 
 // eslint-disable-next-line no-unused-vars
 const store = useBeritaWeb()
+
+import { ref, watch, nextTick } from 'vue'
+import { useAccessibilityStore } from 'src/stores/web/accessibility'
+
+const accStore = useAccessibilityStore()
+const cardContentRef = ref(null)
+
+watch(() => props.bigCardNews, async (val) => {
+  if (val) {
+    await nextTick()
+    if (cardContentRef.value && val.content) {
+      cardContentRef.value.innerHTML = val.content
+      accStore.notifyContentUpdated()
+    }
+  }
+}, { immediate: true })
 
 function getKategori(val) {
   const arr = val.map(x => x.nama)

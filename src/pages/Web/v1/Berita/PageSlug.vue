@@ -54,9 +54,9 @@
         />
       </div>
     </div>
-    <app-editor
-      v-model="store.content"
-      :edited="false"
+    <div
+      ref="newsBodyRef"
+      class="news-body-content q-py-md text-slate-800 leading-relaxed text-body1"
     />
     <q-separator />
     <!-- <div class="text-right text-grey f-14">
@@ -76,16 +76,59 @@
 
 <script setup>
 import { useBeritaWeb } from 'src/stores/web/berita'
-import { computed, ref } from 'vue'
+import { computed, ref, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { pathImg } from 'src/boot/axios'
 import { useAppStore } from 'src/stores/app'
 import { dateWeb } from 'src/modules/formatter'
 import { useHead } from '@vueuse/head'
+import { useAccessibilityStore } from 'src/stores/web/accessibility'
 
 const route = useRoute()
 const store = useBeritaWeb()
 const storeApp = useAppStore()
+const accStore = useAccessibilityStore()
+const newsBodyRef = ref(null)
+
+function normalizeSentenceCase(text) {
+  if (!text) return ''
+  if (text === text.toUpperCase() && text.length > 10) {
+    return text.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, c => c.toUpperCase())
+  }
+  return text
+}
+
+function formatContentForTranslation(html) {
+  if (!html) return ''
+  let str = String(html)
+    .replace(/class="[^"]*notranslate[^"]*"/gi, '')
+    .replace(/translate="no"/gi, '')
+
+  if (typeof document === 'undefined') return str
+
+  const tempDiv = document.createElement('div')
+  tempDiv.innerHTML = str
+
+  // Hanya normalisasi jika node daun berformat HURUF KAPITAL SEMUA (ALL-CAPS)
+  const textNodes = tempDiv.querySelectorAll('h1, h2, h3, h4, h5, h6, p, div, span, strong, b, a, li, td, th')
+  textNodes.forEach(el => {
+    if (el.children.length === 0 && el.textContent && el.textContent === el.textContent.toUpperCase() && el.textContent.length > 15) {
+      el.textContent = el.textContent.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, c => c.toUpperCase())
+    }
+  })
+
+  return tempDiv.innerHTML
+}
+
+watch(() => store.content, async (val) => {
+  if (val) {
+    await nextTick()
+    if (newsBodyRef.value) {
+      newsBodyRef.value.innerHTML = formatContentForTranslation(val)
+      accStore.notifyContentUpdated()
+    }
+  }
+}, { immediate: true })
 
 const logo = computed(() => {
   if (storeApp.logo === null) {
@@ -132,20 +175,85 @@ useHead({
     }
   ]
 })
-
-// const params = ref({
-//   q: route.query.page || '',
-//   page: route.params.page || 'all'
-// })
-
-// onMounted(() => {
-//   store.getContent(params.value)
-// })
-// console.log(route)
 </script>
 
 <style lang="scss" scoped>
 a {
   text-decoration: none;
+}
+
+.news-body-content {
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: #1e293b;
+
+  :deep(p) {
+    margin-bottom: 1.15rem;
+  }
+
+  :deep(strong), :deep(b) {
+    font-weight: 800 !important;
+    color: #0f172a;
+  }
+
+  :deep(a) {
+    color: #0d9488 !important;
+    text-decoration: underline !important;
+    font-weight: 700;
+    word-break: break-all;
+
+    &:hover {
+      color: #0891b2 !important;
+    }
+  }
+
+  :deep(ul) {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1.15rem;
+  }
+
+  :deep(ol) {
+    list-style-type: decimal;
+    padding-left: 1.5rem;
+    margin-bottom: 1.15rem;
+  }
+
+  :deep(li) {
+    margin-bottom: 0.35rem;
+  }
+
+  :deep(h1), :deep(h2), :deep(h3), :deep(h4), :deep(h5), :deep(h6) {
+    font-weight: 800;
+    color: #0f172a;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+  }
+
+  :deep(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.25rem;
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 0.6rem 0.85rem;
+    }
+
+    th {
+      background-color: #f1f5f9;
+      font-weight: 800;
+      color: #0f172a;
+    }
+  }
+
+  :deep(blockquote) {
+    border-left: 4px solid #0d9488;
+    padding-left: 1rem;
+    margin-left: 0;
+    color: #475569;
+    font-style: italic;
+  }
 }
 </style>

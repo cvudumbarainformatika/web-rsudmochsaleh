@@ -33,14 +33,6 @@
               </div>
             </div>
 
-            <!-- TOMBOL TES SUARA PRIMITIF (native HTML, bukan Quasar) -->
-            <button
-              style="background:#fff;color:#0f766e;border:none;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:800;cursor:pointer;margin-right:4px;"
-              onclick="window.speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance('Halo, ini tes suara aksesibilitas RSUD.'); window.speechSynthesis.speak(u); console.log('TES PRIMITIF: speak() dipanggil');"
-            >
-              🔊 Tes
-            </button>
-
             <!-- Action Buttons: Reset & Close -->
             <div class="flex items-center gap-1">
               <q-btn
@@ -71,20 +63,31 @@
 
         <!-- 2. Scrollable Content Body (High Contrast Background #e2e8f0) -->
         <q-card-section class="widget-content-body flex-1 overflow-y-auto p-4 space-y-5 bg-slate-200/90">
-          <!-- Selector Bahasa -->
-          <div class="lang-selector-box bg-white rounded-2xl p-3.5 border border-slate-300 shadow-sm flex items-center justify-between">
-            <div class="flex items-center gap-2.5 font-bold text-xs text-slate-800">
-              <q-icon name="language" size="18px" class="text-teal-700" />
-              <span>Bahasa Layanan</span>
+          <!-- Selector Bahasa Layanan Multibahasa (8 Opsi Bahasa Dunia) -->
+          <div class="lang-selector-box bg-white rounded-2xl p-3.5 border border-slate-300 shadow-sm space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 font-bold text-xs text-slate-800">
+                <q-icon name="translate" size="18px" class="text-teal-700" />
+                <span>Bahasa Layanan (*Multi-Language*)</span>
+              </div>
+              <span class="text-[0.65rem] text-teal-800 font-extrabold bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200">
+                Auto-Translate
+              </span>
             </div>
-            <select
-              v-model="store.language"
-              class="lang-select-input bg-slate-100 border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 outline-none cursor-pointer focus:border-teal-600"
-              @change="store.saveToStorage()"
-            >
-              <option value="id">Bahasa Indonesia</option>
-              <option value="en">English</option>
-            </select>
+
+            <div class="grid grid-cols-2 gap-2">
+              <button
+                v-for="lang in languageList"
+                :key="lang.code"
+                type="button"
+                class="lang-btn px-2.5 py-1.5 rounded-xl text-xs font-bold border flex items-center gap-2 transition-all cursor-pointer"
+                :class="store.language === lang.code ? 'bg-teal-700 text-white border-teal-700 shadow-xs' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'"
+                @click="store.setLanguage(lang.code)"
+              >
+                <span class="text-sm">{{ lang.flag }}</span>
+                <span class="truncate text-[0.72rem]">{{ lang.name }}</span>
+              </button>
+            </div>
           </div>
 
           <!-- Section 1: Profil Aksesibilitas (6 Cards Grid) -->
@@ -208,6 +211,9 @@
           </div>
         </q-card-section>
 
+        <!-- Hidden Google Translate Element Target -->
+        <div id="google_translate_element" style="display:none;"></div>
+
         <!-- 3. Footer Bar (Fixed Bottom) -->
         <q-card-section class="widget-footer-bar bg-white border-t border-slate-300 p-3.5 text-center flex-shrink-0">
           <div class="flex items-center justify-between text-[0.72rem] text-slate-600 font-bold">
@@ -228,6 +234,17 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useAccessibilityStore } from 'src/stores/web/accessibility'
 
 const store = useAccessibilityStore()
+
+const languageList = [
+  { code: 'id', name: 'Indonesia', flag: '🇮🇩' },
+  { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'zh-CN', name: 'China / 中文', flag: '🇨🇳' },
+  { code: 'it', name: 'Italia', flag: '🇮🇹' },
+  { code: 'fr', name: 'Prancis', flag: '🇫🇷' },
+  { code: 'ko', name: 'Korea / 한국어', flag: '🇰🇷' },
+  { code: 'ar', name: 'Arab / العربية', flag: '🇸🇦' },
+  { code: 'ja', name: 'Jepang / 日本語', flag: '🇯🇵' }
+]
 const mouseY = ref(100)
 
 /**
@@ -419,6 +436,7 @@ onMounted(() => {
   store.loadFromStorage()
   if (typeof window !== 'undefined') {
     window.addEventListener('mousemove', handleMouseMove)
+    store.initGoogleTranslateScript()
   }
 })
 

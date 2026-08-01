@@ -111,8 +111,8 @@
                   class="absolute top-full transform-gpu z-50 overflow-visible pt-2"
                   :class="[
                     hasAnyNestedSubmenu(item)
-                      ? 'w-[720px] right-0'
-                      : (item.items && item.items.length > 8 ? 'w-[680px] right-0' : 'w-80 left-0')
+                      ? (index <= 2 ? 'w-[720px] left-0' : 'w-[720px] right-0')
+                      : (item.items && item.items.length > 8 ? (index <= 2 ? 'w-[680px] left-0' : 'w-[680px] right-0') : (index <= 2 ? 'w-80 left-0' : 'w-80 right-0'))
                   ]"
                 >
                   <q-card

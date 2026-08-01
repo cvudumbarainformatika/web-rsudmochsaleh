@@ -73,8 +73,8 @@
       </div>
 
       <div
+        ref="newsBodyRef"
         class="content-body"
-        v-html="store.content"
       />
     </div>
   </div>
@@ -82,16 +82,64 @@
 
 <script setup>
 import { useBeritaWeb } from 'src/stores/web/berita'
-import { computed, ref } from 'vue'
+import { computed, ref, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { pathImg } from 'src/boot/axios'
 import { useAppStore } from 'src/stores/app'
 import { dateWeb } from 'src/modules/formatter'
+import { useAccessibilityStore } from 'src/stores/web/accessibility'
 
 const route = useRoute()
 const store = useBeritaWeb()
 const storeApp = useAppStore()
+const accStore = useAccessibilityStore()
 const url = ref(window.location.origin + route.fullPath)
+const newsBodyRef = ref(null)
+
+function normalizeSentenceCase(text) {
+  if (!text) return ''
+  // Jika teks berupa HURUF KAPITAL SEMUA, ubah ke Sentence Case agar Google Translate tidak mengabaikannya
+  if (text === text.toUpperCase() && text.length > 10) {
+    return text.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, c => c.toUpperCase())
+  }
+  return text
+}
+
+function formatContentForTranslation(html) {
+  if (!html) return ''
+  let str = String(html)
+    .replace(/class="[^"]*notranslate[^"]*"/gi, '')
+    .replace(/translate="no"/gi, '')
+
+  if (typeof document === 'undefined') return str
+
+  const tempDiv = document.createElement('div')
+  tempDiv.innerHTML = str
+
+  const textNodes = tempDiv.querySelectorAll('p, div, span, h1, h2, h3, h4, h5, h6')
+  if (textNodes.length > 0) {
+    textNodes.forEach(el => {
+      if (el.textContent && el.textContent === el.textContent.toUpperCase() && el.textContent.length > 12) {
+        el.textContent = normalizeSentenceCase(el.textContent)
+      }
+    })
+    return tempDiv.innerHTML
+  } else {
+    // Jika hanya teks mentah tanpa tag HTML
+    const lines = tempDiv.innerText.split('\n').filter(l => l.trim().length > 0)
+    return lines.map(line => `<p class="my-2 leading-relaxed text-slate-700">${normalizeSentenceCase(line)}</p>`).join('')
+  }
+}
+
+watch(() => store.content, async (val) => {
+  if (val) {
+    await nextTick()
+    if (newsBodyRef.value) {
+      newsBodyRef.value.innerHTML = formatContentForTranslation(val)
+      accStore.notifyContentUpdated()
+    }
+  }
+}, { immediate: true })
 
 const logo = computed(() => {
   if (storeApp.logo === null) {

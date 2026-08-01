@@ -43,9 +43,108 @@ export const useAccessibilityStore = defineStore('accessibility', {
       this.bigCursor = false
       this.readingLine = false
       this.readableFont = false
+      this.language = 'id'
       this.disableSpeechReader()
       this.applyDOMClasses()
+      if (typeof document !== 'undefined') {
+        const domain = window.location.hostname
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${domain};`
+      }
       localStorage.removeItem('rsud_accessibility_config')
+      if (typeof window !== 'undefined') {
+        window.location.reload()
+      }
+    },
+
+    setLanguage(langCode) {
+      if (typeof window === 'undefined') return
+      this.language = langCode
+
+      const domain = window.location.hostname
+      const paths = ['/', window.location.pathname]
+
+      if (langCode === 'id') {
+        // Hapus cookie googtrans pada semua path dan domain
+        paths.forEach(p => {
+          document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${p};`
+          document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${p}; domain=${domain};`
+        })
+        // Reload 1x bersih agar Google Translate menghentikan penerjemahan dan kembali ke Bahasa Indonesia murni
+        window.location.reload()
+      } else {
+        const val = `/id/${langCode}`
+        paths.forEach(p => {
+          document.cookie = `googtrans=${val}; path=${p};`
+          document.cookie = `googtrans=${val}; path=${p}; domain=${domain};`
+        })
+        // Reload 1x bersih agar Google Translate memproses DOM dengan bahasa baru
+        window.location.reload()
+      }
+    },
+
+    initGoogleTranslateScript(cb) {
+      if (typeof document === 'undefined') return
+      if (document.getElementById('google-translate-script')) {
+        if (cb) cb()
+        return
+      }
+      window.googleTranslateElementInit = () => {
+        if (window.google && window.google.translate) {
+          try {
+            new window.google.translate.TranslateElement({
+              pageLanguage: 'id',
+              includedLanguages: 'en,zh-CN,it,fr,ko,ar,ja,id',
+              autoDisplay: false
+            }, 'google_translate_element')
+          } catch (e) {
+            console.error('Google Translate Init Error:', e)
+          }
+          if (cb) cb()
+        }
+      }
+      const s = document.createElement('script')
+      s.id = 'google-translate-script'
+      s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'
+      document.head.appendChild(s)
+    },
+
+    notifyContentUpdated() {
+      if (typeof document === 'undefined') return
+      if (this.language && this.language !== 'id') {
+        setTimeout(() => {
+          this.triggerTranslate(this.language)
+        }, 250)
+      }
+    },
+
+    triggerTranslate(langCode) {
+      if (typeof document === 'undefined') return
+      
+      const doTrigger = () => {
+        const select = document.querySelector('.goog-te-combo')
+        if (select) {
+          select.value = langCode === 'id' ? '' : langCode
+          select.dispatchEvent(new Event('change'))
+        } else {
+          // Jika belum ada combo, coba lagi setelah delay singkat
+          setTimeout(() => {
+            const selectRetry = document.querySelector('.goog-te-combo')
+            if (selectRetry) {
+              selectRetry.value = langCode === 'id' ? '' : langCode
+              selectRetry.dispatchEvent(new Event('change'))
+            }
+          }, 400)
+        }
+      }
+
+      if (!document.getElementById('google-translate-script')) {
+        this.initGoogleTranslateScript(() => {
+          setTimeout(doTrigger, 300)
+        })
+      } else {
+        doTrigger()
+      }
     },
 
     setFontSize(step) {
@@ -94,7 +193,6 @@ export const useAccessibilityStore = defineStore('accessibility', {
         const targetEl = e.target.closest('button, a, h1, h2, h3, h4, h5, p, span, li, td, th, label, [role="button"]') || e.target
         const rawText = (targetEl?.innerText || targetEl?.alt || targetEl?.title || targetEl?.ariaLabel || '').trim()
 
-        // Buang baris yang hanya berisi nama ikon Material (lowercase+underscore saja)
         const cleaned = rawText.replace(/^[a-z][a-z_]*\n/gm, '').trim()
 
         if (cleaned && cleaned.length > 2 && cleaned.length < 300 && cleaned !== lastText) {
@@ -106,10 +204,11 @@ export const useAccessibilityStore = defineStore('accessibility', {
         }
       }
 
-      document.addEventListener('mouseover', this._speechHandler)
+      document.addEventListener('mouseover', this._speechHandler, { passive: true })
     },
 
     disableSpeechReader() {
+      if (typeof document === 'undefined') return
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel()
       }
@@ -132,10 +231,8 @@ export const useAccessibilityStore = defineStore('accessibility', {
         contrastMode: this.contrastMode,
         bigCursor: this.bigCursor,
         readingLine: this.readingLine,
-        readableFont: this.readableFont,
-        language: this.language
-        // visionImpaired SENGAJA TIDAK DISIMPAN
-        // karena memerlukan user-gesture baru untuk aktif setiap sesi
+        readableFont: this.readableFont
+        // language TIDAK DISIMPAN agar default SELALU Bahasa Indonesia ('id') saat dibuka kembali
       }
       localStorage.setItem('rsud_accessibility_config', JSON.stringify(payload))
     },
@@ -146,7 +243,6 @@ export const useAccessibilityStore = defineStore('accessibility', {
         const saved = localStorage.getItem('rsud_accessibility_config')
         if (saved) {
           const parsed = JSON.parse(saved)
-          // visionImpaired TIDAK di-restore (butuh user gesture baru tiap sesi)
           this.seizureSafe = parsed.seizureSafe ?? false
           this.lowVision = parsed.lowVision ?? false
           this.adhdFriendly = parsed.adhdFriendly ?? false
@@ -157,10 +253,27 @@ export const useAccessibilityStore = defineStore('accessibility', {
           this.bigCursor = parsed.bigCursor ?? false
           this.readingLine = parsed.readingLine ?? false
           this.readableFont = parsed.readableFont ?? false
-          this.language = parsed.language ?? 'id'
-          // Terapkan DOM class untuk setting non-speech
-          this.applyDOMClasses()
         }
+
+        // Selaraskan state tombol UI dengan Cookie Google Translate aktual
+        if (typeof document !== 'undefined') {
+          const matches = document.cookie.match(/(?:^|; )googtrans=([^;]*)/)
+          if (matches && matches[1]) {
+            const val = decodeURIComponent(matches[1])
+            const parts = val.split('/')
+            if (parts.length >= 3 && parts[2]) {
+              this.language = parts[2]
+            } else {
+              this.language = 'id'
+            }
+          } else {
+            this.language = 'id'
+          }
+        } else {
+          this.language = 'id'
+        }
+
+        this.applyDOMClasses()
       } catch (e) {
         console.error('Gagal memuat pengaturan aksesibilitas:', e)
       }
