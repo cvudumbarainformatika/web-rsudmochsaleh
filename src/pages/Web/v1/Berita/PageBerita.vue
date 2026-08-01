@@ -1,209 +1,259 @@
 <template>
-  <q-page class="news-page min-h-screen bg-slate-50 q-pb-xl">
+  <q-page class="news-page min-h-screen bg-slate-50/60 q-py-xl">
     <app-loading v-if="store.loading" />
-    <div v-else class="container-padding q-pt-lg">
+    <div v-else class="container-padding">
 
       <!-- Detail Berita View (jika slug ada dan bukan 'all') -->
       <div v-if="isDetailPage">
         <PageSlug :key="route.params.slug" />
       </div>
 
-      <!-- Main News List & Search View (jika slug === 'all') -->
+      <!-- Main News Layout SS2 (jika slug === 'all') -->
       <div v-else>
-        <!-- Modern Hero Search Banner -->
-        <section class="news-hero-banner bg-gradient-to-r from-teal-800 via-cyan-800 to-slate-900 text-white rounded-3xl p-6 md:p-10 q-mb-xl shadow-lg relative overflow-hidden">
-          <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl pointer-events-none" />
+        <div class="row q-col-gutter-lg">
 
-          <div class="row items-center q-col-gutter-lg relative z-10">
-            <div class="col-12 col-md-7">
-              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/30 text-teal-200 text-xs font-bold uppercase tracking-wider q-mb-sm">
-                <q-icon name="newspaper" size="16px" />
-                Pusat Informasi &amp; Berita RSUD
-              </div>
-              <h1 class="text-h3 font-extrabold text-white tracking-tight leading-tight q-mb-xs margin-0">
-                Kabar &amp; Edukasi Kesehatan
-              </h1>
-              <p class="text-slate-300 text-body1 margin-0">
-                Dapatkan artikel berita terkini, tips medis, serta pengumuman resmi RSUD dr. Mohamad Saleh Kota Probolinggo.
-              </p>
-            </div>
-
-            <!-- Interactive Search Box -->
-            <div class="col-12 col-md-5">
-              <div class="search-box-wrapper bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-2 flex items-center gap-2 shadow-inner">
-                <q-icon name="search" size="24px" class="text-teal-300 q-ml-sm" />
+          <!-- 1. LEFT SIDEBAR (col-12 col-md-3): Search + Kategori + Arsip -->
+          <div class="col-12 col-md-3">
+            <div class="left-sidebar bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm sticky top-24">
+              <!-- Search Box -->
+              <div class="search-box relative q-mb-lg">
+                <q-icon name="search" size="18px" class="absolute left-3 top-3 text-slate-400" />
                 <input
                   v-model="searchQuery"
                   type="text"
-                  placeholder="Cari berita atau artikel kesehatan..."
-                  class="bg-transparent text-white placeholder-slate-300 border-none outline-none w-full text-sm py-2"
+                  placeholder="Cari konten berita..."
+                  class="w-full pl-9 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:border-teal-600 focus:bg-white transition"
                 />
-                <button
+                <q-icon
                   v-if="searchQuery"
-                  class="bg-white/20 hover:bg-white/30 text-white rounded-full p-1.5 flex items-center justify-center transition border-none cursor-pointer"
+                  name="close"
+                  size="14px"
+                  class="absolute right-3 top-3 text-slate-400 cursor-pointer hover:text-slate-700"
                   @click="searchQuery = ''"
+                />
+              </div>
+
+              <!-- Kategori Filter -->
+              <div class="q-mb-lg">
+                <div
+                  class="flex items-center justify-between font-bold text-slate-900 text-xs q-mb-sm cursor-pointer select-none"
+                  @click="showCategories = !showCategories"
                 >
-                  <q-icon name="close" size="16px" />
-                </button>
+                  <span>Kategori</span>
+                  <q-icon :name="showCategories ? 'expand_less' : 'expand_more'" size="18px" />
+                </div>
+                <q-slide-transition>
+                  <div v-show="showCategories" class="space-y-1">
+                    <div
+                      v-for="cat in categoryList"
+                      :key="cat.id"
+                      class="px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer flex items-center justify-between"
+                      :class="selectedCategory === cat.id ? 'bg-teal-50 text-teal-700 font-bold border-l-4 border-teal-600' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'"
+                      @click="selectedCategory = cat.id"
+                    >
+                      <span>{{ cat.name }}</span>
+                    </div>
+                  </div>
+                </q-slide-transition>
+              </div>
+
+              <!-- Arsip Filter -->
+              <div>
+                <div
+                  class="flex items-center justify-between font-bold text-slate-900 text-xs q-mb-sm cursor-pointer select-none"
+                  @click="showArchives = !showArchives"
+                >
+                  <span>Arsip</span>
+                  <q-icon :name="showArchives ? 'expand_less' : 'expand_more'" size="18px" />
+                </div>
+                <q-slide-transition>
+                  <div v-show="showArchives" class="space-y-1">
+                    <div
+                      v-for="arch in archiveList"
+                      :key="arch"
+                      class="px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer"
+                      :class="selectedArchive === arch ? 'bg-teal-50 text-teal-700 font-bold border-l-4 border-teal-600' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'"
+                      @click="selectedArchive = arch"
+                    >
+                      {{ arch }}
+                    </div>
+                  </div>
+                </q-slide-transition>
               </div>
             </div>
           </div>
-        </section>
 
-        <!-- Hero Section: Featured & Trending -->
-        <section class="hero-section q-mb-xl">
-          <div class="row q-col-gutter-xl">
-            <!-- Main Featured News -->
-            <div class="col-md-8 col-lg-8 col-xs-12">
-              <div class="featured-news">
-                <app-cardnews
-                  :big-card-news="store.bigCardForPageBerita"
-                  class="main-featured-card"
+          <!-- 2. CENTER MAIN CONTENT (col-12 col-md-6): Heading + Featured Card + Grid Berita Lainnya -->
+          <div class="col-12 col-md-6">
+            <div class="main-content">
+              <!-- Page Heading -->
+              <div class="q-mb-lg">
+                <h1 class="text-h3 font-extrabold text-slate-900 tracking-tight margin-0">
+                  Berita
+                </h1>
+                <p class="text-slate-500 text-body2 q-mt-xs margin-0">
+                  Informasi dan berita resmi RSUD dr. Mohamad Saleh Probolinggo
+                </p>
+              </div>
+
+              <!-- Featured Big Main Article Card (Model Card Paling Atas SS2) -->
+              <div
+                v-if="featuredNews"
+                class="featured-card bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm hover:shadow-lg transition-all duration-300 q-mb-xl cursor-pointer"
+                @click="beritaClick(featuredNews)"
+              >
+                <div class="row q-col-gutter-md items-center">
+                  <div class="col-12 col-sm-5">
+                    <div class="aspect-video rounded-xl overflow-hidden bg-slate-100 relative">
+                      <q-img
+                        :src="pathImg + featuredNews.thumbnail"
+                        fit="cover"
+                        class="w-full h-full hover:scale-105 transition-transform duration-500"
+                        alt="Featured News Thumbnail"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-7">
+                    <div class="flex items-center gap-2 text-xs text-slate-400 font-medium q-mb-xs">
+                      <span class="bg-teal-50 text-teal-700 font-bold px-2.5 py-0.5 rounded-full text-[10px] uppercase">
+                        {{ getCategoryName(featuredNews) }}
+                      </span>
+                      <span>•</span>
+                      <span>{{ dateHuman(featuredNews.tanggal) }}</span>
+                    </div>
+                    <h2 class="text-base font-extrabold text-slate-900 hover:text-teal-600 transition-colors line-clamp-2 leading-snug q-mb-xs margin-0">
+                      {{ featuredNews.judul }}
+                    </h2>
+                    <p class="text-slate-500 text-xs line-clamp-2 leading-relaxed q-mb-sm margin-0">
+                      {{ getExcerpt(featuredNews.content) }}
+                    </p>
+                    <div class="flex items-center gap-2">
+                      <q-avatar size="24px" class="bg-teal-600 text-white font-bold text-[10px]">
+                        RS
+                      </q-avatar>
+                      <span class="text-xs font-bold text-slate-700">Admin RSUD</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Berita Lainnya 2-Column Grid -->
+              <div class="q-mb-md">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div
+                    v-for="(item, idx) in filteredNewsList"
+                    :key="idx"
+                    class="article-card bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
+                    @click="beritaClick(item)"
+                  >
+                    <div class="h-40 overflow-hidden bg-slate-100 relative">
+                      <q-img
+                        :src="pathImg + item.thumbnail"
+                        fit="cover"
+                        class="w-full h-full hover:scale-105 transition-transform duration-500"
+                        alt="Article Thumbnail"
+                      />
+                      <span class="absolute top-2.5 left-2.5 bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">
+                        {{ getCategoryName(item) }}
+                      </span>
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col justify-between">
+                      <div>
+                        <div class="text-[11px] text-slate-400 font-medium q-mb-xs">
+                          {{ dateHuman(item.tanggal) }}
+                        </div>
+                        <h3 class="text-sm font-bold text-slate-900 hover:text-teal-600 transition-colors line-clamp-2 leading-snug q-mb-xs margin-0">
+                          {{ item.judul }}
+                        </h3>
+                        <p class="text-slate-500 text-xs line-clamp-2 leading-relaxed margin-0">
+                          {{ getExcerpt(item.content) }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div v-if="filteredNewsList.length === 0" class="text-center py-12 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                <q-icon name="article" size="48px" class="text-slate-300 q-mb-sm" />
+                <div class="text-sm font-bold text-slate-700">Belum Ada Artikel Berita</div>
+                <p class="text-xs text-slate-400 margin-0">Tidak ada berita yang sesuai dengan kriteria pencarian atau kategori ini.</p>
+              </div>
+
+              <!-- Pagination -->
+              <div class="pagination-wrapper q-mt-xl flex flex-center">
+                <q-pagination
+                  v-model="current"
+                  color="teal-8"
+                  active-color="teal-7"
+                  :max="maxPagin"
+                  :max-pages="6"
+                  :boundary-numbers="false"
+                  class="shadow-sm bg-white rounded-2xl p-1 border border-slate-200"
                 />
               </div>
             </div>
-
-            <!-- Trending / Terbaru List -->
-            <div class="col-md-4 col-lg-4 col-xs-12">
-              <div class="trending-section bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm">
-                <div class="flex items-center gap-2 q-mb-md">
-                  <span class="w-1.5 h-6 bg-teal-600 rounded-full" />
-                  <h2 class="text-h6 font-extrabold text-slate-900 margin-0">
-                    Terbaru
-                  </h2>
-                </div>
-                <div class="trending-list">
-                  <app-trending-news-list
-                    :items="store.beritas"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Berita Populer Carousel Section (Bahasa Indonesia) -->
-        <section
-          v-if="firstArr.length > 0"
-          class="popular-section q-py-xl q-px-lg bg-white rounded-3xl border border-slate-200/80 shadow-sm q-mb-xl"
-        >
-          <div class="text-center q-mb-lg">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 text-teal-700 text-xs font-bold uppercase tracking-wider q-mb-xs">
-              <q-icon name="trending_up" size="16px" />
-              Rekomendasi Pembaca
-            </div>
-            <h2 class="text-h4 font-extrabold text-slate-900 tracking-tight margin-0">
-              Berita Populer
-            </h2>
-            <p class="text-slate-500 text-body2 q-mt-xs margin-0">
-              Artikel berita dan pengumuman yang paling banyak dibaca minggu ini.
-            </p>
           </div>
 
-          <q-carousel
-            v-model="slide"
-            transition-prev="slide-right"
-            transition-next="slide-left"
-            swipeable
-            animated
-            infinite
-            autoplay
-            arrows
-            class="rounded-2xl news-carousel bg-transparent"
-            height="340px"
-          >
-            <q-carousel-slide :name="1" class="q-pa-none">
-              <div class="row q-col-gutter-md">
+          <!-- 3. RIGHT SIDEBAR (col-12 col-md-3): Artikel Terpopuler List -->
+          <div class="col-12 col-md-3">
+            <div class="right-sidebar bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm sticky top-24">
+              <h3 class="text-xs font-extrabold text-slate-900 tracking-tight uppercase text-slate-400 q-mb-md margin-0">
+                Berita Terpopuler
+              </h3>
+
+              <div class="space-y-4">
                 <div
-                  v-for="(article, i) in firstArr"
+                  v-for="(pop, i) in store.populars.slice(0, 6)"
                   :key="i"
-                  class="col-12 col-md-4"
+                  class="popular-item flex gap-3 items-center group cursor-pointer border-b border-slate-100 q-pb-xs last:border-0"
+                  @click="beritaClick(pop)"
                 >
-                  <app-smallcard-news
-                    :item="article"
-                    class="news-card-hover"
-                  />
+                  <div class="w-14 h-14 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
+                    <q-img
+                      :src="pathImg + pop.thumbnail"
+                      fit="cover"
+                      class="w-full h-full group-hover:scale-105 transition-transform duration-300"
+                      alt="Popular Thumbnail"
+                    />
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <h4 class="text-xs font-bold text-slate-900 group-hover:text-teal-600 transition-colors line-clamp-2 leading-snug margin-0">
+                      {{ pop.judul }}
+                    </h4>
+                    <div class="text-[10px] text-slate-400 q-mt-xs">
+                      {{ dateHuman(pop.tanggal) }}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </q-carousel-slide>
-
-            <q-carousel-slide
-              v-if="secondArr.length > 0"
-              :name="2"
-              class="q-pa-none"
-            >
-              <div class="row q-col-gutter-md">
-                <div
-                  v-for="(article, n) in secondArr"
-                  :key="n"
-                  class="col-12 col-md-4"
-                >
-                  <app-smallcard-news
-                    :item="article"
-                    class="news-card-hover"
-                  />
-                </div>
-              </div>
-            </q-carousel-slide>
-          </q-carousel>
-        </section>
-
-        <!-- Latest News / Berita Lainnya Section (3-Column Grid) -->
-        <section class="latest-news-section q-py-lg">
-          <div class="flex items-center justify-between q-mb-lg flex-wrap gap-4">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="w-1.5 h-6 bg-teal-600 rounded-full" />
-                <h2 class="text-h4 font-extrabold text-slate-900 tracking-tight margin-0">
-                  Berita Lainnya
-                </h2>
-              </div>
-              <p class="text-slate-500 text-xs q-mt-xs margin-0">
-                Menampilkan daftar seluruh arsip berita dan edukasi kesehatan.
-              </p>
-            </div>
-
-            <!-- Active Filter Badge -->
-            <div v-if="searchQuery" class="bg-teal-50 text-teal-700 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-2">
-              <span>Hasil pencarian: "{{ searchQuery }}"</span>
-              <q-icon name="close" size="14px" class="cursor-pointer" @click="searchQuery = ''" />
             </div>
           </div>
 
-          <!-- Modern 3-Column Grid AppListNews Component -->
-          <app-list-news
-            :items="filteredSmallCards"
-            :loading="store.loadingMore"
-          />
-
-          <!-- Pagination -->
-          <div class="pagination-wrapper q-mt-xl flex flex-center">
-            <q-pagination
-              v-model="current"
-              color="teal-8"
-              active-color="teal-7"
-              :max="maxPagin"
-              :max-pages="6"
-              :boundary-numbers="false"
-              class="shadow-sm pagination-custom bg-white rounded-2xl p-1 border border-slate-200"
-            />
-          </div>
-        </section>
+        </div>
       </div>
     </div>
   </q-page>
 </template>
 
 <script setup>
+import { pathImg } from 'src/boot/axios'
+import { dateHuman } from 'src/modules/formatter'
 import { useBeritaWeb } from 'src/stores/web/berita'
 import { computed, onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import PageSlug from './PageSlug.vue'
 
 const route = useRoute()
+const router = useRouter()
 const store = useBeritaWeb()
-const slide = ref(1)
+
 const searchQuery = ref('')
+const selectedCategory = ref('all')
+const selectedArchive = ref('Semua')
+const showCategories = ref(true)
+const showArchives = ref(true)
 
 const isDetailPage = computed(() => {
   const slug = route.params.slug
@@ -222,22 +272,140 @@ const p = ref({
   page: route.params.slug || 'all'
 })
 
-const firstArr = computed(() => store.populars.slice(0, 3))
-const secondArr = computed(() => store.populars.slice(3))
-
-// Filter pencarian berita
-const filteredSmallCards = computed(() => {
-  const items = store.smallCardForPageBerita || []
-  if (!searchQuery.value || searchQuery.value.trim() === '') {
-    return items
+// Helper penanganan kategori array/object/string dari API
+function extractKategoriNames(item) {
+  if (!item) return []
+  const cat = item.kategori || item.kategoris || item.category || item.categories
+  if (!cat) return []
+  if (Array.isArray(cat)) {
+    return cat.map(c => (typeof c === 'object' ? (c.nama || c.name || '') : String(c))).filter(Boolean)
   }
-  const q = searchQuery.value.toLowerCase()
-  return items.filter(item => {
-    const title = (item.judul || '').toLowerCase()
-    const content = (item.content || '').toLowerCase()
-    return title.includes(q) || content.includes(q)
+  if (typeof cat === 'object') {
+    return [cat.nama || cat.name || ''].filter(Boolean)
+  }
+  if (typeof cat === 'string') {
+    return [cat]
+  }
+  return []
+}
+
+function getCategoryName(item) {
+  const names = extractKategoriNames(item)
+  return names.length > 0 ? names.join(', ') : 'BERITA'
+}
+
+// Dynamic Categories from API Data
+const categoryList = computed(() => {
+  const map = new Map()
+  map.set('all', 'Semua')
+
+  const items = store.beritas || []
+  items.forEach(item => {
+    const names = extractKategoriNames(item)
+    names.forEach(name => {
+      if (name && name.trim() !== '') {
+        const key = name.trim()
+        map.set(key.toLowerCase(), key)
+      }
+    })
   })
+
+  // Fallback kategori standar RSUD jika berita belum memiliki tag kategori
+  if (map.size === 1) {
+    map.set('informasi', 'Informasi')
+    map.set('kesehatan', 'Kesehatan')
+    map.set('pengumuman', 'Pengumuman')
+    map.set('kegiatan', 'Kegiatan')
+  }
+
+  return Array.from(map.entries()).map(([id, name]) => ({ id, name }))
 })
+
+// Dynamic Archives from API Data
+const archiveList = computed(() => {
+  const set = new Set()
+  set.add('Semua')
+
+  const items = store.beritas || []
+  items.forEach(item => {
+    const rawDate = item.tanggal || item.created_at
+    if (rawDate) {
+      const d = new Date(rawDate)
+      if (!isNaN(d.getTime())) {
+        const monthYear = d.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })
+        set.add(monthYear)
+      }
+    }
+  })
+
+  return Array.from(set)
+})
+
+const featuredNews = computed(() => {
+  const arr = store.beritas || []
+  return arr.length > 0 ? arr[0] : null
+})
+
+const filteredNewsList = computed(() => {
+  const arr = store.beritas || []
+  if (arr.length === 0) return []
+
+  let list = arr.length > 1 ? arr.slice(1) : arr
+
+  if (selectedCategory.value !== 'all') {
+    list = list.filter(item => {
+      const names = extractKategoriNames(item).map(n => n.toLowerCase())
+      return names.some(n => n.includes(selectedCategory.value))
+    })
+  }
+
+  if (selectedArchive.value && selectedArchive.value !== 'Semua' && selectedArchive.value !== 'all') {
+    list = list.filter(item => {
+      const rawDate = item.tanggal || item.created_at
+      if (rawDate) {
+        const d = new Date(rawDate)
+        if (!isNaN(d.getTime())) {
+          const monthYear = d.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })
+          return monthYear.toLowerCase() === selectedArchive.value.toLowerCase()
+        }
+      }
+      return false
+    })
+  }
+
+  if (searchQuery.value && searchQuery.value.trim() !== '') {
+    const q = searchQuery.value.toLowerCase()
+    list = list.filter(item => {
+      const title = (item.judul || '').toLowerCase()
+      const content = (item.content || '').toLowerCase()
+      return title.includes(q) || content.includes(q)
+    })
+  }
+
+  return list
+})
+
+
+
+function getExcerpt(html) {
+  if (!html) return ''
+  if (typeof document === 'undefined') return ''
+  const tmp = document.createElement('DIV')
+  tmp.innerHTML = html
+  const text = tmp.textContent || tmp.innerText || ''
+  return text.trim()
+}
+
+function beritaClick(item) {
+  const slug = String(item.slug).replace(/^"+|"+$/g, '') || 'all'
+  const params = {
+    q: slug,
+    slug
+  }
+  store.getContent(params).then(() => {
+    router.replace({ name: 'berita-detail', params: { slug } })
+  })
+}
 
 onMounted(() => {
   store.getDataPagin(p.value.page)
@@ -249,27 +417,5 @@ onMounted(() => {
 <style lang="scss" scoped>
 .news-page {
   background-color: #f8fafc;
-}
-
-.main-featured-card {
-  transition: transform 0.3s ease;
-  &:hover {
-    transform: translateY(-4px);
-  }
-}
-
-.news-card-hover {
-  transition: all 0.3s ease;
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.15);
-  }
-}
-
-.pagination-custom {
-  :deep(.q-btn) {
-    border-radius: 10px;
-    margin: 0 2px;
-  }
 }
 </style>
