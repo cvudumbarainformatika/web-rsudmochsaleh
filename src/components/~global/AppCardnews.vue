@@ -59,7 +59,7 @@ import { useBeritaWeb } from 'src/stores/web/berita'
 import { useRoute, useRouter } from 'vue-router'
 // import { defineProps } from "vue";
 
-defineProps({
+const props = defineProps({
   bigCardNews: {
     type: Object,
     default: null
