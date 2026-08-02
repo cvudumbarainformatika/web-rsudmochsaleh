@@ -12,18 +12,16 @@
               </span>
             </div>
 
-            <!-- Animated Title & Description -->
-            <transition name="hero-text-fade" mode="out-in">
-              <div :key="slide" class="hero-text-content">
-                <h1 class="hero-main-title hero-main-title-gradient leading-tight q-mb-sm">
-                  {{ currentSlideTitle }}
-                </h1>
+            <!-- Paten Judul & Deskripsi Utama (Statis & Bebas Loncat) -->
+            <div class="hero-text-content q-mb-md">
+              <h1 class="hero-main-title hero-main-title-gradient leading-tight q-mb-sm">
+                RSUD DR. MOHAMAD SALEH KOTA PROBOLINGGO
+              </h1>
 
-                <p class="hero-description text-slate-600 text-body1 line-height-relaxed q-mb-md">
-                  {{ currentSlideDesc }}
-                </p>
-              </div>
-            </transition>
+              <p class="hero-description text-slate-600 text-body1 line-height-relaxed">
+                Kesembuhan Pasien Pengabdianku, Kepuasan Pasien Kebahagiaanku...
+              </p>
+            </div>
 
             <!-- Address Info (SS Footer Style) -->
             <div class="hero-address-box flex items-center gap-2 text-slate-600 text-caption text-weight-medium q-mb-md">

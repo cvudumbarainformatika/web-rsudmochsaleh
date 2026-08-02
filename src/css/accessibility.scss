@@ -79,12 +79,14 @@ html.acc-dyslexia-font {
   }
 }
 
-/* 9. ADHD Focus Overlay Mask */
+/* 9. ADHD Focus Overlay Mask — hanya highlight elemen interaktif & teks bermakna */
 html.acc-adhd-focus {
-  *:hover {
+  p:hover, h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover,
+  a:hover, button:hover, li:hover, label:hover, td:hover, th:hover,
+  [role="button"]:hover, [role="link"]:hover {
     outline: 2px dashed #06b6d4 !important;
-    outline-offset: 2px !important;
-    background-color: rgba(6, 182, 212, 0.05) !important;
+    outline-offset: 3px !important;
+    border-radius: 3px !important;
   }
 }
 
@@ -118,4 +120,14 @@ body {
 .goog-text-highlight {
   background-color: transparent !important;
   box-shadow: none !important;
+}
+
+/* 11. Speech Reader — Hover Highlight untuk Mode Tunanetra (Profil Audio)
+   Memberikan visual outline bersih dan profesional pada elemen teks yang sedang dibaca (0px Layout Shift) */
+.acc-speech-hover {
+  outline: 2px dashed #2563eb !important;
+  outline-offset: 3px !important;
+  border-radius: 4px !important;
+  background-color: rgba(37, 99, 235, 0.08) !important;
+  transition: none !important;
 }

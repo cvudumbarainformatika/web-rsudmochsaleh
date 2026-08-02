@@ -1,5 +1,26 @@
 import { defineStore } from 'pinia'
 
+function findReadableElement(el) {
+  if (!el || el === document.body || el === document.documentElement) return null
+
+  // 1. Cek tag standar (paragraf, heading, link, button, list, dll)
+  const standard = el.closest('p, h1, h2, h3, h4, h5, h6, a, button, li, td, th, label, figcaption, blockquote, [role="button"], [role="link"], [aria-label]')
+  if (standard) return standard
+
+  // 2. Cek elemen div/span/badge/stat (seperti INFO TT, Kamar Ranap, IKM, TOP ICD-10, Bed Kosong, angka statistik)
+  const textHolder = el.closest('span, div, strong, b, small, mark')
+  if (textHolder) {
+    // Jangan highlight kontainer besar yang memiliki banyak elemen anak
+    if (textHolder.children.length > 4) return null
+    const txt = (textHolder.innerText || textHolder.textContent || '').trim()
+    if (txt && txt.length >= 2 && txt.length <= 150) {
+      return textHolder
+    }
+  }
+
+  return null
+}
+
 export const useAccessibilityStore = defineStore('accessibility', {
   state: () => ({
     // 6 Profil Aksesibilitas - SEMUA DEFAULT FALSE
@@ -65,12 +86,10 @@ export const useAccessibilityStore = defineStore('accessibility', {
       const paths = ['/', window.location.pathname]
 
       if (langCode === 'id') {
-        // Hapus cookie googtrans pada semua path dan domain
         paths.forEach(p => {
           document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${p};`
           document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${p}; domain=${domain};`
         })
-        // Reload 1x bersih agar Google Translate menghentikan penerjemahan dan kembali ke Bahasa Indonesia murni
         window.location.reload()
       } else {
         const val = `/id/${langCode}`
@@ -78,7 +97,6 @@ export const useAccessibilityStore = defineStore('accessibility', {
           document.cookie = `googtrans=${val}; path=${p};`
           document.cookie = `googtrans=${val}; path=${p}; domain=${domain};`
         })
-        // Reload 1x bersih agar Google Translate memproses DOM dengan bahasa baru
         window.location.reload()
       }
     },
@@ -127,7 +145,6 @@ export const useAccessibilityStore = defineStore('accessibility', {
           select.value = langCode === 'id' ? '' : langCode
           select.dispatchEvent(new Event('change'))
         } else {
-          // Jika belum ada combo, coba lagi setelah delay singkat
           setTimeout(() => {
             const selectRetry = document.querySelector('.goog-te-combo')
             if (selectRetry) {
@@ -186,25 +203,74 @@ export const useAccessibilityStore = defineStore('accessibility', {
       this.speechActive = true
       let speechTimer = null
       let lastText = ''
+      let lastHighlightedEl = null
+
+      const clearHighlight = () => {
+        if (speechTimer) {
+          clearTimeout(speechTimer)
+          speechTimer = null
+        }
+        if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+          window.speechSynthesis.cancel()
+        }
+        if (lastHighlightedEl) {
+          lastHighlightedEl.classList.remove('acc-speech-hover')
+          lastHighlightedEl = null
+        }
+      }
 
       this._speechHandler = (e) => {
         if (!this.visionImpaired) return
 
-        const targetEl = e.target.closest('button, a, h1, h2, h3, h4, h5, p, span, li, td, th, label, [role="button"]') || e.target
-        const rawText = (targetEl?.innerText || targetEl?.alt || targetEl?.title || targetEl?.ariaLabel || '').trim()
+        const targetEl = findReadableElement(e.target)
+        if (!targetEl) {
+          clearHighlight()
+          return
+        }
 
-        const cleaned = rawText.replace(/^[a-z][a-z_]*\n/gm, '').trim()
+        const rawText = (
+          targetEl.innerText ||
+          targetEl.getAttribute('aria-label') ||
+          targetEl.getAttribute('alt') ||
+          targetEl.getAttribute('title') ||
+          ''
+        ).trim()
 
-        if (cleaned && cleaned.length > 2 && cleaned.length < 300 && cleaned !== lastText) {
-          if (speechTimer) clearTimeout(speechTimer)
-          speechTimer = setTimeout(() => {
+        const cleaned = rawText.replace(/^[a-z][a-z_]*\n/gm, '').replace(/\n[a-z][a-z_]*$/gm, '').trim()
+
+        if (!cleaned || cleaned.length < 2) {
+          clearHighlight()
+          return
+        }
+
+        // Pindah ke elemen baru: bersihkan highlight lama & hentikan suara lama
+        if (targetEl !== lastHighlightedEl) {
+          clearHighlight()
+          targetEl.classList.add('acc-speech-hover')
+          lastHighlightedEl = targetEl
+        }
+
+        if (speechTimer) {
+          clearTimeout(speechTimer)
+          speechTimer = null
+        }
+
+        // Timer debounce 250ms
+        speechTimer = setTimeout(() => {
+          // SYARAT MUTLAK: Suara HANYA berbunyi JIKA elemen MASIH ter-highlight secara visual!
+          if (lastHighlightedEl === targetEl && targetEl.classList.contains('acc-speech-hover')) {
             lastText = cleaned
             speakFn(cleaned)
-          }, 200)
-        }
+          }
+        }, 250)
+      }
+
+      this._mouseleaveHandler = () => {
+        clearHighlight()
       }
 
       document.addEventListener('mouseover', this._speechHandler, { passive: true })
+      document.addEventListener('mouseleave', this._mouseleaveHandler, { passive: true })
     },
 
     disableSpeechReader() {
@@ -216,6 +282,13 @@ export const useAccessibilityStore = defineStore('accessibility', {
         document.removeEventListener('mouseover', this._speechHandler)
         this._speechHandler = null
       }
+      if (this._mouseleaveHandler) {
+        document.removeEventListener('mouseleave', this._mouseleaveHandler)
+        this._mouseleaveHandler = null
+      }
+      document.querySelectorAll('.acc-speech-hover').forEach(el => {
+        el.classList.remove('acc-speech-hover')
+      })
       this.speechActive = false
     },
 
