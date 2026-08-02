@@ -1,6 +1,6 @@
 <template>
   <div class="admin-table-container">
-    <!-- Header Controls -->
+    <!-- Header Controls Bar -->
     <div class="header-control-card bg-gradient-to-r from-slate-900 via-slate-800 to-teal-950 text-white rounded-2xl p-4.5 q-mb-md shadow-md flex items-center justify-between gap-4">
       <div class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-xl bg-teal-500/20 border border-teal-400/30 flex items-center justify-center text-teal-300">
@@ -33,41 +33,38 @@
       <div class="text-sm font-bold text-slate-600">Belum ada data profil</div>
     </div>
 
-    <!-- List Items (Futuristic Card List with Right-Aligned Action Buttons) -->
+    <!-- List Items (Horizontal Card - Always Locked Right Buttons) -->
     <div v-else class="space-y-3 q-mb-lg">
       <div
         v-for="(item, n) in store.items"
         :key="n"
-        class="admin-item-card bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-slate-200/80 shadow-xs hover:shadow-lg transition-all duration-300 flex items-center justify-between gap-5"
+        class="admin-item-card bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-slate-200/80 shadow-xs hover:shadow-lg transition-all duration-300 flex items-center justify-between gap-4 min-w-0"
       >
-        <!-- KIRI: Thumbnail + Info (grow) -->
-        <div class="flex items-center gap-4 grow overflow-hidden">
-          <!-- Direct HTML Image -->
-          <div class="w-[115px] h-[75px] shrink-0 rounded-xl overflow-hidden border border-slate-200/80 shadow-xs bg-slate-100 relative">
-            <img
-              :src="getImage(item.thumbnail)"
-              alt="Thumbnail"
-              class="w-full h-full object-cover rounded-xl"
-              @error="handleImgError"
-            />
-          </div>
-
-          <!-- Info Text -->
-          <div class="grow overflow-hidden pr-2">
-            <!-- Title -->
-            <h3 class="text-sm font-extrabold text-slate-900 margin-0 truncate leading-snug">
-              {{ item.nama }}
-            </h3>
-
-            <!-- Text Content Preview (Cleaned HTML - No Giant Images!) -->
-            <p class="text-xs text-slate-500 margin-0 mt-1.5 line-clamp-2 leading-relaxed font-medium">
-              {{ stripHtml(item.content) }}
-            </p>
-          </div>
+        <!-- 1. KIRI: Thumbnail (Shrink-0) -->
+        <div class="w-[120px] h-[80px] shrink-0 rounded-xl overflow-hidden border border-slate-200/80 shadow-xs bg-slate-100 relative">
+          <img
+            :src="getImage(item.thumbnail)"
+            alt="Thumbnail"
+            class="w-full h-full object-cover rounded-xl"
+            @error="handleImgError"
+          />
         </div>
 
-        <!-- KANAN UJUNG: Action Controls (Right-Aligned) -->
-        <div class="flex items-center gap-1.5 shrink-0 justify-end border-l border-slate-100 pl-4">
+        <!-- 2. TENGAH: Info & Preview Text (Grow, Min-W-0) -->
+        <div class="grow min-w-0 overflow-hidden px-1">
+          <!-- Title -->
+          <h3 class="text-sm font-extrabold text-slate-900 margin-0 truncate leading-snug">
+            {{ item.nama }}
+          </h3>
+
+          <!-- Text Content Preview -->
+          <p class="text-xs text-slate-500 margin-0 mt-1 line-clamp-2 leading-relaxed font-medium overflow-hidden text-ellipsis">
+            {{ stripHtml(item.content) }}
+          </p>
+        </div>
+
+        <!-- 3. KANAN UJUNG: Tombol Aksi (Shrink-0, Locked Right-Aligned) -->
+        <div class="shrink-0 flex items-center gap-1 pl-3 border-l border-slate-100 justify-end">
           <q-btn
             flat
             round
