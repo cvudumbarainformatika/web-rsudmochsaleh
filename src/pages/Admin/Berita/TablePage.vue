@@ -76,7 +76,7 @@
             color="teal"
             icon="visibility"
             class="hover:bg-teal-50"
-            :to="{name:'berita', params:{page:item.categories[0]?.url}, query:{page:item.slug}}"
+            :to="{ name: 'berita-detail', params: { slug: item.slug } }"
             target="_blank"
           >
             <q-tooltip class="bg-teal text-white">Lihat di Website</q-tooltip>
