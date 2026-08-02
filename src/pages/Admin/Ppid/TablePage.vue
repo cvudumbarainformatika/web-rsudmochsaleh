@@ -42,20 +42,14 @@
       >
         <!-- KIRI: Thumbnail + Info (grow) -->
         <div class="flex items-center gap-4 grow overflow-hidden">
-          <!-- Thumbnail dengan Fallback Error Safe -->
-          <div class="shrink-0 rounded-xl overflow-hidden border border-slate-200/80 shadow-xs bg-slate-100">
-            <q-img
+          <!-- Direct HTML Image -->
+          <div class="w-[115px] h-[75px] shrink-0 rounded-xl overflow-hidden border border-slate-200/80 shadow-xs bg-slate-100 relative">
+            <img
               :src="getImage(item.thumbnail)"
-              style="width: 115px; height: 75px"
-              fit="cover"
-              class="rounded-xl"
-            >
-              <template #error>
-                <div class="absolute-full flex flex-center bg-slate-100 text-slate-400">
-                  <q-icon name="image" size="24px" />
-                </div>
-              </template>
-            </q-img>
+              alt="Thumbnail"
+              class="w-full h-full object-cover rounded-xl"
+              @error="handleImgError"
+            />
           </div>
 
           <!-- Info Text -->
@@ -134,6 +128,7 @@ import { pathImg } from 'src/boot/axios'
 import { usePpidForm } from 'src/stores/admin/ppid/form'
 import { usePpidTable } from 'src/stores/admin/ppid/table'
 import { useRouter } from 'vue-router'
+import fallbackImg from '../../../assets/images/no-image.png'
 
 const $q = useQuasar()
 const store = usePpidTable()
@@ -142,6 +137,10 @@ const router = useRouter()
 
 store.getDataTable()
 
+function handleImgError(e) {
+  e.target.src = fallbackImg
+}
+
 function stripHtml(html) {
   if (!html) return ''
   return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').trim()
@@ -149,7 +148,7 @@ function stripHtml(html) {
 
 function getImage(image) {
   if (!image || image === null || image === '' || image === 'null') {
-    return new URL('../../../assets/images/no-image.png', import.meta.url).href
+    return fallbackImg
   }
   if (image.startsWith('http') || image.startsWith('/')) {
     return image
@@ -179,7 +178,11 @@ function handleSubmenu(item) {
   position: relative;
 }
 
-:deep(img), :deep(figure), :deep(iframe) {
-  display: none !important;
+:deep(img.object-cover) {
+  display: block !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
 }
 </style>
