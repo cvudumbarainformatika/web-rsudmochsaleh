@@ -297,17 +297,65 @@ function speak(text) {
   currentUtterance.volume = 1.0
   currentUtterance.pitch = 1.0
 
+  // 1. Auto-Detect Bahasa berdasarkan Karakter Teks (Unicode Set) & Store Language
+  let detectedLang = store.language || 'id'
+  if (/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/.test(cleaned)) {
+    detectedLang = 'ar'
+  } else if (/[\u4e00-\u9fa5]/.test(cleaned)) {
+    detectedLang = 'zh'
+  } else if (/[\uac00-\ud7af]/.test(cleaned)) {
+    detectedLang = 'ko'
+  } else if (/[\u3040-\u30ff]/.test(cleaned)) {
+    detectedLang = 'ja'
+  }
+
+  const langPrefixMap = {
+    id: ['id', 'indonesia'],
+    en: ['en', 'english'],
+    zh: ['zh', 'chinese', 'mandarin', 'cmn'],
+    'zh-CN': ['zh', 'chinese', 'mandarin', 'cmn'],
+    ar: ['ar', 'arabic', 'maged', 'tarik', 'laila', 'saudi'],
+    ja: ['ja', 'japanese', 'kyoko', 'otoya'],
+    ko: ['ko', 'korean', 'yuna'],
+    fr: ['fr', 'french', 'thomas', 'audrey'],
+    it: ['it', 'italian', 'alice', 'luca']
+  }
+
+  const defaultLangTagMap = {
+    id: 'id-ID',
+    en: 'en-US',
+    zh: 'zh-CN',
+    'zh-CN': 'zh-CN',
+    ar: 'ar-SA',
+    ja: 'ja-JP',
+    ko: 'ko-KR',
+    fr: 'fr-FR',
+    it: 'it-IT'
+  }
+
+  const activeLang = detectedLang
+  const prefixes = langPrefixMap[activeLang] || [activeLang]
   const voices = synth.getVoices() || []
-  console.log('[ACC-TTS] 4. Jumlah voice sistem terdeteksi:', voices.length)
+
+  // Set kode BCP-47 resmi terlebih dahulu (wajib untuk Web Speech API)
+  currentUtterance.lang = defaultLangTagMap[activeLang] || 'ar-SA'
+
+  console.log('[ACC-TTS] 4. Bahasa terdeteksi:', activeLang, '| Lang tag:', currentUtterance.lang, '| Jumlah voice OS:', voices.length)
 
   if (voices.length > 0) {
-    const idVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('id') || v.lang.toLowerCase().includes('indonesia')))
-    if (idVoice) {
-      console.log('[ACC-TTS] 5. Menggunakan voice Indonesia:', idVoice.name, '(', idVoice.lang, ')')
-      currentUtterance.voice = idVoice
-      currentUtterance.lang = idVoice.lang
+    const matchedVoice = voices.find(v => {
+      if (!v.lang) return false
+      const l = v.lang.toLowerCase().replace('_', '-')
+      const name = (v.name || '').toLowerCase()
+      return prefixes.some(p => l.includes(p) || name.includes(p))
+    })
+
+    if (matchedVoice) {
+      console.log('[ACC-TTS] 5. Menggunakan voice terdeteksi:', matchedVoice.name, '(', matchedVoice.lang, ')')
+      currentUtterance.voice = matchedVoice
+      currentUtterance.lang = matchedVoice.lang
     } else {
-      console.log('[ACC-TTS] 5. Voice Indonesia tidak ada di OS, pakai voice default browser:', navigator.language)
+      console.log('[ACC-TTS] 5. Voice OS spesifik tidak terpasang, me-render via lang tag:', currentUtterance.lang)
     }
   }
 

@@ -59,8 +59,15 @@
               :style="`--delay: ${(i + 1) * 80}ms`"
             >
               <div class="card-wide" @click="clickList(item.nama)">
-                <div class="card-icon-box">
-                  <q-icon :name="getServiceIcon(i + 1)" size="26px" class="icon-teal" />
+                <div class="card-icon-box flex items-center justify-center overflow-hidden">
+                  <SmartLottieIcon
+                    :url="item.lottie"
+                    :animation-data="getLottieData(i + 1)"
+                    :icon="getServiceIcon(i + 1)"
+                    icon-size="26px"
+                    :height="36"
+                    :width="36"
+                  />
                 </div>
                 <div class="card-wide-body">
                   <div class="card-title">{{ item.nama }}</div>
@@ -82,8 +89,15 @@
                 <div class="card-mini-hero" @click="clickList(item.nama)">
                   <div class="mini-visual">
                     <div class="hero-bg-pattern" />
-                    <div class="mini-icon-wrap">
-                      <q-icon :name="getServiceIcon(i + 3)" size="32px" class="icon-teal" />
+                    <div class="mini-icon-wrap flex items-center justify-center overflow-hidden">
+                      <SmartLottieIcon
+                        :url="item.lottie"
+                        :animation-data="getLottieData(i + 3)"
+                        :icon="getServiceIcon(i + 3)"
+                        icon-size="32px"
+                        :height="44"
+                        :width="44"
+                      />
                     </div>
                   </div>
                   <div class="mini-body">
@@ -99,6 +113,7 @@
                 </div>
               </div>
             </div>
+
           </div>
 
           <!-- ── KANAN: Kartu Hero ── -->
@@ -108,11 +123,18 @@
             style="--delay: 0ms"
           >
             <div class="card-hero" @click="clickList(items[0]?.nama)">
-              <!-- Area visual atas: ikon besar + pola -->
+              <!-- Area visual atas: ikon besar / lottie + pola -->
               <div class="hero-visual">
                 <div class="hero-bg-pattern" />
-                <div class="hero-icon-wrap">
-                  <q-icon :name="getServiceIcon(0)" size="64px" class="hero-icon" />
+                <div class="hero-icon-wrap flex items-center justify-center overflow-hidden">
+                  <SmartLottieIcon
+                    :url="items[0]?.lottie"
+                    :animation-data="getLottieData(0)"
+                    :icon="getServiceIcon(0)"
+                    icon-size="64px"
+                    :height="80"
+                    :width="80"
+                  />
                 </div>
               </div>
 
@@ -164,6 +186,11 @@
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { usePelayananWeb } from 'src/stores/web/pelayanan'
 import { useRouter } from 'vue-router'
+import SmartLottieIcon from 'src/components/~web/SmartLottieIcon.vue'
+import hospitalLottie from 'src/assets/lottie/115223-hospital.json'
+import heartLottie from 'src/assets/lottie/123520-heart-beat-pulse.json'
+import pulseLottie from 'src/assets/lottie/38359-pulse.json'
+import medicalLottie from 'src/assets/lottie/4565-heartbeat-medical.json'
 
 const router = useRouter()
 const store = usePelayananWeb()
@@ -179,6 +206,11 @@ const iconList = [
   'medical_services', 'health_and_safety', 'vaccines', 'psychology'
 ]
 function getServiceIcon(i) { return iconList[i % iconList.length] }
+
+const lottieMap = [hospitalLottie, heartLottie, pulseLottie, medicalLottie, heartLottie]
+function getLottieData(i) {
+  return lottieMap[i % lottieMap.length]
+}
 
 function clickList(val) {
   if (val) store.setTab(val)
