@@ -301,10 +301,29 @@ const selectedArchive = ref('Semua')
 const showCategories = ref(true)
 const showArchives = ref(true)
 
-const isDetailPage = computed(() => {
-  const slug = route.params.slug
-  return !!slug && slug !== 'all'
+const currentSlug = computed(() => {
+  if (route.params.slug && route.params.slug !== 'all') {
+    return String(route.params.slug).replace(/^"+|"+$/g, '')
+  }
+  if (route.query.page && isNaN(route.query.page) && route.query.page !== 'all') {
+    return String(route.query.page).replace(/^"+|"+$/g, '')
+  }
+  return null
 })
+
+const isDetailPage = computed(() => !!currentSlug.value)
+
+function fetchDetailNews(slug) {
+  if (!slug) return
+  const params = { q: slug, slug }
+  store.getContent(params)
+}
+
+watch(currentSlug, (newSlug) => {
+  if (newSlug) {
+    fetchDetailNews(newSlug)
+  }
+}, { immediate: true })
 
 const current = computed({
   get: () => store.params.page,
