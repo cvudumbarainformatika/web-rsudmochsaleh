@@ -1,21 +1,12 @@
 <template>
   <q-page class="bukutamu-page-container container-padding q-pb-xl">
-    <!-- Header Banner Seksi Buku Tamu & Aspirasi Publik -->
-    <div class="header-banner-card bg-gradient-to-r from-teal-800 via-teal-900 to-cyan-900 text-white rounded-3xl p-6 md:p-8 q-mb-xl shadow-lg relative overflow-hidden">
-      <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-        <div>
-          <div class="flex items-center gap-2 text-cyan-3 text-xs font-extrabold uppercase tracking-widest q-mb-xs">
-            <q-icon name="rate_review" size="16px" />
-            <span>Layanan Publik &amp; Transparansi RSUD</span>
-          </div>
-          <h1 class="text-2xl md:text-3xl font-extrabold text-white margin-0 leading-tight">
-            Buku Tamu &amp; Aspirasi Publik
-          </h1>
-          <p class="text-teal-100 text-sm mt-1 max-w-2xl margin-0">
-            Sampaikan saran, masukan, pengaduan, dan penilaian Anda demi meningkatkan kualitas pelayanan kesehatan RSUD dr. Mohamad Saleh Kota Probolinggo.
-          </p>
-        </div>
-      </div>
+    <!-- Header Title Seksi Buku Tamu & Aspirasi Publik (Seragam dengan Halaman Profil & Sejarah) -->
+    <div class="panel-header q-mb-lg">
+      <app-text-judul
+        judul="Buku Tamu & Aspirasi Publik"
+        kategori="Layanan Publik & Transparansi"
+        deskripsi="Sampaikan saran, masukan, pengaduan, dan penilaian Anda demi meningkatkan kualitas pelayanan kesehatan RSUD dr. Mohamad Saleh Kota Probolinggo."
+      />
     </div>
 
     <!-- Navigation Tabs (Interaktif: Form vs History Feed) -->

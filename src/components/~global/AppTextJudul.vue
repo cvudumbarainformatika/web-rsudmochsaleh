@@ -6,12 +6,15 @@
       <div>
         <h1 class="page-main-title">{{ judul }}</h1>
         <div class="page-sub-meta text-grey-6 flex items-center gap-1.5 q-mt-xs">
-          <span class="text-capitalize text-teal-600 font-bold">{{ routeNameTranslated }}</span>
+          <span class="text-capitalize text-teal-600 font-bold">{{ kategori || routeNameTranslated }}</span>
           <span class="meta-dot" />
           <span>UOBK RSUD dr. Mohamad Saleh</span>
         </div>
       </div>
     </div>
+    <p v-if="deskripsi" class="text-xs text-slate-500 q-mt-sm max-w-3xl leading-relaxed">
+      {{ deskripsi }}
+    </p>
   </div>
 </template>
 
@@ -23,6 +26,14 @@ defineProps({
   judul: {
     type: String,
     default: 'Pelayanan'
+  },
+  kategori: {
+    type: String,
+    default: ''
+  },
+  deskripsi: {
+    type: String,
+    default: ''
   }
 })
 
@@ -35,7 +46,7 @@ const routeNameTranslated = computed(() => {
   if (name.includes('ppid')) return 'PPID'
   if (name.includes('pokja')) return 'Pokja Akreditasi'
   if (name.includes('pengaduan')) return 'Pengaduan'
-  if (name.includes('buku-tamu')) return 'Buku Tamu'
+  if (name.includes('buku-tamu') || name.includes('bukutamu')) return 'Buku Tamu'
   return name
 })
 </script>
