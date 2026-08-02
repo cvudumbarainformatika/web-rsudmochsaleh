@@ -1,37 +1,5 @@
 <template>
   <div class="admin-table-container">
-    <!-- Header Controls Bar -->
-    <div class="header-control-card bg-gradient-to-r from-slate-900 via-slate-800 to-teal-950 text-white rounded-2xl p-4.5 q-mb-md shadow-md flex items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-teal-500/20 border border-teal-400/30 flex items-center justify-center text-teal-300">
-          <q-icon name="newspaper" size="20px" />
-        </div>
-        <div>
-          <h2 class="text-base font-extrabold text-white margin-0 leading-tight">Daftar Data Berita</h2>
-          <p class="text-xs text-slate-300 margin-0">Kelola publikasi berita & artikel rumah sakit</p>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-2">
-        <q-select
-          v-model="sel"
-          dense
-          outlined
-          dark
-          color="teal-4"
-          :options="filters"
-          label="Filter Status"
-          map-options
-          emit-value
-          option-label="label"
-          option-value="status"
-          style="min-width: 140px"
-          class="bg-slate-800/80 rounded-xl"
-          @update:model-value="changeFilter"
-        />
-      </div>
-    </div>
-
     <!-- Loading State -->
     <div
       v-if="store.loading"
@@ -52,25 +20,25 @@
       <div class="text-sm font-bold text-slate-600">Belum ada data berita</div>
     </div>
 
-    <!-- List Items (Horizontal Card - Always Locked Right Buttons) -->
+    <!-- List Items (Strict Horizontal Layout: Thumbnail -> Info -> Right Actions) -->
     <div v-else class="space-y-3 q-mb-lg">
       <div
         v-for="(item, n) in store.items"
         :key="n"
-        class="admin-item-card bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-slate-200/80 shadow-xs hover:shadow-lg transition-all duration-300 flex items-center justify-between gap-4 min-w-0"
+        class="admin-item-card"
       >
-        <!-- 1. KIRI: Thumbnail (Shrink-0) -->
-        <div class="w-[120px] h-[80px] shrink-0 rounded-xl overflow-hidden border border-slate-200/80 shadow-xs bg-slate-100 relative">
+        <!-- 1. KIRI: Thumbnail -->
+        <div class="item-thumb-box">
           <img
             :src="getImage(item.thumbnail)"
             alt="Thumbnail"
-            class="w-full h-full object-cover rounded-xl"
+            class="item-thumb-img"
             @error="handleImgError"
           />
         </div>
 
-        <!-- 2. TENGAH: Info & Preview Text (Grow, Min-W-0 untuk Mencegah Push Overflow) -->
-        <div class="grow min-w-0 overflow-hidden px-1">
+        <!-- 2. TENGAH: Details & Text Preview -->
+        <div class="item-info-box">
           <div class="flex items-center gap-2 q-mb-xs">
             <!-- Category Badge -->
             <span class="bg-teal-50 text-teal-800 border border-teal-200/80 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider shrink-0">
@@ -88,18 +56,18 @@
           </div>
 
           <!-- Title -->
-          <h3 class="text-sm font-extrabold text-slate-900 margin-0 truncate leading-snug">
+          <h3 class="item-title">
             {{ item.judul }}
           </h3>
 
-          <!-- Text Content Preview (Bersih dari Tag HTML & Gambar, Line Clamp 2) -->
-          <p class="text-xs text-slate-500 margin-0 mt-1 line-clamp-2 leading-relaxed font-medium overflow-hidden text-ellipsis">
+          <!-- Text Preview (Strict Vanilla Line Clamp 2) -->
+          <div class="item-desc-clamp">
             {{ stripHtml(item.content) }}
-          </p>
+          </div>
         </div>
 
-        <!-- 3. KANAN UJUNG: Tombol Aksi (Shrink-0, Locked Right-Aligned) -->
-        <div class="shrink-0 flex items-center gap-1 pl-3 border-l border-slate-100 justify-end">
+        <!-- 3. KANAN UJUNG: Action Buttons (Locked Right) -->
+        <div class="item-actions-right">
           <q-btn
             v-if="item.status === 2"
             flat
@@ -226,11 +194,84 @@ function getCategories(item) {
   position: relative;
 }
 
-:deep(img.object-cover) {
-  display: block !important;
-  max-width: 100% !important;
+.admin-item-card {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  width: 100% !important;
+
+  &:hover {
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  }
+}
+
+.item-thumb-box {
+  width: 120px !important;
+  height: 80px !important;
+  flex-shrink: 0 !important;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  background-color: #f8fafc;
+  position: relative;
+}
+
+.item-thumb-img {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
+  display: block !important;
+  border-radius: 12px;
+}
+
+.item-info-box {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.item-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.item-desc-clamp {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.45;
+  max-height: 2.9em;
+}
+
+.item-actions-right {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 4px !important;
+  flex-shrink: 0 !important;
+  margin-left: auto !important;
+  padding-left: 12px;
+  border-left: 1px solid #f1f5f9;
 }
 </style>
