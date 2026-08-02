@@ -1,156 +1,159 @@
 <template>
-  <q-card>
-    <q-list
-      bordered
-      separator
-      class="rounded-borders q-mb-xl"
+  <div class="admin-table-container">
+    <!-- Header Controls -->
+    <div class="header-control-card bg-gradient-to-r from-slate-900 via-slate-800 to-teal-950 text-white rounded-2xl p-4.5 q-mb-md shadow-md flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-teal-500/20 border border-teal-400/30 flex items-center justify-center text-teal-300">
+          <q-icon name="newspaper" size="20px" />
+        </div>
+        <div>
+          <h2 class="text-base font-extrabold text-white margin-0 leading-tight">Daftar Data Berita</h2>
+          <p class="text-xs text-slate-300 margin-0">Kelola publikasi berita & artikel rumah sakit</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <q-select
+          v-model="sel"
+          dense
+          outlined
+          dark
+          color="teal-4"
+          :options="filters"
+          label="Filter Status"
+          map-options
+          emit-value
+          option-label="label"
+          option-value="status"
+          style="min-width: 140px"
+          class="bg-slate-800/80 rounded-xl"
+          @update:model-value="changeFilter"
+        />
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div
+      v-if="store.loading"
+      class="column flex-center text-teal-700 bg-white/80 backdrop-blur-md rounded-2xl p-12 border border-slate-200/80"
+      style="min-height: 280px"
     >
-      <q-item-label header>
-        <div class="row items-center justify-between">
-          <div>Table Data Berita</div>
-          <div>
-            <q-select
-              v-model="sel"
-              dense
-              filled
-              :options="filters"
-              label="Filter"
-              map-options
-              emit-value
-              option-label="label"
-              option-value="status"
-              style="min-width:100px"
-              @update:model-value="changeFilter"
+      <q-spinner-cube color="teal" size="3.5em" />
+      <div class="text-xs font-bold text-slate-600 mt-4 tracking-wider uppercase">Memuat Data Berita...</div>
+    </div>
+
+    <!-- Empty State -->
+    <div
+      v-else-if="store.items.length === 0"
+      class="column flex-center text-slate-400 bg-white/80 backdrop-blur-md rounded-2xl p-12 border border-slate-200/80"
+      style="min-height: 280px"
+    >
+      <q-icon name="feed" size="48px" class="opacity-40 q-mb-sm" />
+      <div class="text-sm font-bold text-slate-600">Belum ada data berita</div>
+    </div>
+
+    <!-- List Items (Futuristic Card List) -->
+    <div v-else class="space-y-3.5 q-mb-lg">
+      <div
+        v-for="(item, n) in store.items"
+        :key="n"
+        class="admin-item-card bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-slate-200/80 shadow-xs hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+      >
+        <!-- Left Section: Thumbnail + Details -->
+        <div class="flex items-center gap-4 grow overflow-hidden">
+          <!-- Thumbnail -->
+          <div class="w-28 h-20 shrink-0 rounded-xl overflow-hidden border border-slate-200/80 shadow-inner bg-slate-100 relative">
+            <q-img
+              :src="pathImg + item.thumbnail"
+              class="w-full h-full object-cover"
+              :ratio="16/9"
             />
+          </div>
+
+          <!-- Info Text -->
+          <div class="grow overflow-hidden">
+            <div class="flex items-center gap-2 q-mb-xs">
+              <!-- Category Badge -->
+              <span class="bg-teal-50 text-teal-800 border border-teal-200/80 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                {{ getCategories(item.categories) }}
+              </span>
+              <!-- Status Badge -->
+              <span
+                class="cursor-pointer text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 transition-transform active:scale-95"
+                :class="item.status === 1 ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'"
+                @click="updateStatus(item)"
+              >
+                <span class="w-1.5 h-1.5 rounded-full" :class="item.status === 1 ? 'bg-rose-500' : 'bg-emerald-500 animate-pulse'" />
+                {{ item.status === 1 ? 'Draft' : 'Published' }}
+              </span>
+            </div>
+
+            <!-- Title -->
+            <h3 class="text-sm font-extrabold text-slate-900 margin-0 truncate leading-snug">
+              {{ item.judul }}
+            </h3>
+
+            <!-- Text Content Preview (Cleaned HTML - No Giant Images!) -->
+            <p class="text-xs text-slate-500 margin-0 mt-1 line-clamp-2 leading-relaxed font-medium">
+              {{ stripHtml(item.content) }}
+            </p>
           </div>
         </div>
-      </q-item-label>
-      <q-separator />
-      <div
-        v-if="store.loading"
-        class="column flex-center text-grey-8"
-        style="min-height:300px"
-      >
-        <q-spinner-cube
-          color="primary"
-          size="3em"
-        />
-        <div>Harap Tunggu ...</div>
-      </div>
-      <!-- <div v-else> -->
-      <div
-        v-else-if="store.items.length === 0"
-        class="column flex-center text-grey-8"
-        style="min-height:300px"
-      >
-        <q-icon
-          name="list_alt"
-          size="md"
-        />
-        <div>Data belum ada</div>
-      </div>
-      <q-item
-        v-for="(item, n) in store.items"
-        v-else
-        :key="n"
-        class="q-py-sm"
-        tag="String"
-      >
-        <q-item-section
-          avatar
-          class="col-2"
-        >
-          <q-img
-            :ratio="16/9"
-            :src="pathImg + item.thumbnail"
-          />
-        </q-item-section>
 
-        <q-item-section top>
-          <q-item-label lines="1">
-            <span class="text-weight-bold f-16">{{ item.judul }}</span>
-          </q-item-label>
-          <q-item-label
-            lines="2"
+        <!-- Right Section: Action Controls -->
+        <div class="flex items-center gap-2 shrink-0 self-end md:self-center border-t md:border-t-0 border-slate-100 pt-2 md:pt-0 w-full md:w-auto justify-end">
+          <q-btn
+            v-if="item.status === 2"
+            flat
+            round
+            dense
+            color="teal"
+            icon="visibility"
+            class="hover:bg-teal-50"
+            :to="{name:'berita', params:{page:item.categories[0]?.url}, query:{page:item.slug}}"
+            target="_blank"
           >
-            <div v-html="item.content" />
-          </q-item-label>
-          <q-item-label
-            caption
-            lines="1"
-            align="right"
-          >
-            <div class="f-10">
-              <q-badge
-                round
-                color="primary"
-                :label="getCategories(item.categories)"
-              />
-            </div>
-          </q-item-label>
-          <q-item-label
-            lines="1"
-            class="q-mt-xs text-body2 text-weight-bold text-uppercase"
-          >
-            <span
-              class="cursor-pointer"
-              :class="item.status === 1?'text-negative':'text-primary'"
-              @click="updateStatus(item)"
-            >{{ item.status === 1? 'Draft / Belum di Publish':'Published' }}</span>
-            <span>
-              <q-btn
-                v-if="item.status === 2"
-                no-caps
-                dense
-                size="xs"
-                color="info"
-                label="view"
-                class="q-ml-md"
-                :to="{name:'berita', params:{page:item.categories[0].url}, query:{page:item.slug}}"
-                target="_blank"
-              />
-            </span>
-          </q-item-label>
-        </q-item-section>
+            <q-tooltip class="bg-teal text-white">Lihat di Website</q-tooltip>
+          </q-btn>
 
-        <q-item-section
-          side
-        >
-          <div class="text-grey-8 q-gutter-xs">
-            <q-btn
-              class="gt-xs"
-              size="sm"
-              flat
-              dense
-              round
-              icon="delete"
-              @click="deleteData(item)"
-            />
-            <q-btn
-              size="sm"
-              flat
-              dense
-              round
-              icon="edit"
-              @click="form.editForm(item)"
-            />
-          </div>
-        </q-item-section>
-      </q-item>
-      <!-- </div> -->
-      <q-separator />
-      <q-item-label header>
-        <app-pagination-table
-          v-if="store.items.length > 0"
-          :meta="store.meta"
-          @next="(val)=>store.setPage(val)"
-          @prev="(val)=>store.setPage(val)"
-          @last="(val)=>store.setPage(val)"
-          @first="(val)=>store.setPage(val)"
-        />
-      </q-item-label>
-    </q-list>
-  </q-card>
+          <q-btn
+            flat
+            round
+            dense
+            color="primary"
+            icon="edit_note"
+            class="hover:bg-blue-50"
+            @click="form.editForm(item)"
+          >
+            <q-tooltip class="bg-primary text-white">Edit Berita</q-tooltip>
+          </q-btn>
+
+          <q-btn
+            flat
+            round
+            dense
+            color="negative"
+            icon="delete_outline"
+            class="hover:bg-rose-50"
+            @click="deleteData(item)"
+          >
+            <q-tooltip class="bg-negative text-white">Hapus Berita</q-tooltip>
+          </q-btn>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination Footer -->
+    <div v-if="store.items.length > 0" class="bg-white/90 backdrop-blur-md rounded-2xl p-3 border border-slate-200/80">
+      <app-pagination-table
+        :meta="store.meta"
+        @next="(val)=>store.setPage(val)"
+        @prev="(val)=>store.setPage(val)"
+        @last="(val)=>store.setPage(val)"
+        @first="(val)=>store.setPage(val)"
+      />
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -166,12 +169,17 @@ const form = useBeritaForm()
 
 const sel = ref('')
 const filters = ref([
-  { status: '', label: 'Semua' },
+  { status: '', label: 'Semua Status' },
   { status: 1, label: 'Draft' },
   { status: 2, label: 'Publish' }
 ])
 
 store.getDataTable()
+
+function stripHtml(html) {
+  if (!html) return ''
+  return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').trim()
+}
 
 function deleteData(item) {
   $q.dialog({
@@ -182,24 +190,30 @@ function deleteData(item) {
     html: true
   }).onOk(() => {
     store.deletesData(item.id)
-  }).onCancel(() => {
-    // console.log('Cancel')
-  }).onDismiss(() => {
-    // console.log('I am triggered on both OK and Cancel')
   })
 }
 
 function changeFilter(val) {
   store.setStatus(val)
 }
+
 function updateStatus(val) {
-  console.log(val)
   const status = val.status === 1 ? 2 : 1
   store.updateStatus(val.id, status)
 }
 
 function getCategories(item) {
+  if (!item || !Array.isArray(item)) return 'Umum'
   return item.map(x => x.nama).join(', ')
 }
-
 </script>
+
+<style scoped lang="scss">
+.admin-table-container {
+  position: relative;
+}
+
+:deep(img), :deep(figure), :deep(iframe) {
+  display: none !important;
+}
+</style>

@@ -1,136 +1,124 @@
 <template>
-  <q-card>
-    <q-list
-      bordered
-      separator
-      class="rounded-borders q-mb-xl"
-    >
-      <q-item-label header>
-        <div class="row items-center justify-between">
-          <div>Table Data Ppid</div>
-          <!-- <div>
-            <q-select
-              v-model="sel"
-              dense
-              filled
-              :options="filters"
-              label="Filter"
-              map-options
-              emit-value
-              option-label="label"
-              option-value="status"
-              style="min-width:100px"
-              @update:model-value="changeFilter"
-            />
-          </div> -->
+  <div class="admin-table-container">
+    <!-- Header Controls -->
+    <div class="header-control-card bg-gradient-to-r from-slate-900 via-slate-800 to-teal-950 text-white rounded-2xl p-4.5 q-mb-md shadow-md flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-teal-500/20 border border-teal-400/30 flex items-center justify-center text-teal-300">
+          <q-icon name="info" size="20px" />
         </div>
-      </q-item-label>
-      <q-separator />
-      <div
-        v-if="store.loading"
-        class="column flex-center text-grey-8"
-        style="min-height:300px"
-      >
-        <q-spinner-cube
-          color="primary"
-          size="3em"
-        />
-        <div>Harap Tunggu ...</div>
+        <div>
+          <h2 class="text-base font-extrabold text-white margin-0 leading-tight">Daftar Data PPID</h2>
+          <p class="text-xs text-slate-300 margin-0">Kelola kategori & dokumen informasi publik PPID</p>
+        </div>
       </div>
-      <!-- <div v-else> -->
+    </div>
+
+    <!-- Loading State -->
+    <div
+      v-if="store.loading"
+      class="column flex-center text-teal-700 bg-white/80 backdrop-blur-md rounded-2xl p-12 border border-slate-200/80"
+      style="min-height: 280px"
+    >
+      <q-spinner-cube color="teal" size="3.5em" />
+      <div class="text-xs font-bold text-slate-600 mt-4 tracking-wider uppercase">Memuat Data PPID...</div>
+    </div>
+
+    <!-- Empty State -->
+    <div
+      v-else-if="store.items.length === 0"
+      class="column flex-center text-slate-400 bg-white/80 backdrop-blur-md rounded-2xl p-12 border border-slate-200/80"
+      style="min-height: 280px"
+    >
+      <q-icon name="folder_open" size="48px" class="opacity-40 q-mb-sm" />
+      <div class="text-sm font-bold text-slate-600">Belum ada data PPID</div>
+    </div>
+
+    <!-- List Items (Futuristic Card List) -->
+    <div v-else class="space-y-3.5 q-mb-lg">
       <div
-        v-else-if="store.items.length === 0"
-        class="column flex-center text-grey-8"
-        style="min-height:300px"
-      >
-        <q-icon
-          name="list_alt"
-          size="md"
-        />
-        <div>Data belum ada</div>
-      </div>
-      <q-item
         v-for="(item, n) in store.items"
-        v-else
         :key="n"
-        class="q-py-sm"
-        tag="String"
+        class="admin-item-card bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-slate-200/80 shadow-xs hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
       >
-        <q-item-section
-          avatar
-          class="col-2"
-        >
-          <q-img
-            :ratio="16/9"
-            :src="getImage(item.thumbnail)"
-          />
-        </q-item-section>
-
-        <q-item-section top>
-          <q-item-label lines="1">
-            <span class="text-weight-bold f-16">{{ item.nama }}</span>
-          </q-item-label>
-          <q-item-label
-            lines="2"
-          >
-            <div
-              class="__html"
-              v-html="item.content"
+        <!-- Left Section: Thumbnail + Details -->
+        <div class="flex items-center gap-4 grow overflow-hidden">
+          <!-- Thumbnail -->
+          <div class="w-28 h-20 shrink-0 rounded-xl overflow-hidden border border-slate-200/80 shadow-inner bg-slate-100 relative">
+            <q-img
+              :src="getImage(item.thumbnail)"
+              class="w-full h-full object-cover"
+              :ratio="16/9"
             />
-          </q-item-label>
-        </q-item-section>
-
-        <q-item-section
-          side
-        >
-          <div class="text-grey-8 q-gutter-xs">
-            <q-btn
-              class="gt-xs"
-              size="sm"
-              flat
-              dense
-              round
-              icon="delete"
-              @click="deleteData(item)"
-            />
-            <q-btn
-              size="sm"
-              flat
-              dense
-              round
-              icon="edit"
-              @click="form.editForm(item)"
-            />
-            <q-btn
-              unelevated
-              size="sm"
-              dense
-              round
-              :color="`${item?.submenu?.length>0?'secondary':'dark'}`"
-              icon="arrow_forward"
-              @click="handleSubmenu(item)"
-            >
-              <q-tooltip :class="item?.submenu?.length > 0 ?'bg-secondary':'bg-dark'">
-                Tambah Submenu
-              </q-tooltip>
-            </q-btn>
           </div>
-        </q-item-section>
-      </q-item>
-      <!-- </div> -->
-      <q-separator />
-      <q-item-label header>
-        <app-pagination-table
-          v-if="store.items.length > 0"
-          :meta="store.meta"
-          @next="(val)=>store.setPage(val)"
-          @prev="(val)=>store.setPage(val)"
-          @last="(val)=>store.setPage(val)"
-          @first="(val)=>store.setPage(val)"
-        />
-      </q-item-label>
-    </q-list>
-  </q-card>
+
+          <!-- Info Text -->
+          <div class="grow overflow-hidden">
+            <!-- Title -->
+            <h3 class="text-sm font-extrabold text-slate-900 margin-0 truncate leading-snug">
+              {{ item.nama }}
+            </h3>
+
+            <!-- Text Content Preview (Cleaned HTML - No Giant Images!) -->
+            <p class="text-xs text-slate-500 margin-0 mt-1.5 line-clamp-2 leading-relaxed font-medium">
+              {{ stripHtml(item.content) }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Right Section: Action Controls -->
+        <div class="flex items-center gap-2 shrink-0 self-end md:self-center border-t md:border-t-0 border-slate-100 pt-2 md:pt-0 w-full md:w-auto justify-end">
+          <q-btn
+            flat
+            round
+            dense
+            color="primary"
+            icon="edit_note"
+            class="hover:bg-blue-50"
+            @click="form.editForm(item)"
+          >
+            <q-tooltip class="bg-primary text-white">Edit PPID</q-tooltip>
+          </q-btn>
+
+          <q-btn
+            flat
+            round
+            dense
+            color="negative"
+            icon="delete_outline"
+            class="hover:bg-rose-50"
+            @click="deleteData(item)"
+          >
+            <q-tooltip class="bg-negative text-white">Hapus PPID</q-tooltip>
+          </q-btn>
+
+          <q-btn
+            unelevated
+            dense
+            rounded
+            size="sm"
+            :color="item?.submenu?.length > 0 ? 'teal-7' : 'slate-700'"
+            class="px-3 py-1 text-xs font-bold"
+            icon-right="arrow_forward"
+            label="Submenu"
+            @click="handleSubmenu(item)"
+          >
+            <q-tooltip class="bg-slate-900 text-white">Kelola Submenu ({{ item?.submenu?.length || 0 }})</q-tooltip>
+          </q-btn>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination Footer -->
+    <div v-if="store.items.length > 0" class="bg-white/90 backdrop-blur-md rounded-2xl p-3 border border-slate-200/80">
+      <app-pagination-table
+        :meta="store.meta"
+        @next="(val)=>store.setPage(val)"
+        @prev="(val)=>store.setPage(val)"
+        @last="(val)=>store.setPage(val)"
+        @first="(val)=>store.setPage(val)"
+      />
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -139,21 +127,18 @@ import { pathImg } from 'src/boot/axios'
 import { usePpidForm } from 'src/stores/admin/ppid/form'
 import { usePpidTable } from 'src/stores/admin/ppid/table'
 import { useRouter } from 'vue-router'
-// import { ref } from 'vue'
 
 const $q = useQuasar()
 const store = usePpidTable()
 const form = usePpidForm()
 const router = useRouter()
 
-// const sel = ref('')
-// const filters = ref([
-//   { status: '', label: 'Semua' },
-//   { status: 1, label: 'Draft' },
-//   { status: 2, label: 'Publish' }
-// ])
-
 store.getDataTable()
+
+function stripHtml(html) {
+  if (!html) return ''
+  return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').trim()
+}
 
 function getImage(image) {
   if (image === null || image === '') {
@@ -171,40 +156,20 @@ function deleteData(item) {
     html: true
   }).onOk(() => {
     store.deletesData(item.id)
-  }).onCancel(() => {
-    // console.log('Cancel')
-  }).onDismiss(() => {
-    // console.log('I am triggered on both OK and Cancel')
   })
 }
 
-// function changeFilter(val) {
-//   store.setStatus(val)
-// }
-// function updateStatus(val) {
-//   console.log(val)
-//   const status = val.status === 1 ? 2 : 1
-//   store.updateStatus(val.id, status)
-// }
-
-// function getCategories(item) {
-//   return item.map(x => x.nama).join(', ')
-// }
-
 function handleSubmenu(item) {
-  // if (route.name === 'admin.pokja' || route.name === 'form.pokja') {
-  //   router.push('/admin/pokja/submenu/' + item.id)
-  // } else {
-  //   router.push('/admin/pelayanan/submenu/' + item.id)
-  // }
-
-  router.push('/admin/ppid/submenu/' + item.id)
+  router.push({ name: 'admin.ppid.submenu', params: { id: item.id } })
 }
-
 </script>
 
-<style lang="scss" scoped>
-.__html{
-  max-height: 500px;
+<style scoped lang="scss">
+.admin-table-container {
+  position: relative;
+}
+
+:deep(img), :deep(figure), :deep(iframe) {
+  display: none !important;
 }
 </style>
