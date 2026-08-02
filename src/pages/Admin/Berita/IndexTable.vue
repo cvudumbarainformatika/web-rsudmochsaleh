@@ -1,14 +1,9 @@
 <template>
   <q-page>
-    <Suspense>
-      <TablePage />
-      <template #fallback>
-        <app-loading />
-      </template>
-    </Suspense>
+    <TablePage />
   </q-page>
 </template>
+
 <script setup>
-import { defineAsyncComponent } from 'vue'
-const TablePage = defineAsyncComponent(() => import('./TablePage.vue'/* webpackChunkName: "TablePage" */))
+import TablePage from './TablePage.vue'
 </script>
