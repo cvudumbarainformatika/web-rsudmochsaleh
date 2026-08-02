@@ -26,7 +26,11 @@
           <div class="col-12 col-md-8 col-lg-8">
             <div class="main-content-card">
               <!-- Featured Image Box (Framed & Elegant) -->
-              <div v-if="store.item.thumbnail" class="featured-image-box">
+              <div
+                v-if="store.item.thumbnail"
+                class="featured-image-box cursor-pointer group relative overflow-hidden"
+                @click="openImageModal(pathImg + store.item.thumbnail)"
+              >
                 <q-img
                   :src="pathImg + store.item.thumbnail"
                   class="featured-image"
@@ -38,10 +42,14 @@
                     </div>
                   </template>
                 </q-img>
+                <div class="absolute-bottom-right q-pa-sm bg-slate-900/80 text-white rounded-tl-xl text-xs font-bold flex items-center gap-1.5 opacity-90 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
+                  <q-icon name="zoom_in" size="16px" />
+                  <span>Klik untuk Fullscreen</span>
+                </div>
               </div>
 
               <!-- Content Rich Text Body -->
-              <div class="content-body">
+              <div class="content-body" @click="handleContentImageClick">
                 <app-editor
                   v-model="store.item.content"
                   :edited="false"
@@ -87,11 +95,22 @@
         </div>
       </div>
     </template>
+
+    <!-- Fullscreen Image Lightbox Modal -->
+    <q-dialog v-model="imageModal" maximized transition-show="fade" transition-hide="fade">
+      <q-card class="bg-black/95 text-white flex flex-col justify-between items-center relative overflow-hidden">
+        <q-btn flat round icon="close" color="white" class="absolute-top-right z-50 q-ma-md bg-black/50" v-close-popup />
+        <div class="full-width full-height flex items-center justify-center p-4">
+          <img :src="selectedImageUrl" class="max-w-full max-h-[94vh] object-contain rounded-xl shadow-2xl" alt="Preview Fullscreen" />
+        </div>
+      </q-card>
+    </q-dialog>
+
   </div>
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { pathImg } from 'src/boot/axios'
 import { useSubmenuWeb } from 'src/stores/web/submenu'
@@ -99,6 +118,9 @@ import { useSubmenuWeb } from 'src/stores/web/submenu'
 const store = useSubmenuWeb()
 const route = useRoute()
 const router = useRouter()
+
+const imageModal = ref(false)
+const selectedImageUrl = ref('')
 
 const submenu = computed(() => {
   return store.getSubmenu
@@ -110,6 +132,19 @@ onMounted(() => {
 
 function goTo(val) {
   router.push('/pengaduan/submenu/' + val.slug)
+}
+
+function openImageModal(url) {
+  if (url) {
+    selectedImageUrl.value = url
+    imageModal.value = true
+  }
+}
+
+function handleContentImageClick(e) {
+  if (e.target && e.target.tagName === 'IMG') {
+    openImageModal(e.target.src)
+  }
 }
 </script>
 
@@ -128,7 +163,6 @@ function goTo(val) {
   margin-bottom: 2.5rem;
   padding: 5rem 2rem;
   box-shadow: 0 10px 30px -10px rgba(13, 148, 136, 0.15);
-  background: #0f172a;
 }
 
 .hero-backdrop {
@@ -136,24 +170,23 @@ function goTo(val) {
   inset: 0;
   background-size: cover;
   background-position: center;
-  filter: blur(4px) brightness(0.45);
-  transform: scale(1.05);
-  opacity: 0.7;
+  filter: blur(14px) brightness(0.6);
+  transform: scale(1.1);
+  transition: transform 0.5s ease;
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(66, 58, 142, 0.5) 0%, rgba(13, 148, 136, 0.7) 100%);
-  mix-blend-mode: multiply;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(13, 148, 136, 0.75) 100%);
 }
 
 .hero-content-wrap {
   position: relative;
-  z-index: 2;
-  text-align: center;
+  z-index: 10;
   max-width: 800px;
   margin: 0 auto;
+  text-align: center;
   color: white;
 }
 
@@ -161,42 +194,44 @@ function goTo(val) {
   display: inline-flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  padding: 4px 14px;
+  backdrop-filter: blur(8px);
+  padding: 6px 16px;
   border-radius: 20px;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: 1.25rem;
-  backdrop-filter: blur(8px);
+  color: #5eead4;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .hero-title {
-  font-size: clamp(1.85rem, 4vw, 2.75rem);
-  font-weight: 800;
-  line-height: 1.25;
-  margin: 0 0 1rem;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  font-size: clamp(1.8rem, 4vw, 2.75rem);
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+  color: white;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .hero-divider {
-  width: 80px;
+  width: 60px;
   height: 4px;
-  background: white;
+  background: linear-gradient(to right, #2dd4bf, #06b6d4);
   border-radius: 4px;
   margin: 0 auto;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
-// ── Main Content Card ────────────────────────────────────────────
+// ── Content Card ─────────────────────────────────────────────────
 .main-content-card {
   background: white;
   border-radius: 24px;
   border: 1px solid rgba(15, 23, 42, 0.06);
   box-shadow: 0 4px 30px rgba(15, 23, 42, 0.04);
   padding: 1.5rem;
-
+  
   @media (min-width: 768px) {
     padding: 2.25rem;
   }
@@ -209,11 +244,12 @@ function goTo(val) {
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
   margin-bottom: 2rem;
   background: #f8fafc;
+  width: 100%;
 }
 
 .featured-image {
-  width: 100%;
-  height: auto;
+  width: 100% !important;
+  height: auto !important;
   max-height: none !important;
   display: block;
 }
@@ -230,6 +266,13 @@ function goTo(val) {
     margin: 1.75rem 0;
     box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
     object-fit: contain !important;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: scale(1.01);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+    }
   }
 
   :deep(p) {

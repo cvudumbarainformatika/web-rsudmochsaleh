@@ -23,7 +23,7 @@
         </div>
       </q-tab-panel>
 
-      <!-- Panel 2: Detail Halaman Profil (Sejarah / Visi Misi dll.) -->
+      <!-- Panel 2: Detail Halaman Profil (Sejarah / Visi Misi / Struktur Organisasi dll.) -->
       <q-tab-panel
         v-for="(item, n) in store.items"
         :key="n"
@@ -35,17 +35,25 @@
         </div>
 
         <div class="content-box">
-          <!-- Featured Image (Bila Ada) -->
-          <div v-if="item.thumbnail" class="featured-image-wrap q-mb-lg">
+          <!-- Featured Image (Full Width & Clickable for Lightbox Zoom) -->
+          <div
+            v-if="item.thumbnail"
+            class="featured-image-wrap q-mb-lg cursor-pointer group relative overflow-hidden"
+            @click="openImageModal(pathImg + item.thumbnail)"
+          >
             <q-img
               :src="pathImg + item.thumbnail"
               class="featured-image-main rounded-2xl shadow-md"
               alt="thumbnail Rsud dr mohamad saleh"
             />
+            <div class="absolute-bottom-right q-pa-sm bg-slate-900/80 text-white rounded-tl-xl text-xs font-bold flex items-center gap-1.5 opacity-90 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
+              <q-icon name="zoom_in" size="16px" />
+              <span>Klik untuk Fullscreen</span>
+            </div>
           </div>
 
           <!-- Deskripsi Content Utama -->
-          <div class="content-description-card q-mb-xl">
+          <div class="content-description-card q-mb-xl" @click="handleContentImageClick">
             <app-editor
               v-model="item.content"
               :edited="false"
@@ -55,17 +63,29 @@
       </q-tab-panel>
     </q-tab-panels>
 
+    <!-- Fullscreen Image Lightbox Modal -->
+    <q-dialog v-model="imageModal" maximized transition-show="fade" transition-hide="fade">
+      <q-card class="bg-black/95 text-white flex flex-col justify-between items-center relative overflow-hidden">
+        <q-btn flat round icon="close" color="white" class="absolute-top-right z-50 q-ma-md bg-black/50" v-close-popup />
+        <div class="full-width full-height flex items-center justify-center p-4">
+          <img :src="selectedImageUrl" class="max-w-full max-h-[94vh] object-contain rounded-xl shadow-2xl" alt="Preview Fullscreen" />
+        </div>
+      </q-card>
+    </q-dialog>
+
     <div class="q-mb-xl" />
   </q-page>
 </template>
 
 <script setup>
 import { useProfilWeb } from 'src/stores/web/profil'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { pathImg } from 'src/boot/axios'
 import ListBigProfil from './ListBigProfil.vue'
 
 const store = useProfilWeb()
+const imageModal = ref(false)
+const selectedImageUrl = ref('')
 
 onMounted(() => {
   store.getData()
@@ -74,6 +94,19 @@ onMounted(() => {
 function clickList(val) {
   console.log(val)
   store.setTab(val)
+}
+
+function openImageModal(url) {
+  if (url) {
+    selectedImageUrl.value = url
+    imageModal.value = true
+  }
+}
+
+function handleContentImageClick(e) {
+  if (e.target && e.target.tagName === 'IMG') {
+    openImageModal(e.target.src)
+  }
 }
 </script>
 
@@ -113,11 +146,12 @@ function clickList(val) {
   border: 1px solid rgba(15, 23, 42, 0.08);
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
   background: #f8fafc;
+  width: 100%;
 }
 
 .featured-image-main {
-  width: 100%;
-  height: auto;
+  width: 100% !important;
+  height: auto !important;
   max-height: none !important;
   display: block;
 }
@@ -135,6 +169,13 @@ function clickList(val) {
     margin: 1.75rem 0;
     box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
     object-fit: contain !important;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: scale(1.01);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+    }
   }
 }
 </style>
