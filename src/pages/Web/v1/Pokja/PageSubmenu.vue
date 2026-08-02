@@ -258,20 +258,14 @@ function handleContentImageClick(e) {
   color: #334155;
 
   :deep(img) {
-    width: 100% !important;
     max-width: 100% !important;
-    height: auto !important;
-    border-radius: 16px;
-    display: block;
-    margin: 1.75rem 0;
-    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
-    object-fit: contain !important;
+    height: auto;
+    border-radius: 12px;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     &:hover {
-      transform: scale(1.01);
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
     }
   }
 
