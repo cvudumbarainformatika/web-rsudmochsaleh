@@ -208,16 +208,29 @@ function goTo(val) {
   border: 1px solid rgba(15, 23, 42, 0.08);
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
   margin-bottom: 2rem;
+  background: #f8fafc;
 }
 
 .featured-image {
   width: 100%;
-  max-height: 480px;
+  height: auto;
+  max-height: none !important;
   display: block;
 }
 
 .content-body {
   color: #334155;
+
+  :deep(img) {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 16px;
+    display: block;
+    margin: 1.75rem 0;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+    object-fit: contain !important;
+  }
 
   :deep(p) {
     line-height: 1.75;
