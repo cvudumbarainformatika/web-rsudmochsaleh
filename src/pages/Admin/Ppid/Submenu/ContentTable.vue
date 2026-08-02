@@ -9,25 +9,33 @@
       <div
         v-for="(item, n) in items"
         :key="n"
-        class="admin-item-card bg-white/95 backdrop-blur-md rounded-2xl p-3.5 border border-slate-200/80 shadow-xs hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-between gap-4"
+        class="admin-item-card bg-white/95 backdrop-blur-md rounded-2xl p-3.5 border border-slate-200/80 shadow-xs hover:shadow-lg transition-all duration-300 flex items-center justify-between gap-5"
       >
+        <!-- KIRI: Thumbnail + Details (grow) -->
         <div class="flex items-center gap-3.5 grow overflow-hidden">
-          <!-- Thumbnail Image -->
-          <div class="w-24 h-16 shrink-0 rounded-xl overflow-hidden border border-slate-200/80 bg-slate-100 relative">
+          <!-- Thumbnail dengan Fallback Error Safe -->
+          <div class="shrink-0 rounded-xl overflow-hidden border border-slate-200/80 shadow-xs bg-slate-100">
             <q-img
               :src="getImage(item.thumbnail)"
-              class="w-full h-full object-cover"
-              :ratio="16/9"
-            />
+              style="width: 100px; height: 65px"
+              fit="cover"
+              class="rounded-xl"
+            >
+              <template #error>
+                <div class="absolute-full flex flex-center bg-slate-100 text-slate-400">
+                  <q-icon name="image" size="20px" />
+                </div>
+              </template>
+            </q-img>
           </div>
 
           <!-- Lottie Animation Preview (Bila Ada) -->
-          <div v-if="item.animation" class="w-12 h-12 shrink-0 rounded-xl bg-teal-50 border border-teal-200/80 flex items-center justify-center p-1">
+          <div v-if="item.animation" class="w-11 h-11 shrink-0 rounded-xl bg-teal-50 border border-teal-200/80 flex items-center justify-center p-1">
             <app-lottie :url="item.animation" />
           </div>
 
           <!-- Details -->
-          <div class="grow overflow-hidden">
+          <div class="grow overflow-hidden pr-2">
             <h3 class="text-sm font-extrabold text-slate-900 margin-0 truncate leading-snug">
               {{ item.nama }}
             </h3>
@@ -37,8 +45,8 @@
           </div>
         </div>
 
-        <!-- Actions -->
-        <div class="flex items-center gap-1.5 shrink-0">
+        <!-- KANAN UJUNG: Action Controls (Right-Aligned) -->
+        <div class="flex items-center gap-1.5 shrink-0 justify-end border-l border-slate-100 pl-3">
           <q-btn
             flat
             round
@@ -86,8 +94,11 @@ function stripHtml(html) {
 }
 
 function getImage(image) {
-  if (image === null || image === '') {
+  if (!image || image === null || image === '' || image === 'null') {
     return new URL('../../../../assets/images/no-image.png', import.meta.url).href
+  }
+  if (image.startsWith('http') || image.startsWith('/')) {
+    return image
   }
   return pathImg + image
 }

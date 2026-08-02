@@ -33,26 +33,33 @@
       <div class="text-sm font-bold text-slate-600">Belum ada data PPID</div>
     </div>
 
-    <!-- List Items (Futuristic Card List) -->
-    <div v-else class="space-y-3.5 q-mb-lg">
+    <!-- List Items (Futuristic Card List with Right-Aligned Action Buttons) -->
+    <div v-else class="space-y-3 q-mb-lg">
       <div
         v-for="(item, n) in store.items"
         :key="n"
-        class="admin-item-card bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-slate-200/80 shadow-xs hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+        class="admin-item-card bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-slate-200/80 shadow-xs hover:shadow-lg transition-all duration-300 flex items-center justify-between gap-5"
       >
-        <!-- Left Section: Thumbnail + Details -->
+        <!-- KIRI: Thumbnail + Info (grow) -->
         <div class="flex items-center gap-4 grow overflow-hidden">
-          <!-- Thumbnail -->
-          <div class="w-28 h-20 shrink-0 rounded-xl overflow-hidden border border-slate-200/80 shadow-inner bg-slate-100 relative">
+          <!-- Thumbnail dengan Fallback Error Safe -->
+          <div class="shrink-0 rounded-xl overflow-hidden border border-slate-200/80 shadow-xs bg-slate-100">
             <q-img
               :src="getImage(item.thumbnail)"
-              class="w-full h-full object-cover"
-              :ratio="16/9"
-            />
+              style="width: 115px; height: 75px"
+              fit="cover"
+              class="rounded-xl"
+            >
+              <template #error>
+                <div class="absolute-full flex flex-center bg-slate-100 text-slate-400">
+                  <q-icon name="image" size="24px" />
+                </div>
+              </template>
+            </q-img>
           </div>
 
           <!-- Info Text -->
-          <div class="grow overflow-hidden">
+          <div class="grow overflow-hidden pr-2">
             <!-- Title -->
             <h3 class="text-sm font-extrabold text-slate-900 margin-0 truncate leading-snug">
               {{ item.nama }}
@@ -65,8 +72,8 @@
           </div>
         </div>
 
-        <!-- Right Section: Action Controls -->
-        <div class="flex items-center gap-2 shrink-0 self-end md:self-center border-t md:border-t-0 border-slate-100 pt-2 md:pt-0 w-full md:w-auto justify-end">
+        <!-- KANAN UJUNG: Action Controls (Right-Aligned) -->
+        <div class="flex items-center gap-1.5 shrink-0 justify-end border-l border-slate-100 pl-4">
           <q-btn
             flat
             round
@@ -141,8 +148,11 @@ function stripHtml(html) {
 }
 
 function getImage(image) {
-  if (image === null || image === '') {
+  if (!image || image === null || image === '' || image === 'null') {
     return new URL('../../../assets/images/no-image.png', import.meta.url).href
+  }
+  if (image.startsWith('http') || image.startsWith('/')) {
+    return image
   }
   return pathImg + image
 }
