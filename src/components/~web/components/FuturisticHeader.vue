@@ -109,11 +109,7 @@
                 <div
                   v-if="item.dropdown && activeDropdown === index && item.items && item.items.length > 0"
                   class="absolute top-full transform-gpu z-50 overflow-visible pt-2"
-                  :class="[
-                    hasAnyNestedSubmenu(item)
-                      ? (index <= 2 ? 'w-[720px] left-0' : 'w-[720px] right-0')
-                      : (item.items && item.items.length > 8 ? (index <= 2 ? 'w-[680px] left-0' : 'w-[680px] right-0') : (index <= 2 ? 'w-80 left-0' : 'w-80 right-0'))
-                  ]"
+                  :class="getDropdownClass(item, index)"
                 >
                   <q-card
                     class="glass-dropdown-card shadow-24 animate-slide-down rounded-2xl border-light overflow-hidden"
@@ -462,6 +458,39 @@ const handleDropdownMouseLeave = (index) => {
       closeDropdown(index)
     }
   }, 220)
+}
+
+function getDropdownClass(item, index) {
+  const isNested = hasAnyNestedSubmenu(item)
+  const isLarge = item.items && item.items.length > 8
+  const isMega = isNested || isLarge
+  const widthStyle = isNested ? 'w-[720px]' : (isLarge ? 'w-[680px]' : 'w-80')
+
+  // Menu paling awal (index 0 / Beranda): Rata kiri aman agar tidak tembus layar kiri
+  if (index === 0) {
+    return `${widthStyle} left-0`
+  }
+
+  // Menu paling akhir (Buku Tamu): Rata kanan aman agar tidak tembus layar kanan
+  if (index >= menuItems.length - 1) {
+    return `${widthStyle} right-0`
+  }
+
+  // Untuk Mega Menu (720px / 680px):
+  // Center alignment yang presisi dan aman dari batas layar
+  if (isMega) {
+    if (index <= 2) {
+      return `${widthStyle} left-1/2 -translate-x-[25%]`
+    }
+    if (index >= menuItems.length - 3) {
+      return `${widthStyle} left-1/2 -translate-x-[75%]`
+    }
+    return `${widthStyle} left-1/2 -translate-x-1/2`
+  }
+
+  // Untuk Dropdown Standar (320px / w-80):
+  // 100% PERFECTLY CENTERED DI TENGAH-TENGAH TOMBOL MENU INDUK
+  return `${widthStyle} left-1/2 -translate-x-1/2`
 }
 
 // 8 Menu Asli Persis Bawaan Aplikasi (Hanya Menu Resmi)
@@ -834,6 +863,7 @@ onBeforeUnmount(() => {
   border: 1px solid #e2e8f0 !important;
   border-radius: 20px !important;
   box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.18) !important;
+  max-width: calc(100vw - 32px) !important;
 }
 
 .dropdown-scroll-body {
