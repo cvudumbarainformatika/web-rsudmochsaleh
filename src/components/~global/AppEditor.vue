@@ -147,13 +147,26 @@ const editor = useEditor({
 })
 
 function setcontenteditor(content) {
-  const isSame = editor.value.getHTML() === content
+  if (!content) return
+
+  let htmlText = content
+  if (typeof content === 'object' && content !== null) {
+    htmlText = content.result || content.data || ''
+  } else if (typeof content === 'string' && content.includes('{"result":')) {
+    try {
+      const parsed = JSON.parse(content.substring(content.indexOf('{"result":')))
+      htmlText = parsed.result || content
+    } catch (e) {
+      htmlText = content
+    }
+  }
+
+  const isSame = editor.value.getHTML() === htmlText
   if (isSame) {
     return
   }
 
-  const index = content.indexOf('{"result":')
-  editor.value.commands.setContent(content.substring(0, index - 1), false)
+  editor.value.commands.setContent(htmlText, false)
   emits('update:modelValue', editor.value.getHTML())
 }
 

@@ -325,7 +325,7 @@ async function startImport() {
       }
     }).then((resp) => {
       // console.log(resp)
-      emits('onimportword', resp.data)
+      emits('onimportword', resp.data?.result || resp.data)
     })
   } catch (error) {
     // this.loading = false
