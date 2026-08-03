@@ -133,7 +133,7 @@ import { pathImg } from 'src/boot/axios'
 import { useCustomMenuWeb } from 'src/stores/web/customMenu'
 import { computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import logo from 'src/assets/images/logo.png'
+import logo from 'src/assets/logos/logo.png'
 
 const route = useRoute()
 const store = useCustomMenuWeb()
