@@ -11,16 +11,30 @@
             {{ parentItem ? `Item ini akan tersimpan di dalam folder hirarki "${parentItem.nama}".` : 'Menu utama ini akan langsung tampil di Header Navbar publik.' }}
           </p>
         </div>
-        <q-btn
-          flat
-          rounded
-          icon="arrow_back"
-          label="Kembali"
-          no-caps
-          color="slate-700"
-          class="bg-slate-100 font-bold"
-          @click="goBack"
-        />
+        <div class="flex items-center gap-2">
+          <q-btn
+            v-if="isEdit && store.form.slug"
+            flat
+            rounded
+            icon="open_in_new"
+            label="Lihat Halaman"
+            no-caps
+            color="teal-8"
+            class="bg-teal-50 font-bold border border-teal-200"
+            :href="`/menu/${store.form.slug}`"
+            target="_blank"
+          />
+          <q-btn
+            flat
+            rounded
+            icon="arrow_back"
+            label="Kembali"
+            no-caps
+            color="slate-700"
+            class="bg-slate-100 font-bold"
+            @click="goBack"
+          />
+        </div>
       </div>
 
       <!-- Banner Info Submenu & Switcher Inline (Desktop) -->
