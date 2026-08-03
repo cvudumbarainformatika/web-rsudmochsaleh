@@ -110,10 +110,10 @@
           <div class="col-md-8 col-lg-8 col-xl-8 col-xs-12 col-sm-12">
             <!-- Nama Input -->
             <div class="q-mb-md">
-              <span class="text-xs font-bold text-slate-700 block q-mb-xs">Judul Halaman Artikel*</span>
+              <span class="text-xs font-bold text-slate-700 block q-mb-xs">Nama Menu / Submenu*</span>
               <app-input
                 v-model="store.form.nama"
-                placeholder="Masukkan judul artikel..."
+                placeholder="Masukkan nama menu / submenu..."
                 @change="setSlug"
               />
             </div>
