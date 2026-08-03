@@ -164,13 +164,10 @@ const logo = computed(() => {
   return pathImg + storeApp.logo
 })
 
-// Penamaan Submenu Kategori di Banner Meta Badge
+// Penamaan Label Banner Meta Badge (Selalu Mengikuti Nama Menu / Submenu Yang Sedang Dibuka)
 const parentCategoryName = computed(() => {
   if (!store.activeArticle) return 'MENU RSUD'
-  if (store.activeArticle.parent) {
-    return store.activeArticle.parent.nama.toUpperCase()
-  }
-  return store.activeArticle.nama.toUpperCase()
+  return (store.activeArticle.nama || 'MENU RSUD').toUpperCase()
 })
 
 // Daftar Layanan Terkait (Sidebar Kiri)
