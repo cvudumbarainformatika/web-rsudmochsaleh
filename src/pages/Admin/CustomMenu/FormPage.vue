@@ -118,14 +118,15 @@
               />
             </div>
 
-            <!-- Judul Lengkap Artikel (Opsional) -->
+            <!-- Judul Lengkap Artikel (Otomatis Terisi Sama) -->
             <div class="q-mb-md">
-              <span class="text-xs font-bold text-slate-700 block q-mb-xs">Judul Lengkap Halaman Artikel (Opsional - Jika Berbeda)</span>
+              <span class="text-xs font-bold text-slate-700 block q-mb-xs">Judul Lengkap Halaman Artikel (Otomatis Terisi Sama - Bisa Diubah)</span>
               <app-input
                 v-model="store.form.title_detail"
-                placeholder="Contoh: Percobaan Interaksi Kepada Hewan dan Tumbuhan..."
+                placeholder="Otomatis terisi sama dengan Nama Menu..."
+                @update:model-value="onTitleDetailInput"
               />
-              <span class="text-[11px] text-slate-400 block mt-1">Kosongkan jika judul artikel ingin disamakan dengan Nama Menu / Submenu di atas.</span>
+              <span class="text-[11px] text-slate-400 block mt-1">Otomatis menyamakan Nama Menu di atas. Ubah teks di sini jika ingin judul artikel lebih panjang.</span>
             </div>
 
             <!-- WYSIWYG Editor Konten -->
@@ -245,9 +246,18 @@ function imgClick() {
   fileRef.value.pickFiles()
 }
 
+const isTitleDetailTouched = ref(false)
+
 function setSlug(val) {
   const slug = sanitizeTitle(val)
   store.setForm('slug', slug)
+  if (!isTitleDetailTouched.value) {
+    store.setForm('title_detail', val)
+  }
+}
+
+function onTitleDetailInput() {
+  isTitleDetailTouched.value = true
 }
 
 function goBack() {
