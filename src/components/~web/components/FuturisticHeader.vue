@@ -550,18 +550,6 @@ const menuItems = reactive([
       { label: 'PPI', href: '/pokja/ppi' }
     ]
   },
-  {
-    label: 'Interaksi',
-    dropdown: true,
-    href: '/interaksi',
-    items: []
-  },
-  {
-    label: 'Antrian Online',
-    dropdown: true,
-    href: '/antrian-online',
-    items: []
-  },
   { label: 'Buku Tamu', href: '/buku-tamu' }
 ])
 
@@ -726,33 +714,36 @@ const handleCustomMenu = async () => {
   const customList = storeCustomMenu.menus
   if (!customList || customList.length === 0) return
 
-  customList.forEach(m => {
-    const formattedItem = {
-      label: m.nama,
-      href: m.external_link ? m.external_link : `/menu/${m.slug}`,
-      dropdown: m.children && m.children.length > 0,
-      items: m.children?.map(sub => ({
-        label: sub.nama,
-        href: sub.external_link ? sub.external_link : `/menu/${sub.slug}`,
-        submenu: sub.children?.map(sub3 => ({
-          label: sub3.nama,
-          href: sub3.external_link ? sub3.external_link : `/menu/${sub3.slug}`
-        })) || []
+  // Format seluruh item menu dinamis dari backend
+  const formattedCustoms = customList.map(m => ({
+    label: m.nama,
+    href: m.external_link ? m.external_link : `/menu/${m.slug}`,
+    dropdown: m.children && m.children.length > 0,
+    items: m.children?.map(sub => ({
+      label: sub.nama,
+      href: sub.external_link ? sub.external_link : `/menu/${sub.slug}`,
+      submenu: sub.children?.map(sub3 => ({
+        label: sub3.nama,
+        href: sub3.external_link ? sub3.external_link : `/menu/${sub3.slug}`
       })) || []
-    }
+    })) || []
+  }))
 
-    const existingIndex = menuItems.findIndex(x => x.label.toLowerCase() === m.nama.toLowerCase() || (x.href && x.href.includes(m.slug)))
-    if (existingIndex !== -1) {
-      menuItems[existingIndex] = { ...menuItems[existingIndex], ...formattedItem }
-    } else {
-      const bukuTamuIndex = menuItems.findIndex(x => x.label === 'Buku Tamu')
-      if (bukuTamuIndex !== -1) {
-        menuItems.splice(bukuTamuIndex, 0, formattedItem)
-      } else {
-        menuItems.push(formattedItem)
-      }
+  // Bersihkan menu dinamis lama dari menuItems jika ada
+  customList.forEach(m => {
+    const idx = menuItems.findIndex(x => x.label.toLowerCase() === m.nama.toLowerCase() || (x.href && x.href.includes(m.slug)))
+    if (idx !== -1) {
+      menuItems.splice(idx, 1)
     }
   })
+
+  // Sisipkan SEMUA menu dinamis persis SEBELUM "Buku Tamu"
+  const bukuTamuIndex = menuItems.findIndex(x => x.label === 'Buku Tamu')
+  if (bukuTamuIndex !== -1) {
+    menuItems.splice(bukuTamuIndex, 0, ...formattedCustoms)
+  } else {
+    menuItems.push(...formattedCustoms)
+  }
 }
 
 const activeNestedSubMap = ref({})
