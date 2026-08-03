@@ -24,23 +24,24 @@
       </div>
 
       <!-- Banner Info Submenu & Judul Artikel Inline (Desktop) -->
-      <div v-if="parentItem || itemType === 'article'" class="bg-teal-50 border border-teal-200 rounded-2xl p-4 q-mb-lg flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="bg-teal-50 border border-teal-200 rounded-2xl p-4 q-mb-lg flex flex-col md:flex-row items-center justify-between gap-4">
         <!-- Kiri: Hirarki Induk Kategori -->
-        <div v-if="parentItem" class="flex items-center gap-3">
+        <div class="flex items-center gap-3">
           <q-icon name="folder_special" size="24px" class="text-teal-7" />
           <div>
             <div class="text-[10px] font-black text-teal-900 uppercase tracking-wider">Hirarki Otomatis Terkunci</div>
             <div class="text-xs text-teal-800 font-bold">
-              Induk Kategori: <strong class="text-teal-950 font-black text-sm">{{ parentItem.nama }}</strong> ({{ parentItem.slug }})
+              Induk Kategori: <strong class="text-teal-950 font-black text-sm">{{ parentItem ? parentItem.nama : 'Menu Utama (Tingkat 1)' }}</strong>
+              <span v-if="parentItem" class="text-slate-500 font-mono text-[11px]"> ({{ parentItem.slug }})</span>
             </div>
           </div>
         </div>
 
-        <!-- Kanan: Judul Lengkap Halaman Artikel (Jika Mode Artikel) -->
-        <div v-if="itemType === 'article'" class="flex items-center gap-2 w-full md:w-auto min-w-[280px] md:min-w-[360px] ml-auto">
+        <!-- Kanan: Judul Lengkap Halaman Artikel (Inline Selalu Tampil) -->
+        <div class="flex items-center gap-2 w-full md:w-auto min-w-[280px] md:min-w-[380px] ml-auto">
           <q-icon name="edit_note" size="22px" class="text-teal-7 flex-shrink-0" />
           <div class="w-full">
-            <span class="text-[10px] font-black text-teal-900 uppercase tracking-wider block">Judul Halaman Artikel (Bisa Diubah)</span>
+            <span class="text-[10px] font-black text-teal-900 uppercase tracking-wider block">Judul Halaman Artikel (Otomatis Terisi Sama)</span>
             <app-input
               v-model="store.form.title_detail"
               placeholder="Otomatis terisi sama dengan Nama Menu..."
@@ -55,7 +56,7 @@
       <div class="bg-slate-100 p-1.5 rounded-2xl flex items-center gap-2 max-w-md mx-auto q-mb-lg border border-slate-200/80">
         <button
           type="button"
-          class="cursor-pointer flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
+          class="cursor-pointer flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 style-pointer"
           :class="itemType === 'folder' ? 'bg-white text-teal-8 shadow-sm font-black' : 'text-slate-600 hover:text-slate-900'"
           @click="itemType = 'folder'"
         >
@@ -64,7 +65,7 @@
         </button>
         <button
           type="button"
-          class="cursor-pointer flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
+          class="cursor-pointer flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 style-pointer"
           :class="itemType === 'article' ? 'bg-white text-teal-8 shadow-sm font-black' : 'text-slate-600 hover:text-slate-900'"
           @click="itemType = 'article'"
         >
@@ -366,5 +367,8 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .margin-0 {
   margin: 0;
+}
+.style-pointer {
+  cursor: pointer !important;
 }
 </style>
