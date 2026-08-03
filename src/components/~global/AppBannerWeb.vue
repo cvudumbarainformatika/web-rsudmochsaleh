@@ -33,8 +33,8 @@
       </template>
 
       <div class="absolute-bottom text-center q-ma-lg">
-        <div class=" my--style text-h6 text-white text-capitalize">
-          {{ route.name }}
+        <div class="my--style text-h5 font-extrabold text-white text-capitalize tracking-wide drop-shadow-md">
+          {{ bannerTitle }}
         </div>
       </div>
     </q-parallax>
@@ -46,9 +46,17 @@ import { pathImg } from 'src/boot/axios'
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAppStore } from '../../stores/app'
+import { useCustomMenuWeb } from 'src/stores/web/customMenu'
 
 const route = useRoute()
-console.log('banner', route)
+const storeCustomMenu = useCustomMenuWeb()
+
+const bannerTitle = computed(() => {
+  if (route.name === 'custom-menu-detail' || route.name === 'custom-menu') {
+    return storeCustomMenu.activeArticle?.nama || 'Menu RSUD'
+  }
+  return (route.name || '').replace(/-/g, ' ')
+})
 
 const props = defineProps({
   admin: {
