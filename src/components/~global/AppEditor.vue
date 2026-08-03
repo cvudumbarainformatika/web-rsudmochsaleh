@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="editor-wrapper border border-slate-300 rounded-2xl overflow-hidden bg-white shadow-xs focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
     <editor-button
       v-if="edited"
       :editor="editor"
       @onimportword="setcontenteditor"
       @on-add-youtube="addVideo"
     />
-    <div :class="edited?'editor':''">
+    <div :class="edited ? 'editor' : ''">
       <editor-content
         :editor="editor"
       />
@@ -282,8 +282,9 @@ onMounted(() => {
 
 <style lang="scss">
   .editor {
-    border: 1px solid $grey-3;
-    height: 100vh;
+    border: none !important;
+    min-height: 420px;
+    max-height: 680px;
     overflow: auto !important;
   }
 

@@ -1,27 +1,38 @@
 <template>
-  <q-card>
-    <q-card-section>
+  <q-card class="rounded-2xl border border-slate-200/80 shadow-sm bg-white overflow-hidden">
+    <q-card-section class="p-6">
       <div class="row q-col-gutter-lg">
+        <!-- Kolom Kiri: Judul & Editor -->
         <div class="col-md-8 col-lg-8 col-xl-8 col-xs-12 col-sm-12">
           <app-input
             v-model="store.form.title"
-            label="Judul*"
+            label="Judul Berita*"
             class="q-mb-md"
             @change="setSlug"
           />
           <app-editor v-model="store.form.content" />
         </div>
+
+        <!-- Kolom Kanan: Thumbnail, Slug, Tanggal, Kategori, & Simpan -->
         <div class="col-md-4 col-lg-4 col-xl-4 col-xs-12 col-sm-12">
-          <!-- <q-scroll-area class="full-height"> -->
-          <q-form
-            @submit="onSave"
-          >
-            <q-img
-              :src="previewImage"
-              fit="fill"
-              class="full-height cursor-pointer"
+          <q-form @submit="onSave">
+            <!-- Dropzone Interactive Thumbnail -->
+            <div
+              class="thumbnail-dropzone border-2 border-dashed border-slate-300 hover:border-teal-500 rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 bg-slate-50 hover:bg-teal-50/20 relative min-h-[180px] flex items-center justify-center q-mb-md shadow-xs"
               @click="imgClick()"
-            />
+            >
+              <img
+                :src="previewImage"
+                alt="Thumbnail Preview"
+                class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300"
+                @error="handleImgError"
+              />
+              <div class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center text-white backdrop-blur-[2px]">
+                <q-icon name="cloud_upload" size="32px" class="q-mb-xs" />
+                <span class="text-xs font-bold uppercase tracking-wider">Klik untuk Pilih / Ganti Thumbnail</span>
+              </div>
+            </div>
+
             <q-file
               ref="fileRef"
               v-model="tempImg"
@@ -29,122 +40,122 @@
               dense
               label="Gambar Thumbnail"
               accept="image/*"
+              class="hidden"
+            />
+
+            <!-- Input Slug Otomatis -->
+            <app-input
+              v-model="store.form.slug"
+              label="Slug Otomatis"
+              readonly
+              valid
               class="q-mb-md"
             />
 
-            <app-input
-              v-model="store.form.slug"
-              label="Slug Otomatis input"
-              readonly
-              valid
-              class="q-mt-md"
-            />
+            <!-- Input Tanggal -->
             <app-input-date
               :model="store.form.tanggal"
               icon="event"
-              label="Tanggal"
+              label="Tanggal Publikasi"
               outlined
-              class="q-mt-md"
-              @set-model="(val)=>store.setForm('tanggal', val)"
+              class="q-mb-md"
+              @set-model="(val) => store.setForm('tanggal', val)"
             />
-            <q-list
-              bordered
-              separator
-              dense
-              class="q-mt-md"
-            >
-              <q-item-section>
-                <div class="flex items-center justify-between q-pa-md">
-                  <div>Pilih Kategori</div>
-                  <q-btn
-                    round
-                    icon="add"
-                    size="xs"
-                    color="primary"
-                  >
-                    <q-popup-proxy
-                      transition-show="flip-up"
-                      transition-hide="flip-down"
-                      @before-show="newCategori = null"
-                    >
-                      <div class="q-pa-sm">
-                        <q-input
-                          ref="inputCategoriRef"
-                          v-model="newCategori"
-                          dense
-                          label="Tambah Kategori : Enter"
-                          style="min-width:200px"
-                          @keydown.enter="addKategori"
-                        />
-                      </div>
-                    </q-popup-proxy>
-                  </q-btn>
-                </div>
-              </q-item-section>
-              <q-separator />
 
-              <q-item
-                v-for="(item, i) in categories"
-                :key="i"
-              >
-                <!-- {{ selectedCategories }} -->
-                <q-item-section
-                  avatar
-                  thumbnail
+            <!-- Box List Kategori Subtle Card -->
+            <div class="category-box bg-slate-50/70 border border-slate-200/80 rounded-2xl p-4 q-mt-md">
+              <div class="flex items-center justify-between q-mb-sm">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-slate-700">Pilih Kategori</span>
+                <q-btn
+                  round
+                  icon="add"
+                  size="xs"
+                  color="primary"
+                  class="shadow-xs"
                 >
-                  <q-checkbox
-                    v-model="store.selectedCategories"
-                    size="xs"
-                    :val="item.id"
-                    @update:model-value="arrToString"
-                  />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>
-                    {{ item.nama }}
-                    <q-popup-edit
-                      v-slot="scope"
-                      v-model="item.nama"
-                      :cover="true"
-                      :offset="[0, 0]"
-                      auto-save
-                      :validate="val => val.length > 0"
-                    >
+                  <q-tooltip>Tambah Kategori Baru</q-tooltip>
+                  <q-popup-proxy
+                    transition-show="flip-up"
+                    transition-hide="flip-down"
+                    @before-show="newCategori = null"
+                  >
+                    <div class="q-pa-sm bg-white rounded-xl shadow-lg border border-slate-100">
                       <q-input
-                        v-model="scope.value"
+                        ref="inputCategoriRef"
+                        v-model="newCategori"
                         dense
-                        autofocus
-                        counter
-                        @keyup.enter="editCategory(scope, item.id)"
+                        outlined
+                        label="Tambah Kategori : Enter"
+                        style="min-width: 220px;"
+                        @keydown.enter="addKategori"
                       />
-                    </q-popup-edit>
-                  </q-item-label>
-                </q-item-section>
-                <q-item-section
-                  side
+                    </div>
+                  </q-popup-proxy>
+                </q-btn>
+              </div>
+
+              <q-separator class="q-mb-sm" />
+
+              <div class="category-list flex flex-col gap-1.5 max-h-[220px] overflow-y-auto pr-1">
+                <div
+                  v-for="(item, i) in categories"
+                  :key="i"
+                  class="flex items-center justify-between p-2 rounded-xl bg-white border border-slate-200/60 hover:border-teal-300 transition-colors shadow-2xs"
                 >
+                  <div class="flex items-center gap-2">
+                    <q-checkbox
+                      v-model="store.selectedCategories"
+                      size="xs"
+                      color="primary"
+                      :val="item.id"
+                      @update:model-value="arrToString"
+                    />
+                    <span class="text-xs font-bold text-slate-800 cursor-pointer">
+                      {{ item.nama }}
+                      <q-popup-edit
+                        v-slot="scope"
+                        v-model="item.nama"
+                        :cover="true"
+                        :offset="[0, 0]"
+                        auto-save
+                        :validate="val => val.length > 0"
+                      >
+                        <q-input
+                          v-model="scope.value"
+                          dense
+                          autofocus
+                          counter
+                          @keyup.enter="editCategory(scope, item.id)"
+                        />
+                      </q-popup-edit>
+                    </span>
+                  </div>
                   <q-btn
                     icon="delete"
                     size="xs"
                     color="negative"
                     flat
                     round
-                    padding="sm"
+                    padding="xs"
                     @click="deleteCategory(i)"
                   />
-                </q-item-section>
-              </q-item>
-            </q-list>
+                </div>
+              </div>
+            </div>
 
-            <div class="q-py-md">
-              <app-btn
-                class="full-width"
-                label="Simpan Draft"
+            <!-- Tombol Simpan Draft (Warna Tema Global Primary) -->
+            <div class="q-mt-lg">
+              <q-btn
+                type="submit"
+                color="primary"
+                class="full-width rounded-xl font-bold py-3 shadow-md hover:shadow-lg transition-all"
+                icon="save"
+                label="Simpan Draft Berita"
                 :loading="store.loading"
+                no-caps
               />
             </div>
           </q-form>
-          <!-- </q-scroll-area> -->
         </div>
       </div>
     </q-card-section>
@@ -229,6 +240,10 @@ const categories = computed(() => storeCategories.items)
 
 function imgClick() {
   fileRef.value.pickFiles()
+}
+
+function handleImgError(e) {
+  e.target.src = new URL('../../../assets/images/no-image.png', import.meta.url).href
 }
 
 function setSlug(val) {

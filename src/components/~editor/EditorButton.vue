@@ -1,6 +1,6 @@
 <template>
   <div v-if="editor">
-    <div class="row items-center q-gutter-xs q-mb-sm bg-grey-2 q-py-xs">
+    <div class="flex flex-wrap items-center gap-1.5 p-2.5 bg-slate-100/90 border-b border-slate-200/80 rounded-t-2xl">
       <!-- <add-more-btn
         @code-block="editor.chain().focus().toggleCodeBlock().run()"
       /> -->
