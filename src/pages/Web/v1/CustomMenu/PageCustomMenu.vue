@@ -34,7 +34,7 @@
               <span>RSUD DR. MOHAMAD SALEH</span>
             </div>
             <h1 class="text-2xl md:text-3xl font-black text-slate-900 leading-snug margin-0 q-mb-md">
-              {{ store.activeArticle.nama }}
+              {{ store.activeArticle.title_detail || store.activeArticle.nama }}
             </h1>
           </div>
 

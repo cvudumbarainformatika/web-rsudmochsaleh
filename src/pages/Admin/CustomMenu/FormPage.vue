@@ -108,14 +108,24 @@
         <div class="row q-col-gutter-lg">
           <!-- Kolom Kiri: Nama & Editor Artikel -->
           <div class="col-md-8 col-lg-8 col-xl-8 col-xs-12 col-sm-12">
-            <!-- Nama Input -->
+            <!-- Nama Input (Singkat di Navbar) -->
             <div class="q-mb-md">
-              <span class="text-xs font-bold text-slate-700 block q-mb-xs">Nama Menu / Submenu*</span>
+              <span class="text-xs font-bold text-slate-700 block q-mb-xs">Nama Menu / Submenu* (Tampil di Navbar)</span>
               <app-input
                 v-model="store.form.nama"
-                placeholder="Masukkan nama menu / submenu..."
+                placeholder="Contoh: Percobaan Interaksi"
                 @change="setSlug"
               />
+            </div>
+
+            <!-- Judul Lengkap Artikel (Opsional) -->
+            <div class="q-mb-md">
+              <span class="text-xs font-bold text-slate-700 block q-mb-xs">Judul Lengkap Halaman Artikel (Opsional - Jika Berbeda)</span>
+              <app-input
+                v-model="store.form.title_detail"
+                placeholder="Contoh: Percobaan Interaksi Kepada Hewan dan Tumbuhan..."
+              />
+              <span class="text-[11px] text-slate-400 block mt-1">Kosongkan jika judul artikel ingin disamakan dengan Nama Menu / Submenu di atas.</span>
             </div>
 
             <!-- WYSIWYG Editor Konten -->
@@ -280,6 +290,7 @@ async function onSave() {
 
   const autoSlug = store.form.slug || sanitizeTitle(store.form.nama)
   formData.append('nama', store.form.nama)
+  formData.append('title_detail', store.form.title_detail || '')
   formData.append('slug', autoSlug)
   formData.append('type', itemType.value === 'folder' ? 'menu' : 'content')
   formData.append('content', itemType.value === 'article' ? (store.form.content || '') : '')

@@ -12,6 +12,7 @@ export const useAdminCustomMenu = defineStore('admin_custom_menu', {
       id: null,
       parent_id: null,
       nama: '',
+      title_detail: '',
       slug: '',
       type: 'content',
       content: '',
