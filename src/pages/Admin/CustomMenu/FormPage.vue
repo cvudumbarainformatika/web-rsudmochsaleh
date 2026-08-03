@@ -5,10 +5,10 @@
       <div class="flex items-center justify-between q-mb-md">
         <div>
           <h2 class="text-xl font-extrabold text-slate-800 margin-0">
-            {{ isEdit ? (parentItem ? `Edit Submenu "${store.form.nama}"` : `Edit Menu Utama "${store.form.nama}"`) : (parentItem ? `Tambah Submenu untuk "${parentItem.nama}"` : 'Tambah Menu Utama Baru') }}
+            {{ isEdit ? `Edit "${store.form.nama}"` : (parentItem ? `Tambah Item di dalam "${parentItem.nama}"` : 'Tambah Menu Utama Baru') }}
           </h2>
           <p class="text-xs text-slate-500 margin-0">
-            {{ parentItem ? `Submenu ini berupa artikel yang tersimpan di bawah hirarki "${parentItem.nama}".` : 'Menu utama ini akan langsung tampil di Header Navbar publik.' }}
+            {{ parentItem ? `Item ini akan tersimpan di dalam folder hirarki "${parentItem.nama}".` : 'Menu utama ini akan langsung tampil di Header Navbar publik.' }}
           </p>
         </div>
         <q-btn
@@ -27,22 +27,44 @@
       <div v-if="parentItem" class="bg-teal-50 border border-teal-200 rounded-2xl p-3.5 q-mb-lg flex items-center gap-3">
         <q-icon name="folder_special" size="24px" class="text-teal-7" />
         <div>
-          <div class="text-xs font-black text-teal-900 uppercase tracking-wider">Submenu Otomatis Terkunci</div>
+          <div class="text-xs font-black text-teal-900 uppercase tracking-wider">Hirarki Otomatis Terkunci</div>
           <div class="text-xs text-teal-800 font-bold">
             Induk Kategori: <strong class="text-teal-950 font-black text-sm">{{ parentItem.nama }}</strong> ({{ parentItem.slug }})
           </div>
         </div>
       </div>
 
-      <!-- FORM A: Jika Tambah MENU UTAMA (Tingkat 1) -> Form Ultra Simple (HANYA NAMA MENU!) -->
-      <q-form v-if="!parentItem" @submit="onSave">
-        <div class="max-w-md mx-auto py-6">
+      <!-- Pilihan Jenis Item (Kategori Menu vs Artikel Konten) -->
+      <div class="bg-slate-100 p-1.5 rounded-2xl flex items-center gap-2 max-w-md mx-auto q-mb-lg border border-slate-200/80">
+        <button
+          type="button"
+          class="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
+          :class="itemType === 'folder' ? 'bg-white text-teal-8 shadow-sm font-black' : 'text-slate-600 hover:text-slate-900'"
+          @click="itemType = 'folder'"
+        >
+          <q-icon name="folder" size="18px" />
+          <span>📁 Folder / Kategori Menu</span>
+        </button>
+        <button
+          type="button"
+          class="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
+          :class="itemType === 'article' ? 'bg-white text-teal-8 shadow-sm font-black' : 'text-slate-600 hover:text-slate-900'"
+          @click="itemType = 'article'"
+        >
+          <q-icon name="article" size="18px" />
+          <span>📄 Halaman Artikel Konten</span>
+        </button>
+      </div>
+
+      <!-- MODE 1: FOLDER / KATEGORI MENU (HANYA INPUT NAMA MENU - TANPA EDITOR!) -->
+      <q-form v-if="itemType === 'folder'" @submit="onSave">
+        <div class="max-w-md mx-auto py-4">
           <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 shadow-xs space-y-4">
             <div>
-              <span class="text-xs font-bold text-slate-700 block q-mb-xs">Nama Menu Utama*</span>
+              <span class="text-xs font-bold text-slate-700 block q-mb-xs">Nama Menu / Submenu Kategori*</span>
               <app-input
                 v-model="store.form.nama"
-                placeholder="Contoh: Interaksi, Antrian Online, Layanan Unggulan..."
+                placeholder="Contoh: Rawat Jalan, Konsultasi Online, Jadwal Poli..."
                 class="bg-white"
                 @change="setSlug"
               />
@@ -61,7 +83,7 @@
 
             <!-- Status Aktif Toggle -->
             <div class="bg-white border border-slate-200/80 rounded-xl p-3 flex items-center justify-between">
-              <span class="text-xs font-bold text-slate-800">Tampilkan di Header Navbar:</span>
+              <span class="text-xs font-bold text-slate-800">Tampilkan di Website:</span>
               <q-toggle v-model="store.form.is_active" color="primary" size="sm" />
             </div>
 
@@ -72,7 +94,7 @@
                 color="primary"
                 class="full-width rounded-xl font-bold py-3 shadow-md hover:shadow-lg transition-all"
                 icon="save"
-                label="Simpan Menu Utama"
+                label="Simpan Folder / Kategori Menu"
                 :loading="store.loading"
                 no-caps
               />
@@ -81,24 +103,24 @@
         </div>
       </q-form>
 
-      <!-- FORM B: Jika Tambah SUBMENU KONTEN -> Form Artikel Lengkap dengan Editor & Thumbnail -->
+      <!-- MODE 2: HALAMAN ARTIKEL KONTEN (DENGAN EDITOR & THUMBNAIL BANNER) -->
       <q-form v-else @submit="onSave">
         <div class="row q-col-gutter-lg">
           <!-- Kolom Kiri: Nama & Editor Artikel -->
           <div class="col-md-8 col-lg-8 col-xl-8 col-xs-12 col-sm-12">
             <!-- Nama Input -->
             <div class="q-mb-md">
-              <span class="text-xs font-bold text-slate-700 block q-mb-xs">Nama Submenu / Artikel*</span>
+              <span class="text-xs font-bold text-slate-700 block q-mb-xs">Judul Halaman Artikel*</span>
               <app-input
                 v-model="store.form.nama"
-                placeholder="Masukkan judul artikel submenu..."
+                placeholder="Masukkan judul artikel..."
                 @change="setSlug"
               />
             </div>
 
             <!-- WYSIWYG Editor Konten -->
             <div class="q-mb-md">
-              <span class="text-xs font-bold text-slate-700 block q-mb-xs">Isi Konten Artikel / Informasi Submenu</span>
+              <span class="text-xs font-bold text-slate-700 block q-mb-xs">Isi Konten Artikel / Informasi</span>
               <app-editor v-model="store.form.content" />
             </div>
           </div>
@@ -158,7 +180,7 @@
                 color="primary"
                 class="full-width rounded-xl font-bold py-3 shadow-md hover:shadow-lg transition-all"
                 icon="save"
-                label="Simpan Submenu Artikel"
+                label="Simpan Halaman Artikel"
                 :loading="store.loading"
                 no-caps
               />
@@ -185,6 +207,9 @@ const store = useAdminCustomMenu()
 const fileRef = ref(null)
 const tempImg = ref(null)
 const parentItem = ref(null)
+
+// 'folder' (Hanya Nama Menu) vs 'article' (Dengan Editor & Thumbnail)
+const itemType = ref('folder')
 
 const isEdit = computed(() => !!route.params.id)
 const parentIdQuery = computed(() => {
@@ -235,7 +260,7 @@ async function fetchParentDetails() {
 
 async function onSave() {
   if (!store.form.nama) {
-    return notifErrVue('Maaf, Nama Menu harus diisi!')
+    return notifErrVue('Maaf, Nama Menu / Artikel harus diisi!')
   }
 
   const formData = new FormData()
@@ -249,14 +274,15 @@ async function onSave() {
     formData.append('parent_id', store.form.parent_id)
   }
 
-  if (tempImg.value !== null) {
+  if (itemType.value === 'article' && tempImg.value !== null) {
     formData.append('thumbnail', tempImg.value)
   }
 
   const autoSlug = store.form.slug || sanitizeTitle(store.form.nama)
   formData.append('nama', store.form.nama)
   formData.append('slug', autoSlug)
-  formData.append('content', store.form.content || '')
+  formData.append('type', itemType.value === 'folder' ? 'menu' : 'content')
+  formData.append('content', itemType.value === 'article' ? (store.form.content || '') : '')
   formData.append('urutan', store.form.urutan || 0)
   formData.append('is_active', store.form.is_active ? '1' : '0')
 
@@ -274,9 +300,15 @@ onMounted(async () => {
     const editItem = store.items.find(x => x.id === parseInt(route.params.id))
     if (editItem) {
       store.form = { ...editItem }
+      if (editItem.content || editItem.thumbnail) {
+        itemType.value = 'article'
+      } else {
+        itemType.value = 'folder'
+      }
     }
   } else {
     store.resetForm(parentIdQuery.value ? parseInt(parentIdQuery.value) : null)
+    itemType.value = 'folder'
   }
 })
 </script>
