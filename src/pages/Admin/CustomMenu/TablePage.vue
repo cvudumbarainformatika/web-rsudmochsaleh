@@ -231,7 +231,16 @@ function openSubmenu(item) {
 }
 
 function goBackParent() {
-  router.push('/admin/custom-menu')
+  // Jika parentItem ada dan parentItem punya parent_id sendiri (berarti kita di Level 3+),
+  // kembali ke halaman parent dari parentItem (Level 2 list)
+  if (parentItem.value && parentItem.value.parent_id !== null && parentItem.value.parent_id !== undefined) {
+    router.push({ path: '/admin/custom-menu', query: { parent_id: parentItem.value.parent_id } })
+  } else if (parentItem.value) {
+    // Kita di Level 2, kembali ke Level 1 (root)
+    router.push('/admin/custom-menu')
+  } else {
+    router.push('/admin/custom-menu')
+  }
 }
 
 function deleteMenu(item) {
