@@ -247,7 +247,13 @@ const isMaxDepthLevel = computed(() => {
 const isFolderParent = computed(() => {
   if (!isEdit.value || !store.form.id) return false
   const editItem = store.items.find(x => x.id === parseInt(route.params.id))
-  return !!(editItem && ((editItem.children_count && parseInt(editItem.children_count) > 0) || (editItem.children && editItem.children.length > 0)))
+  const hasChildren = !!(editItem && (
+    (editItem.children_count && parseInt(editItem.children_count) > 0) ||
+    (editItem.children && editItem.children.length > 0)
+  ))
+  // Hanya KUNCI sebagai Folder jika item berada di Level 1 (parent_id = null) dan punya anak/submenu
+  const isLevel1 = editItem && (editItem.parent_id === null || editItem.parent_id === undefined)
+  return hasChildren && isLevel1
 })
 
 const previewImage = computed(() => {
