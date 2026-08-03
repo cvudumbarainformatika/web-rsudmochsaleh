@@ -68,11 +68,13 @@ export const useAdminCustomMenu = defineStore('admin_custom_menu', {
 
     async saveMenu(formData) {
       this.loading = true
+      const isEdit = formData.has('id') && formData.get('id')
       try {
         const resp = await api.post('/v1/custom_menu/store', formData)
+        const defaultMsg = isEdit ? 'Berhasil memperbarui data menu!' : 'Berhasil menambah menu baru!'
         Notify.create({
           type: 'positive',
-          message: resp.data?.message || 'Berhasil menyimpan menu dinamis!',
+          message: resp.data?.message || defaultMsg,
           position: 'top'
         })
         await this.getData(this.form.parent_id)
@@ -80,7 +82,7 @@ export const useAdminCustomMenu = defineStore('admin_custom_menu', {
       } catch (error) {
         Notify.create({
           type: 'negative',
-          message: error.response?.data?.message || 'Gagal menyimpan menu dinamis.',
+          message: error.response?.data?.message || 'Gagal menyimpan data menu.',
           position: 'top'
         })
         return false
