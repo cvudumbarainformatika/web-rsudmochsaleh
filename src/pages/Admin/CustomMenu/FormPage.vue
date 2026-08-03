@@ -23,13 +23,30 @@
         />
       </div>
 
-      <!-- Banner Info Submenu Otomatis -->
-      <div v-if="parentItem" class="bg-teal-50 border border-teal-200 rounded-2xl p-3.5 q-mb-lg flex items-center gap-3">
-        <q-icon name="folder_special" size="24px" class="text-teal-7" />
-        <div>
-          <div class="text-xs font-black text-teal-900 uppercase tracking-wider">Hirarki Otomatis Terkunci</div>
-          <div class="text-xs text-teal-800 font-bold">
-            Induk Kategori: <strong class="text-teal-950 font-black text-sm">{{ parentItem.nama }}</strong> ({{ parentItem.slug }})
+      <!-- Banner Info Submenu & Judul Artikel Inline (Desktop) -->
+      <div v-if="parentItem || itemType === 'article'" class="bg-teal-50 border border-teal-200 rounded-2xl p-4 q-mb-lg flex flex-col md:flex-row items-center justify-between gap-4">
+        <!-- Kiri: Hirarki Induk Kategori -->
+        <div v-if="parentItem" class="flex items-center gap-3">
+          <q-icon name="folder_special" size="24px" class="text-teal-7" />
+          <div>
+            <div class="text-[10px] font-black text-teal-900 uppercase tracking-wider">Hirarki Otomatis Terkunci</div>
+            <div class="text-xs text-teal-800 font-bold">
+              Induk Kategori: <strong class="text-teal-950 font-black text-sm">{{ parentItem.nama }}</strong> ({{ parentItem.slug }})
+            </div>
+          </div>
+        </div>
+
+        <!-- Kanan: Judul Lengkap Halaman Artikel (Jika Mode Artikel) -->
+        <div v-if="itemType === 'article'" class="flex items-center gap-2 w-full md:w-auto min-w-[280px] md:min-w-[360px] ml-auto">
+          <q-icon name="edit_note" size="22px" class="text-teal-7 flex-shrink-0" />
+          <div class="w-full">
+            <span class="text-[10px] font-black text-teal-900 uppercase tracking-wider block">Judul Halaman Artikel (Bisa Diubah)</span>
+            <app-input
+              v-model="store.form.title_detail"
+              placeholder="Otomatis terisi sama dengan Nama Menu..."
+              class="bg-white text-xs"
+              @update:model-value="onTitleDetailInput"
+            />
           </div>
         </div>
       </div>
@@ -38,7 +55,7 @@
       <div class="bg-slate-100 p-1.5 rounded-2xl flex items-center gap-2 max-w-md mx-auto q-mb-lg border border-slate-200/80">
         <button
           type="button"
-          class="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
+          class="cursor-pointer flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
           :class="itemType === 'folder' ? 'bg-white text-teal-8 shadow-sm font-black' : 'text-slate-600 hover:text-slate-900'"
           @click="itemType = 'folder'"
         >
@@ -47,7 +64,7 @@
         </button>
         <button
           type="button"
-          class="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
+          class="cursor-pointer flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
           :class="itemType === 'article' ? 'bg-white text-teal-8 shadow-sm font-black' : 'text-slate-600 hover:text-slate-900'"
           @click="itemType = 'article'"
         >
@@ -331,6 +348,7 @@ onMounted(async () => {
     const editItem = store.items.find(x => x.id === parseInt(route.params.id))
     if (editItem) {
       store.form = { ...editItem }
+      store.form.is_active = editItem.is_active == 1 || editItem.is_active === true
       if (editItem.content || editItem.thumbnail) {
         itemType.value = 'article'
       } else {
@@ -339,6 +357,7 @@ onMounted(async () => {
     }
   } else {
     store.resetForm(parentIdQuery.value ? parseInt(parentIdQuery.value) : null)
+    store.form.is_active = true
     itemType.value = 'folder'
   }
 })
