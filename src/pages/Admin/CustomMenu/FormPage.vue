@@ -37,10 +37,14 @@
           </div>
         </div>
 
-        <!-- Sebelah Kanan: 2 Tombol Switcher / Badge Batas Kedalaman -->
-        <div v-if="isMaxDepthLevel" class="bg-amber-100/90 text-amber-900 border border-amber-300 p-2 rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs ml-auto">
+        <!-- Sebelah Kanan: 2 Tombol Switcher / Badge Penguncian Otomatis -->
+        <div v-if="isFolderParent" class="bg-teal-100/90 text-teal-900 border border-teal-300 p-2 rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs ml-auto">
+          <q-icon name="folder" size="18px" class="text-teal-8" />
+          <span>📌 Menu ini adalah Induk Submenu (Hanya Format Folder / Nama Menu)</span>
+        </div>
+        <div v-else-if="isMaxDepthLevel" class="bg-amber-100/90 text-amber-900 border border-amber-300 p-2 rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs ml-auto">
           <q-icon name="lock" size="18px" class="text-amber-8" />
-          <span>📌 Batas Maksimal Kedalaman (Level 3): Format Otomatis Artikel Konten</span>
+          <span>📌 Submenu Tingkat 3 (Batas Kedalaman): Otomatis Format Artikel Konten</span>
         </div>
         <div v-else class="bg-white/90 p-1.5 rounded-xl flex items-center gap-2 border border-teal-200 shadow-xs ml-auto">
           <button
@@ -240,6 +244,12 @@ const isMaxDepthLevel = computed(() => {
   return !!(parentItem.value && parentItem.value.parent_id !== null && parentItem.value.parent_id !== undefined)
 })
 
+const isFolderParent = computed(() => {
+  if (!isEdit.value || !store.form.id) return false
+  const editItem = store.items.find(x => x.id === parseInt(route.params.id))
+  return !!(editItem && ((editItem.children_count && parseInt(editItem.children_count) > 0) || (editItem.children && editItem.children.length > 0)))
+})
+
 const previewImage = computed(() => {
   if (tempImg.value !== null) {
     return URL.createObjectURL(tempImg.value)
@@ -344,7 +354,9 @@ onMounted(async () => {
     if (editItem) {
       store.form = { ...editItem }
       store.form.is_active = editItem.is_active == 1 || editItem.is_active === true
-      if (editItem.content || editItem.thumbnail || isMaxDepthLevel.value) {
+      if (isFolderParent.value) {
+        itemType.value = 'folder'
+      } else if (isMaxDepthLevel.value || editItem.content || editItem.thumbnail) {
         itemType.value = 'article'
       } else {
         itemType.value = 'folder'
