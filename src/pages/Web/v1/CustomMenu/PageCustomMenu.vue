@@ -56,7 +56,7 @@
               <q-avatar size="32px">
                 <img :src="logo">
               </q-avatar>
-              <span class="text-xs font-bold text-slate-700">Humas RSUD dr. Mohamad Saleh</span>
+              <span class="text-xs font-bold text-slate-700">{{ storeApp.header.title || 'RSUD DR. MOHAMAD SALEH' }}</span>
             </div>
 
             <!-- Share Buttons -->
@@ -131,13 +131,21 @@
 <script setup>
 import { pathImg } from 'src/boot/axios'
 import { useCustomMenuWeb } from 'src/stores/web/customMenu'
+import { useAppStore } from 'src/stores/app'
 import { computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import logo from 'src/assets/logos/logo.png'
 
 const route = useRoute()
 const store = useCustomMenuWeb()
+const storeApp = useAppStore()
 const currentUrl = computed(() => window.location.href)
+
+const logo = computed(() => {
+  if (storeApp.logo === null) {
+    return new URL('../../../../assets/logos/logo.png', import.meta.url).href
+  }
+  return pathImg + storeApp.logo
+})
 
 async function loadData(slug) {
   if (slug) {
