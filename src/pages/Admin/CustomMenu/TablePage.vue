@@ -1,8 +1,8 @@
 <template>
   <div class="q-pa-xs">
     <!-- Header Page -->
-    <div class="w-full flex items-center justify-between gap-4 q-mb-md">
-      <div>
+    <div class="row items-center justify-between no-wrap w-full q-mb-md gap-4">
+      <div class="col">
         <h2 class="text-xl font-extrabold text-slate-800 margin-0">
           Manajemen Menu Dinamis Universal
         </h2>
@@ -10,7 +10,7 @@
           Kelola menu utama dan hirarki submenu bertingkat (Tingkat 1, 2, 3+) tanpa batas untuk website RSUD.
         </p>
       </div>
-      <div class="flex items-center gap-2 flex-shrink-0">
+      <div class="row items-center gap-2 flex-shrink-0">
         <q-btn
           v-if="parentId"
           flat
