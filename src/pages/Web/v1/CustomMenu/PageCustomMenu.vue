@@ -49,8 +49,8 @@
               </router-link>
             </div>
 
-            <div v-else class="text-xs text-slate-400 py-2">
-              Menu resmi RSUD dr. Mohamad Saleh Probolinggo.
+            <div v-else class="text-xs text-slate-400 py-2 leading-relaxed">
+              Informasi & Layanan Resmi RSUD dr. Mohamad Saleh Kota Probolinggo.
             </div>
           </div>
         </div>
