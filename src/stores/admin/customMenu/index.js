@@ -44,6 +44,17 @@ export const useAdminCustomMenu = defineStore('admin_custom_menu', {
       }
     },
 
+    async getDetail(id) {
+      if (!id) return null
+      try {
+        const resp = await api.get('/v1/custom_menu/show', { params: { id } })
+        return resp.data?.data || null
+      } catch (error) {
+        console.error('Gagal mengambil detail menu parent admin:', error)
+        return null
+      }
+    },
+
     setForm(key, val) {
       this.form[key] = val
     },
