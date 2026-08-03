@@ -447,6 +447,17 @@ export default {
           }
         }
       ]
+    },
+    {
+      path: '/menu/:slug+',
+      component: () => import('pages/Web/TemplateIndex.vue'),
+      children: [
+        {
+          path: '',
+          name: 'custom-menu-detail',
+          component: () => import('src/pages/Web/v1/CustomMenu/PageCustomMenu.vue')
+        }
+      ]
     }
   ]
 }

@@ -718,6 +718,43 @@ watch(() => storePpid.items, () => handlePpidMenu(route.fullPath))
 watch(() => storePokja.menus, () => handlePokjaMenu(route.fullPath))
 watch(() => storePengaduan.menus, () => handlePengaduanMenu(route.fullPath))
 
+import { useCustomMenuWeb } from 'src/stores/web/customMenu'
+const storeCustomMenu = useCustomMenuWeb()
+
+const handleCustomMenu = async () => {
+  await storeCustomMenu.getWebMenus()
+  const customList = storeCustomMenu.menus
+  if (!customList || customList.length === 0) return
+
+  customList.forEach(m => {
+    const formattedItem = {
+      label: m.nama,
+      href: m.external_link ? m.external_link : `/menu/${m.slug}`,
+      dropdown: m.children && m.children.length > 0,
+      items: m.children?.map(sub => ({
+        label: sub.nama,
+        href: sub.external_link ? sub.external_link : `/menu/${sub.slug}`,
+        submenu: sub.children?.map(sub3 => ({
+          label: sub3.nama,
+          href: sub3.external_link ? sub3.external_link : `/menu/${sub3.slug}`
+        })) || []
+      })) || []
+    }
+
+    const existingIndex = menuItems.findIndex(x => x.label.toLowerCase() === m.nama.toLowerCase() || (x.href && x.href.includes(m.slug)))
+    if (existingIndex !== -1) {
+      menuItems[existingIndex] = { ...menuItems[existingIndex], ...formattedItem }
+    } else {
+      const bukuTamuIndex = menuItems.findIndex(x => x.label === 'Buku Tamu')
+      if (bukuTamuIndex !== -1) {
+        menuItems.splice(bukuTamuIndex, 0, formattedItem)
+      } else {
+        menuItems.push(formattedItem)
+      }
+    }
+  })
+}
+
 const activeNestedSubMap = ref({})
 
 function hasAnyNestedSubmenu(menuItem) {
@@ -766,7 +803,8 @@ onMounted(() => {
     storePokja.getMenu(),
     storePengaduan.getMenu(),
     storeInteraksi.getData(),
-    storeAntrianOnline.getData()
+    storeAntrianOnline.getData(),
+    handleCustomMenu()
   ]).then(() => {
     handleRouteAwal()
   })

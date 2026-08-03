@@ -100,6 +100,18 @@ export default {
       ]
     },
     {
+      path: '/admin/custom-menu',
+      component: () => import('pages/Admin/CustomMenu/IndexPage.vue'),
+      children: [
+        { path: '', name: 'admin.custom-menu', component: () => import('src/pages/Admin/CustomMenu/TablePage.vue') },
+        {
+          path: '/admin/custom-menu/form/:id?',
+          name: 'form.custom-menu',
+          component: () => import('pages/Admin/CustomMenu/FormPage.vue')
+        }
+      ]
+    },
+    {
       path: '/admin/ppid',
       component: () => import('pages/Admin/Ppid/IndexPage.vue'),
       children: [

@@ -115,6 +115,7 @@ import { useRoute } from 'vue-router'
 
 const menus = ref([
   { route: 'admin.dashboard', path: '/admin/dashboard', label: 'Dashboard', icon: 'space_dashboard' },
+  { route: 'admin.custom-menu', path: '/admin/custom-menu', label: 'Manage Menu Dinamis', icon: 'account_tree' },
   { route: 'admin.settings', path: '/admin/settings', label: 'Seting Website', icon: 'settings_suggest' },
   { route: 'admin.berita', path: '/admin/berita', label: 'Manage Berita', icon: 'newspaper' },
   { route: 'admin.pelayanan', path: '/admin/pelayanan', label: 'Manage Pelayanan', icon: 'medical_services' },
