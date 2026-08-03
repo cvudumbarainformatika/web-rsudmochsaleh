@@ -202,15 +202,20 @@ async function fetchParentDetails() {
 }
 
 function canHaveSubmenu(item) {
-  // Jika induk halaman yang dibuka (`parentItem.value`) SUDAH MEMILIKI parent_id (artinya parentItem berada di Level 2+),
-  // Maka anak-anak yang tampil di halaman ini (seperti 'Submenu Ke-3') ADALAH TINGKAT 3 (BATAS KEDALAMAN MAKSIMAL)!
-  // Di Level 3 ini, TOMBOL FOLDER (📁) HILANG BERSIH 100% SAMA SEKALI TIDAK ADA!
-  if (parentItem.value && parentItem.value.parent_id !== null && parentItem.value.parent_id !== undefined) {
-    return false
+  // 1. ATURAN UTAMA: Jika item ini SUDAH MEMILIKI SUBMENU ANAK (children_count > 0),
+  // tombol folder HARUS SELALU TAMPIL agar Admin bisa masuk mengelola/melihat submenu di dalamnya!
+  const hasChildren = item && (
+    (item.children_count && parseInt(item.children_count) > 0) ||
+    (item.children && Array.isArray(item.children) && item.children.length > 0)
+  )
+
+  if (hasChildren) {
+    return true
   }
 
-  // Jika item itu sendiri sudah menginduk ke parent yang memiliki parent_id (Level 3+)
-  if (item && item.parent && item.parent.parent_id !== null && item.parent.parent_id !== undefined) {
+  // 2. ATURAN PEMBATASAN: Jika item BELUM punya anak, dan halaman ini dibuka dari induk yang sudah punya parent_id (Level 3),
+  // sembunyikan tombol folder agar tidak bisa menambah folder turunan baru dari nol.
+  if (parentItem.value && parentItem.value.parent_id !== null && parentItem.value.parent_id !== undefined) {
     return false
   }
 
