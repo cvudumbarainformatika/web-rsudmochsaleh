@@ -208,7 +208,7 @@ import { pathImg } from 'src/boot/axios'
 import { useAdminCustomMenu } from 'src/stores/admin/customMenu'
 import { sanitizeTitle } from 'src/modules/shared'
 import { notifErrVue } from 'src/modules/utils'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
@@ -247,6 +247,16 @@ function imgClick() {
 }
 
 const isTitleDetailTouched = ref(false)
+
+watch(() => store.form.nama, (newNama) => {
+  if (newNama) {
+    const slug = sanitizeTitle(newNama)
+    store.setForm('slug', slug)
+    if (!isTitleDetailTouched.value) {
+      store.setForm('title_detail', newNama)
+    }
+  }
+})
 
 function setSlug(val) {
   const slug = sanitizeTitle(val)
