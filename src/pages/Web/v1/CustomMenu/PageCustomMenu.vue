@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-py-lg">
+  <q-page class="q-py-xl bg-slate-50/60 min-h-screen">
     <!-- Loading State -->
     <div v-if="store.loading" class="text-center py-24">
       <q-spinner-dots color="teal-8" size="48px" />
@@ -24,103 +24,149 @@
       />
     </div>
 
-    <!-- Main Futuristic Article Card (Identik dengan UI Berita Detail) -->
-    <div v-else class="max-w-4xl mx-auto">
-      <div class="bg-white rounded-3xl p-6 md:p-12 border border-slate-200/80 shadow-md">
-        <!-- Article Header (Meta Info & Title) -->
-        <div class="q-mb-lg">
-          <!-- Meta Badge -->
-          <div class="flex items-center gap-3 q-mb-md flex-wrap">
-            <span class="bg-teal-50 border border-teal-200 text-teal-8 text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5">
-              <q-icon name="local_hospital" size="14px" />
-              <span>RSUD DR. MOHAMAD SALEH</span>
-            </span>
+    <!-- Layout 3-Kolom Identik Halaman Berita -->
+    <div v-else class="container-padding">
+      <div class="row q-col-gutter-lg">
+        <!-- 1. LEFT SIDEBAR (col-12 col-md-3): Layanan Terkait -->
+        <div class="col-12 col-md-3">
+          <div class="left-sidebar bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm sticky top-24">
+            <h3 class="text-xs font-extrabold text-slate-900 tracking-tight uppercase text-slate-400 q-mb-md margin-0 flex items-center gap-1.5">
+              <q-icon name="widgets" size="16px" class="text-teal-7" />
+              <span>Layanan Terkait</span>
+            </h3>
 
-            <span v-if="store.activeArticle.parent" class="bg-slate-100 text-slate-700 text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5">
-              <q-icon name="folder" size="14px" class="text-slate-500" />
-              <span>{{ store.activeArticle.parent.nama }}</span>
-            </span>
-          </div>
-
-          <!-- Article Main Title -->
-          <h1 class="text-2xl md:text-4xl font-black text-slate-900 leading-snug margin-0 q-mb-xs">
-            {{ store.activeArticle.title_detail || store.activeArticle.nama }}
-          </h1>
-
-          <!-- Futuristic Underline Line -->
-          <div class="w-20 h-1.5 bg-gradient-to-r from-teal-500 to-emerald-400 rounded-full q-mt-sm q-mb-md" />
-
-          <!-- Share & Author Section -->
-          <div class="flex items-center justify-between pt-2 border-t border-slate-100 flex-wrap gap-4">
-            <div class="flex items-center gap-2">
-              <q-avatar size="32px">
-                <img :src="logo">
-              </q-avatar>
-              <span class="text-xs font-bold text-slate-700">{{ storeApp.header.title || 'RSUD DR. MOHAMAD SALEH' }}</span>
+            <!-- Daftar Child / Sibling Submenu -->
+            <div v-if="relatedLinks && relatedLinks.length > 0" class="space-y-1.5">
+              <router-link
+                v-for="link in relatedLinks"
+                :key="link.id"
+                :to="`/menu/${link.slug}`"
+                class="px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between group border"
+                :class="link.slug === store.activeArticle.slug ? 'bg-teal-50 border-teal-300 text-teal-8 font-black shadow-xs' : 'border-slate-100 text-slate-700 hover:bg-slate-50 hover:text-slate-900'"
+              >
+                <span class="line-clamp-1">{{ link.nama }}</span>
+                <q-icon name="chevron_right" size="16px" class="text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+              </router-link>
             </div>
 
-            <!-- Share Buttons (ShareNetwork Identik Berita Detail) -->
-            <div class="flex items-center gap-2">
-              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Bagikan:</span>
-              <div class="flex items-center gap-2">
-                <ShareNetwork
-                  v-for="sharing in sharings"
-                  :key="sharing.network"
-                  :network="sharing.network"
-                  :url="currentUrl"
-                  :title="store.activeArticle.title_detail || store.activeArticle.nama || 'No Title'"
-                  :description="`Informasi ${store.activeArticle.nama}`"
-                  :quote="`Web - ${storeApp.header.title}`"
-                  hashtags="rsud,informasi,layanan"
-                  class="share-button"
-                  :class="sharing.network"
-                >
-                  <q-icon :name="sharing.icon" />
-                </ShareNetwork>
-              </div>
+            <div v-else class="text-xs text-slate-400 py-2">
+              Menu resmi RSUD dr. Mohamad Saleh Probolinggo.
             </div>
           </div>
         </div>
 
-        <!-- Featured Image Banner (Jika Ada) -->
-        <div v-if="store.activeArticle.thumbnail" class="aspect-video w-full rounded-2xl overflow-hidden bg-slate-100 q-mb-xl border border-slate-200/60 shadow-sm">
-          <img
-            :src="pathImg + store.activeArticle.thumbnail"
-            :alt="store.activeArticle.nama"
-            class="w-full h-full object-cover"
-          />
+        <!-- 2. CENTER MAIN CONTENT (col-12 col-md-6): Konten Artikel Utama -->
+        <div class="col-12 col-md-6">
+          <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm">
+            <!-- Article Header -->
+            <div class="q-mb-lg">
+              <!-- Meta Badge Penamaan Submenu Kategori -->
+              <div class="flex items-center gap-2 q-mb-md flex-wrap">
+                <span class="bg-teal-50 border border-teal-200 text-teal-8 text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5">
+                  <q-icon name="folder" size="14px" />
+                  <span>{{ parentCategoryName }}</span>
+                </span>
+
+                <span class="bg-slate-100 text-slate-700 text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5">
+                  <q-icon name="local_hospital" size="14px" class="text-slate-500" />
+                  <span>RSUD DR. MOHAMAD SALEH</span>
+                </span>
+              </div>
+
+              <!-- Article Main Title -->
+              <h1 class="text-2xl md:text-3xl font-black text-slate-900 leading-snug margin-0 q-mb-xs">
+                {{ store.activeArticle.title_detail || store.activeArticle.nama }}
+              </h1>
+
+              <!-- Futuristic Underline Line -->
+              <div class="w-16 h-1.5 bg-gradient-to-r from-teal-500 to-emerald-400 rounded-full q-mt-sm q-mb-md" />
+
+              <!-- Author & Share Section -->
+              <div class="flex items-center justify-between pt-2 border-t border-slate-100 flex-wrap gap-4">
+                <div class="flex items-center gap-2">
+                  <q-avatar size="28px">
+                    <img :src="logo">
+                  </q-avatar>
+                  <span class="text-xs font-bold text-slate-700">{{ storeApp.header.title || 'RSUD DR. MOHAMAD SALEH' }}</span>
+                </div>
+
+                <!-- Share Buttons (ShareNetwork Identik Berita Detail) -->
+                <div class="flex items-center gap-2">
+                  <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Bagikan:</span>
+                  <div class="flex items-center gap-1.5">
+                    <ShareNetwork
+                      v-for="sharing in sharings"
+                      :key="sharing.network"
+                      :network="sharing.network"
+                      :url="currentUrl"
+                      :title="store.activeArticle.title_detail || store.activeArticle.nama || 'No Title'"
+                      :description="`Informasi ${store.activeArticle.nama}`"
+                      :quote="`Web - ${storeApp.header.title}`"
+                      hashtags="rsud,informasi,layanan"
+                      class="share-button"
+                      :class="sharing.network"
+                    >
+                      <q-icon :name="sharing.icon" />
+                    </ShareNetwork>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Featured Image Banner (Jika Ada) -->
+            <div v-if="store.activeArticle.thumbnail" class="aspect-video w-full rounded-2xl overflow-hidden bg-slate-100 q-mb-lg border border-slate-200/60 shadow-xs">
+              <img
+                :src="pathImg + store.activeArticle.thumbnail"
+                :alt="store.activeArticle.nama"
+                class="w-full h-full object-cover"
+              />
+            </div>
+
+            <!-- Article Body Content (WYSIWYG HTML) -->
+            <div
+              class="article-body-content text-slate-800 leading-relaxed q-mb-md"
+              v-html="store.activeArticle.content || '<p>Belum ada isi konten artikel untuk menu ini.</p>'"
+            />
+          </div>
         </div>
 
-        <!-- Article Body Content (WYSIWYG HTML) -->
-        <div
-          class="article-body-content text-slate-800 leading-relaxed q-mb-xl"
-          v-html="store.activeArticle.content || '<p>Belum ada isi konten artikel untuk menu ini.</p>'"
-        />
+        <!-- 3. RIGHT SIDEBAR (col-12 col-md-3): Berita Terpopuler -->
+        <div class="col-12 col-md-3">
+          <div class="right-sidebar bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm sticky top-24">
+            <h3 class="text-xs font-extrabold text-slate-900 tracking-tight uppercase text-slate-400 q-mb-md margin-0 flex items-center gap-1.5">
+              <q-icon name="trending_up" size="16px" class="text-teal-7" />
+              <span>Berita Terpopuler</span>
+            </h3>
 
-        <!-- Submenu Terkait (Jika Memiliki Submenu Anak) -->
-        <div v-if="store.activeArticle.children && store.activeArticle.children.length > 0" class="pt-8 border-t border-slate-100">
-          <h3 class="text-base font-black text-slate-900 margin-0 q-mb-md flex items-center gap-2">
-            <q-icon name="grid_view" size="20px" class="text-teal-6" />
-            <span>Submenu & Layanan Terkait</span>
-          </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <router-link
-              v-for="child in store.activeArticle.children"
-              :key="child.id"
-              :to="`/menu/${child.slug}`"
-              class="p-4 rounded-2xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:border-teal-400 hover:shadow-md transition-all group flex flex-col justify-between"
-            >
-              <div>
-                <q-icon name="article" size="24px" class="text-teal-7 group-hover:scale-110 transition-transform q-mb-sm" />
-                <h4 class="text-sm font-bold text-slate-800 group-hover:text-teal-8 margin-0 leading-snug">
-                  {{ child.nama }}
-                </h4>
+            <div v-if="popularNews && popularNews.length > 0" class="space-y-4">
+              <div
+                v-for="(pop, i) in popularNews.slice(0, 5)"
+                :key="i"
+                class="popular-item flex gap-3 items-center group cursor-pointer border-b border-slate-100 q-pb-xs last:border-0"
+                @click="router.push(`/berita/${pop.slug}`)"
+              >
+                <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
+                  <q-img
+                    :src="pathImg + pop.thumbnail"
+                    fit="cover"
+                    class="w-full h-full group-hover:scale-105 transition-transform duration-300"
+                    alt="Popular Thumbnail"
+                  />
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-xs font-bold text-slate-900 group-hover:text-teal-600 transition-colors line-clamp-2 leading-snug margin-0">
+                    {{ pop.judul }}
+                  </h4>
+                  <div class="text-[10px] text-slate-400 q-mt-xs">
+                    {{ dateHuman(pop.tanggal) }}
+                  </div>
+                </div>
               </div>
-              <div class="flex items-center justify-between text-xs font-bold text-teal-7 mt-3 pt-2 border-t border-slate-100">
-                <span>Buka Halaman</span>
-                <q-icon name="arrow_forward" size="14px" class="group-hover:translate-x-1 transition-transform" />
-              </div>
-            </router-link>
+            </div>
+
+            <div v-else class="text-xs text-slate-400 py-2">
+              Berita resmi RSUD dr. Mohamad Saleh Probolinggo.
+            </div>
           </div>
         </div>
       </div>
@@ -131,13 +177,18 @@
 <script setup>
 import { pathImg } from 'src/boot/axios'
 import { useCustomMenuWeb } from 'src/stores/web/customMenu'
+import { useBeritaWeb } from 'src/stores/web/berita'
 import { useAppStore } from 'src/stores/app'
+import { dateHuman } from 'src/modules/formatter'
 import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
+const router = useRouter()
 const store = useCustomMenuWeb()
+const storeBerita = useBeritaWeb()
 const storeApp = useAppStore()
+
 const currentUrl = computed(() => window.location.href)
 
 const sharings = ref([
@@ -153,9 +204,36 @@ const logo = computed(() => {
   return pathImg + storeApp.logo
 })
 
+// Penamaan Submenu Kategori di Banner Meta Badge
+const parentCategoryName = computed(() => {
+  if (!store.activeArticle) return 'MENU RSUD'
+  if (store.activeArticle.parent) {
+    return store.activeArticle.parent.nama.toUpperCase()
+  }
+  return store.activeArticle.nama.toUpperCase()
+})
+
+// Daftar Layanan Terkait (Sidebar Kiri)
+const relatedLinks = computed(() => {
+  if (!store.activeArticle) return []
+  if (store.activeArticle.children && store.activeArticle.children.length > 0) {
+    return store.activeArticle.children
+  }
+  if (store.activeArticle.parent && store.activeArticle.parent.children) {
+    return store.activeArticle.parent.children
+  }
+  return []
+})
+
+// Data Berita Terpopuler (Sidebar Kanan)
+const popularNews = computed(() => storeBerita.populars || [])
+
 async function loadData(slug) {
   if (slug) {
     await store.getArticleBySlug(slug)
+    if (!storeBerita.populars || storeBerita.populars.length === 0) {
+      await storeBerita.getData()
+    }
   }
 }
 
@@ -180,13 +258,13 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   transition: all 0.3s ease;
   cursor: pointer;
   text-decoration: none;
-  font-size: 15px;
+  font-size: 14px;
 
   &:hover {
     transform: translateY(-2px);
@@ -210,25 +288,25 @@ onMounted(() => {
 }
 
 .article-body-content {
-  font-size: 1.05rem;
-  line-height: 1.9;
+  font-size: 1.025rem;
+  line-height: 1.85;
   color: #1e293b;
   overflow-wrap: break-word;
 
   :deep(p) {
-    margin-bottom: 1.35rem;
+    margin-bottom: 1.25rem;
   }
   :deep(h1), :deep(h2), :deep(h3), :deep(h4) {
     font-weight: 800;
     color: #0f172a;
-    margin-top: 1.75rem;
+    margin-top: 1.5rem;
     margin-bottom: 0.75rem;
   }
   :deep(img) {
     max-width: 100% !important;
     height: auto !important;
-    border-radius: 1.25rem;
-    margin: 1.5rem 0;
+    border-radius: 1rem;
+    margin: 1.25rem 0;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   }
   :deep(ul), :deep(ol) {
