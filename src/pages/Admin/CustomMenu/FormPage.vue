@@ -8,7 +8,7 @@
             {{ isEdit ? (parentItem ? `Edit Submenu "${store.form.nama}"` : `Edit Menu Utama "${store.form.nama}"`) : (parentItem ? `Tambah Submenu untuk "${parentItem.nama}"` : 'Tambah Menu Utama Baru') }}
           </h2>
           <p class="text-xs text-slate-500 margin-0">
-            {{ parentItem ? `Submenu ini berupa artikel yang tersimpan di bawah hirarki "${parentItem.nama}".` : 'Menu utama ini bertindak sebagai Kategori / Induk di Header Navbar.' }}
+            {{ parentItem ? `Submenu ini berupa artikel yang tersimpan di bawah hirarki "${parentItem.nama}".` : 'Menu utama ini akan langsung tampil di Header Navbar publik.' }}
           </p>
         </div>
         <q-btn
@@ -34,48 +34,19 @@
         </div>
       </div>
 
-      <!-- FORM A: Jika Tambah MENU UTAMA (Tingkat 1) -> Form Ringkas Kategori (Tanpa Editor) -->
+      <!-- FORM A: Jika Tambah MENU UTAMA (Tingkat 1) -> Form Ultra Simple (HANYA NAMA MENU!) -->
       <q-form v-if="!parentItem" @submit="onSave">
-        <div class="max-w-xl mx-auto py-4">
+        <div class="max-w-md mx-auto py-6">
           <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 shadow-xs space-y-4">
             <div>
               <span class="text-xs font-bold text-slate-700 block q-mb-xs">Nama Menu Utama*</span>
               <app-input
                 v-model="store.form.nama"
                 placeholder="Contoh: Interaksi, Antrian Online, Layanan Unggulan..."
+                class="bg-white"
                 @change="setSlug"
               />
             </div>
-
-            <!-- Dropzone Interactive Thumbnail -->
-            <div>
-              <span class="text-xs font-bold text-slate-700 block q-mb-xs">Gambar Icon / Thumbnail (Opsional)</span>
-              <div
-                class="thumbnail-dropzone border-2 border-dashed border-slate-300 hover:border-teal-500 rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 bg-white hover:bg-teal-50/20 relative h-36 flex items-center justify-center shadow-xs"
-                @click="imgClick()"
-              >
-                <img
-                  :src="previewImage"
-                  alt="Thumbnail Preview"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  @error="handleImgError"
-                />
-                <div class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center text-white backdrop-blur-[2px]">
-                  <q-icon name="cloud_upload" size="28px" class="q-mb-xs" />
-                  <span class="text-[11px] font-bold uppercase tracking-wider">Klik untuk Pilih / Ganti Gambar</span>
-                </div>
-              </div>
-            </div>
-
-            <q-file
-              ref="fileRef"
-              v-model="tempImg"
-              filled
-              dense
-              label="Gambar Thumbnail"
-              accept="image/*"
-              class="hidden"
-            />
 
             <!-- Slug Transparan -->
             <div>
@@ -84,6 +55,7 @@
                 v-model="store.form.slug"
                 readonly
                 valid
+                class="bg-white"
               />
             </div>
 
@@ -100,7 +72,7 @@
                 color="primary"
                 class="full-width rounded-xl font-bold py-3 shadow-md hover:shadow-lg transition-all"
                 icon="save"
-                label="Simpan Kategori Menu Utama"
+                label="Simpan Menu Utama"
                 :loading="store.loading"
                 no-caps
               />
@@ -109,7 +81,7 @@
         </div>
       </q-form>
 
-      <!-- FORM B: Jika Tambah SUBMENU KONTEN -> Form Artikel Lengkap dengan Editor -->
+      <!-- FORM B: Jika Tambah SUBMENU KONTEN -> Form Artikel Lengkap dengan Editor & Thumbnail -->
       <q-form v-else @submit="onSave">
         <div class="row q-col-gutter-lg">
           <!-- Kolom Kiri: Nama & Editor Artikel -->
@@ -135,7 +107,7 @@
           <div class="col-md-4 col-lg-4 col-xl-4 col-xs-12 col-sm-12">
             <!-- Dropzone Interactive Thumbnail -->
             <div class="q-mb-md">
-              <span class="text-xs font-bold text-slate-700 block q-mb-xs">Gambar Thumbnail (Opsional)</span>
+              <span class="text-xs font-bold text-slate-700 block q-mb-xs">Gambar Banner Artikel (Opsional)</span>
               <div
                 class="thumbnail-dropzone border-2 border-dashed border-slate-300 hover:border-teal-500 rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 bg-slate-50 hover:bg-teal-50/20 relative min-h-[180px] flex items-center justify-center shadow-xs"
                 @click="imgClick()"
@@ -179,7 +151,7 @@
               <q-toggle v-model="store.form.is_active" color="primary" size="sm" />
             </div>
 
-            <!-- Tombol Simpan (Primary Color Theme) -->
+            <!-- Tombol Simpan -->
             <div>
               <q-btn
                 type="submit"
