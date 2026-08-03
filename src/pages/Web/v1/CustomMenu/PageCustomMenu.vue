@@ -55,9 +55,9 @@
           </div>
         </div>
 
-        <!-- 2. CENTER MAIN CONTENT (col-12 col-md-6): Konten Artikel Utama -->
-        <div class="col-12 col-md-6">
-          <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm">
+        <!-- 2. CENTER MAIN CONTENT (col-12 col-md-9): Konten Artikel Utama Lapang -->
+        <div class="col-12 col-md-9">
+          <div class="bg-white rounded-3xl p-6 md:p-10 border border-slate-200/80 shadow-sm">
             <!-- Article Header -->
             <div class="q-mb-lg">
               <!-- Meta Badge Penamaan Submenu Kategori -->
@@ -127,42 +127,6 @@
               class="article-body-content text-slate-800 leading-relaxed q-mb-md"
               v-html="store.activeArticle.content || '<p>Belum ada isi konten artikel untuk menu ini.</p>'"
             />
-          </div>
-        </div>
-
-        <!-- 3. RIGHT SIDEBAR (col-12 col-md-3): [Parent Header] Lainnya -->
-        <div class="col-12 col-md-3">
-          <div class="right-sidebar bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm sticky top-24">
-            <h3 class="text-xs font-extrabold text-slate-900 tracking-tight uppercase text-slate-400 q-mb-md margin-0 flex items-center gap-1.5">
-              <q-icon name="explore" size="16px" class="text-teal-7" />
-              <span>{{ rightSidebarTitle }}</span>
-            </h3>
-
-            <div v-if="otherCategoryItems && otherCategoryItems.length > 0" class="space-y-3">
-              <router-link
-                v-for="item in otherCategoryItems.slice(0, 6)"
-                :key="item.id"
-                :to="`/menu/${item.slug}`"
-                class="popular-item flex gap-3 items-center group cursor-pointer border-b border-slate-100 q-pb-2 last:border-0 text-decoration-none"
-              >
-                <div class="w-10 h-10 rounded-xl overflow-hidden bg-teal-50 border border-teal-100 flex items-center justify-center flex-shrink-0 text-teal-7 group-hover:bg-teal-600 group-hover:text-white transition-colors">
-                  <q-icon name="article" size="18px" />
-                </div>
-                <div class="flex-1 min-w-0">
-                  <h4 class="text-xs font-bold text-slate-800 group-hover:text-teal-7 transition-colors line-clamp-2 leading-snug margin-0">
-                    {{ item.nama }}
-                  </h4>
-                  <div class="text-[10px] text-teal-7 font-bold q-mt-xs flex items-center gap-1">
-                    <span>Lihat Halaman</span>
-                    <q-icon name="arrow_forward" size="10px" class="group-hover:translate-x-0.5 transition-transform" />
-                  </div>
-                </div>
-              </router-link>
-            </div>
-
-            <div v-else class="text-xs text-slate-400 py-2">
-              Layanan resmi RSUD dr. Mohamad Saleh Probolinggo.
-            </div>
           </div>
         </div>
       </div>
