@@ -120,6 +120,7 @@
         <!-- Tombol Aksi Kanan (Right-Locked Alignment) -->
         <div class="flex items-center gap-1.5 flex-shrink-0 ml-auto">
           <q-btn
+            v-if="canHaveSubmenu(item)"
             dense
             flat
             round
@@ -198,6 +199,14 @@ function openFormAdd() {
   } else {
     router.push('/admin/custom-menu/form')
   }
+}
+
+function canHaveSubmenu(item) {
+  // Jika induknya memiliki parent_id (Level 2), maka anak di halaman ini berada di Level 3 (Batas Kedalaman).
+  if (parentItem.value && parentItem.value.parent_id !== null) {
+    return false
+  }
+  return true
 }
 
 function openFormEdit(item) {

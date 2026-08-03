@@ -37,8 +37,12 @@
           </div>
         </div>
 
-        <!-- Sebelah Kanan: 2 Tombol Switcher (Folder vs Halaman Artikel Konten) -->
-        <div class="bg-white/90 p-1.5 rounded-xl flex items-center gap-2 border border-teal-200 shadow-xs ml-auto">
+        <!-- Sebelah Kanan: 2 Tombol Switcher / Badge Batas Kedalaman -->
+        <div v-if="isMaxDepthLevel" class="bg-amber-100/90 text-amber-900 border border-amber-300 p-2 rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs ml-auto">
+          <q-icon name="lock" size="18px" class="text-amber-8" />
+          <span>📌 Batas Maksimal Kedalaman (Level 3): Format Otomatis Artikel Konten</span>
+        </div>
+        <div v-else class="bg-white/90 p-1.5 rounded-xl flex items-center gap-2 border border-teal-200 shadow-xs ml-auto">
           <button
             type="button"
             class="cursor-pointer py-2 px-3.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 style-pointer"
@@ -51,7 +55,7 @@
           <button
             type="button"
             class="cursor-pointer py-2 px-3.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 style-pointer"
-            :class="itemType === 'article' ? 'bg-teal-800 text-white shadow-sm font-black' : 'text-slate-700 hover:bg-teal-100/60'"
+            :class="itemType === 'article' ? 'bg-teal-800 text-white shadow-sm font-black' : 'text-slate-600 hover:bg-teal-100/60'"
             @click="itemType = 'article'"
           >
             <q-icon name="article" size="16px" />
@@ -336,7 +340,7 @@ onMounted(async () => {
     if (editItem) {
       store.form = { ...editItem }
       store.form.is_active = editItem.is_active == 1 || editItem.is_active === true
-      if (editItem.content || editItem.thumbnail) {
+      if (editItem.content || editItem.thumbnail || isMaxDepthLevel.value) {
         itemType.value = 'article'
       } else {
         itemType.value = 'folder'
@@ -345,7 +349,11 @@ onMounted(async () => {
   } else {
     store.resetForm(parentIdQuery.value ? parseInt(parentIdQuery.value) : null)
     store.form.is_active = true
-    itemType.value = 'folder'
+    if (isMaxDepthLevel.value) {
+      itemType.value = 'article'
+    } else {
+      itemType.value = 'folder'
+    }
   }
 })
 </script>
