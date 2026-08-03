@@ -33,17 +33,6 @@
       </div>
     </div>
 
-    <!-- Parent Breadcrumb (Jika sedang di Submenu Level 2/3+) -->
-    <div v-if="parentItem" class="bg-teal-50 border border-teal-200 rounded-2xl p-3.5 q-mb-md flex items-center justify-between">
-      <div class="flex items-center gap-2 text-xs text-teal-900 font-bold">
-        <q-icon name="folder_open" size="18px" class="text-teal-7" />
-        <span>Submenu dari: <strong class="text-teal-900 text-sm font-black">{{ parentItem.nama }}</strong> ({{ parentItem.slug }})</span>
-      </div>
-      <q-badge color="teal-8" class="font-bold uppercase tracking-wider text-[10px] px-2.5 py-1">
-        Nesting Level: {{ getParentDepth(parentItem) }}
-      </q-badge>
-    </div>
-
     <!-- Search & Filter Bar -->
     <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-xs q-mb-md flex items-center justify-between gap-4">
       <div class="w-72">
