@@ -59,25 +59,25 @@
               <span class="text-xs font-bold text-slate-700">{{ storeApp.header.title || 'RSUD DR. MOHAMAD SALEH' }}</span>
             </div>
 
-            <!-- Share Buttons -->
+            <!-- Share Buttons (ShareNetwork Identik Berita Detail) -->
             <div class="flex items-center gap-2">
               <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Bagikan:</span>
-              <a
-                :href="`https://api.whatsapp.com/send?text=${encodeURIComponent(store.activeArticle.nama + ' - ' + currentUrl)}`"
-                target="_blank"
-                class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition-all shadow-xs"
-                title="Bagikan ke WhatsApp"
-              >
-                <q-icon name="fa-brands fa-whatsapp" size="16px" />
-              </a>
-              <a
-                :href="`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`"
-                target="_blank"
-                class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-all shadow-xs"
-                title="Bagikan ke Facebook"
-              >
-                <q-icon name="fa-brands fa-facebook-f" size="14px" />
-              </a>
+              <div class="flex items-center gap-2">
+                <ShareNetwork
+                  v-for="sharing in sharings"
+                  :key="sharing.network"
+                  :network="sharing.network"
+                  :url="currentUrl"
+                  :title="store.activeArticle.title_detail || store.activeArticle.nama || 'No Title'"
+                  :description="`Informasi ${store.activeArticle.nama}`"
+                  :quote="`Web - ${storeApp.header.title}`"
+                  hashtags="rsud,informasi,layanan"
+                  class="share-button"
+                  :class="sharing.network"
+                >
+                  <q-icon :name="sharing.icon" />
+                </ShareNetwork>
+              </div>
             </div>
           </div>
         </div>
@@ -132,13 +132,19 @@
 import { pathImg } from 'src/boot/axios'
 import { useCustomMenuWeb } from 'src/stores/web/customMenu'
 import { useAppStore } from 'src/stores/app'
-import { computed, onMounted, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const store = useCustomMenuWeb()
 const storeApp = useAppStore()
 const currentUrl = computed(() => window.location.href)
+
+const sharings = ref([
+  { network: 'whatsapp', icon: 'mdi-whatsapp' },
+  { network: 'facebook', icon: 'mdi-facebook' },
+  { network: 'twitter', icon: 'mdi-twitter' }
+])
 
 const logo = computed(() => {
   if (storeApp.logo === null) {
@@ -168,6 +174,39 @@ onMounted(() => {
 <style lang="scss" scoped>
 .margin-0 {
   margin: 0;
+}
+
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  &.whatsapp {
+    background: #25D366;
+    color: white;
+  }
+
+  &.facebook {
+    background: #1877F2;
+    color: white;
+  }
+
+  &.twitter {
+    background: #1DA1F2;
+    color: white;
+  }
 }
 
 .article-body-content {
