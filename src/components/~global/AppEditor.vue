@@ -281,6 +281,17 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
+  .editor-wrapper {
+    .ProseMirror,
+    .ProseMirror-focused,
+    div[contenteditable="true"]:focus,
+    [contenteditable="true"] {
+      outline: none !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+  }
+
   .editor {
     border: none !important;
     min-height: 420px;
