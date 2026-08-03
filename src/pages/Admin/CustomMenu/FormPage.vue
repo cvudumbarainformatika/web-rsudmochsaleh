@@ -23,9 +23,9 @@
         />
       </div>
 
-      <!-- Banner Info Submenu & Inputan Judul Artikel Inline (Desktop) -->
+      <!-- Banner Info Submenu & Switcher Inline (Desktop) -->
       <div class="bg-teal-50 border border-teal-200 rounded-2xl p-3.5 q-mb-lg flex flex-col md:flex-row items-center justify-between gap-4">
-        <!-- Kiri: Hirarki Induk Kategori -->
+        <!-- Sebelah Kiri: Hirarki Induk Kategori -->
         <div class="flex items-center gap-3">
           <q-icon name="folder_special" size="24px" class="text-teal-7" />
           <div>
@@ -37,41 +37,27 @@
           </div>
         </div>
 
-        <!-- Kanan: Inputan Box Judul Lengkap Halaman Artikel (Otomatis Terisi Sama - Bisa Diubah) -->
-        <div class="flex items-center gap-2 w-full md:w-auto min-w-[280px] md:min-w-[400px] ml-auto">
-          <q-icon name="edit_note" size="22px" class="text-teal-7 flex-shrink-0" />
-          <div class="w-full">
-            <span class="text-[10px] font-black text-teal-900 uppercase tracking-wider block">Judul Lengkap Halaman Artikel (Otomatis Terisi Sama - Bisa Diubah)</span>
-            <app-input
-              v-model="store.form.title_detail"
-              placeholder="Otomatis terisi sama dengan Nama Menu..."
-              class="bg-white text-xs"
-              @update:model-value="onTitleDetailInput"
-            />
-          </div>
+        <!-- Sebelah Kanan: 2 Tombol Switcher (Folder vs Halaman Artikel Konten) -->
+        <div class="bg-white/90 p-1.5 rounded-xl flex items-center gap-2 border border-teal-200 shadow-xs ml-auto">
+          <button
+            type="button"
+            class="cursor-pointer py-2 px-3.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 style-pointer"
+            :class="itemType === 'folder' ? 'bg-teal-800 text-white shadow-sm font-black' : 'text-slate-700 hover:bg-teal-100/60'"
+            @click="itemType = 'folder'"
+          >
+            <q-icon name="folder" size="16px" />
+            <span>📁 Folder / Submenu</span>
+          </button>
+          <button
+            type="button"
+            class="cursor-pointer py-2 px-3.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 style-pointer"
+            :class="itemType === 'article' ? 'bg-teal-800 text-white shadow-sm font-black' : 'text-slate-700 hover:bg-teal-100/60'"
+            @click="itemType = 'article'"
+          >
+            <q-icon name="article" size="16px" />
+            <span>📄 Halaman Artikel Konten</span>
+          </button>
         </div>
-      </div>
-
-      <!-- Pilihan Jenis Item (Kategori Menu vs Artikel Konten) -->
-      <div class="bg-slate-100 p-1.5 rounded-2xl flex items-center gap-2 max-w-md mx-auto q-mb-lg border border-slate-200/80">
-        <button
-          type="button"
-          class="cursor-pointer flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 style-pointer"
-          :class="itemType === 'folder' ? 'bg-white text-teal-8 shadow-sm font-black' : 'text-slate-600 hover:text-slate-900'"
-          @click="itemType = 'folder'"
-        >
-          <q-icon name="folder" size="18px" />
-          <span>📁 Folder / Kategori Menu</span>
-        </button>
-        <button
-          type="button"
-          class="cursor-pointer flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 style-pointer"
-          :class="itemType === 'article' ? 'bg-white text-teal-8 shadow-sm font-black' : 'text-slate-600 hover:text-slate-900'"
-          @click="itemType = 'article'"
-        >
-          <q-icon name="article" size="18px" />
-          <span>📄 Halaman Artikel Konten</span>
-        </button>
       </div>
 
       <!-- MODE 1: FOLDER / KATEGORI MENU (HANYA INPUT NAMA MENU - TANPA EDITOR!) -->
