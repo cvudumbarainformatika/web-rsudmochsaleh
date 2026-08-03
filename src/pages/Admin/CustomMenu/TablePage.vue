@@ -202,10 +202,17 @@ function openFormAdd() {
 }
 
 function canHaveSubmenu(item) {
-  // Jika induknya memiliki parent_id (Level 2), maka anak di halaman ini berada di Level 3 (Batas Kedalaman).
-  if (parentItem.value && parentItem.value.parent_id !== null) {
+  // 1. Jika halaman yang sedang dibuka memuat parentItem dan parentItem itu sendiri punya parent_id (artinya sedang di Level 2+),
+  // maka item-item yang tampil di daftar ini berada di Level 3+ -> TIDAK BISA MEMILIKI SUBMENU LAGI (TOMBOL FOLDER DIBERSIHKAN).
+  if (parentItem.value && parentItem.value.parent_id !== null && parentItem.value.parent_id !== undefined) {
     return false
   }
+
+  // 2. Jika item itu sendiri sudah punya parent yang memiliki parent_id (Level 3+)
+  if (item && item.parent && item.parent.parent_id !== null && item.parent.parent_id !== undefined) {
+    return false
+  }
+
   return true
 }
 

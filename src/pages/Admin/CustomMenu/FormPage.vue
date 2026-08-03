@@ -236,6 +236,10 @@ const parentIdQuery = computed(() => {
   return (p && p !== 'null' && p !== '0') ? p : null
 })
 
+const isMaxDepthLevel = computed(() => {
+  return !!(parentItem.value && parentItem.value.parent_id !== null && parentItem.value.parent_id !== undefined)
+})
+
 const previewImage = computed(() => {
   if (tempImg.value !== null) {
     return URL.createObjectURL(tempImg.value)
