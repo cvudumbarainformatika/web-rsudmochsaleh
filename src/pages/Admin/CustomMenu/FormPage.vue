@@ -24,7 +24,7 @@
       </div>
 
       <!-- Banner Info Submenu & Judul Artikel Inline (Desktop) -->
-      <div class="bg-teal-50 border border-teal-200 rounded-2xl p-4 q-mb-lg flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="bg-teal-50 border border-teal-200 rounded-2xl p-3.5 q-mb-lg flex flex-col md:flex-row items-center justify-between gap-4">
         <!-- Kiri: Hirarki Induk Kategori -->
         <div class="flex items-center gap-3">
           <q-icon name="folder_special" size="24px" class="text-teal-7" />
@@ -37,23 +37,17 @@
           </div>
         </div>
 
-        <!-- Kanan: Judul Lengkap Halaman Artikel (Inline Selalu Tampil) -->
-        <div class="flex items-center gap-2 w-full md:w-auto min-w-[280px] md:min-w-[380px] ml-auto">
-          <q-icon name="edit_note" size="22px" class="text-teal-7 flex-shrink-0" />
-          <div class="w-full">
-            <span class="text-[10px] font-black text-teal-900 uppercase tracking-wider block">Judul Halaman Artikel (Otomatis Terisi Sama)</span>
-            <app-input
-              v-model="store.form.title_detail"
-              placeholder="Otomatis terisi sama dengan Nama Menu..."
-              class="bg-white text-xs"
-              @update:model-value="onTitleDetailInput"
-            />
+        <!-- Kanan: Info Judul Artikel Ringkas -->
+        <div class="flex items-center gap-2">
+          <q-icon name="article" size="20px" class="text-teal-7" />
+          <div class="text-xs text-teal-900 font-bold">
+            Judul Artikel: <strong class="text-teal-950 font-black text-sm">{{ store.form.title_detail || store.form.nama || '-' }}</strong>
           </div>
         </div>
       </div>
 
       <!-- Pilihan Jenis Item (Kategori Menu vs Artikel Konten) -->
-      <div class="bg-slate-100 p-1.5 rounded-2xl flex items-center gap-2 max-w-md mx-auto q-mb-lg border border-slate-200/80">
+      <div class="bg-slate-100 p-1.5 rounded-2xl flex items-center gap-2 max-w-xl mx-auto q-mb-lg border border-slate-200/80">
         <button
           type="button"
           class="cursor-pointer flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 style-pointer"
@@ -70,7 +64,7 @@
           @click="itemType = 'article'"
         >
           <q-icon name="article" size="18px" />
-          <span>📄 Halaman Artikel Konten</span>
+          <span>📄 Judul Lengkap Halaman Artikel (Otomatis Terisi Sama - Bisa Diubah)</span>
         </button>
       </div>
 
