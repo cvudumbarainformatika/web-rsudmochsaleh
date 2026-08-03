@@ -26,6 +26,7 @@ export const useBukuTamuWeb = defineStore('bukutamu_web', {
     adminLoading: false,
     adminFilterStatus: 'all',
     adminFilterRating: 'all',
+    adminFilterPublish: 'all',
     adminStats: {
       total: 0,
       avg_rating: 5.0,
@@ -104,7 +105,8 @@ export const useBukuTamuWeb = defineStore('bukutamu_web', {
             page: page,
             q: this.searchQuery,
             status: this.adminFilterStatus,
-            rating: this.adminFilterRating
+            rating: this.adminFilterRating,
+            publish: this.adminFilterPublish
           }
         })
         this.adminItems = resp.data?.data || []

@@ -99,6 +99,26 @@
             @update:model-value="store.getAdminData(1)"
           />
         </div>
+
+        <!-- Filter Status Publikasi -->
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold text-slate-700">Publikasi:</span>
+          <q-select
+            v-model="store.adminFilterPublish"
+            dense
+            outlined
+            emit-value
+            map-options
+            options-dense
+            class="bg-slate-50 text-xs w-40"
+            :options="[
+              { label: 'Semua Status', value: 'all' },
+              { label: '🟢 Dipublikasikan', value: 'published' },
+              { label: '⚪ Disembunyikan', value: 'hidden' }
+            ]"
+            @update:model-value="store.getAdminData(1)"
+          />
+        </div>
       </div>
 
       <div class="w-full lg:w-72">
