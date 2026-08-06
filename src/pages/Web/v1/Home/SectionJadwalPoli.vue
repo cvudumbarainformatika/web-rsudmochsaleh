@@ -99,8 +99,8 @@
                 <div class="photo-overlay-top" />
 
                 <!-- Status Badge (Top Right) -->
-                <div class="status-badge-ss text-xs font-bold" :class="item.status === 'AKTIF' ? 'status-active' : 'status-inactive'">
-                  {{ item.status || 'AKTIF' }}
+                <div class="status-badge-ss text-xs font-bold" :class="getScheduleStatus(item) === 'AKTIF' ? 'status-active' : 'status-inactive'">
+                  {{ getScheduleStatus(item) }}
                 </div>
               </div>
 
@@ -179,7 +179,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { api2 } from 'src/boot/axios'
+import { api, api2 } from 'src/boot/axios'
 import doctorFemaleAvatar from 'src/assets/images/doctor-female.webp'
 import doctorMaleAvatar from 'src/assets/images/doctor-male.webp'
 
@@ -187,6 +187,7 @@ const router = useRouter()
 const sectionRef = ref(null)
 const loading = ref(true)
 const schedules = ref([])
+const statusOverrides = ref([])
 const sliderContainer = ref(null)
 const todayName = ref('SENIN')
 const searchQuery = ref('')
@@ -203,9 +204,47 @@ function getTodayString() {
   todayName.value = today === 'MINGGU' ? 'SENIN' : today
 }
 
+async function fetchBackendOverrides() {
+  try {
+    const resp = await api.get('/v1/jadwal_dokter_overrides')
+    if (resp.data && Array.isArray(resp.data)) {
+      statusOverrides.value = resp.data
+    }
+  } catch (e) {
+    console.error('Failed to fetch backend overrides:', e)
+  }
+}
+
+function getScheduleStatus(item) {
+  if (!statusOverrides.value || statusOverrides.value.length === 0) {
+    return item.status || 'AKTIF'
+  }
+
+  const nip = item.pegawai?.nip || item.pegawai?.nik || ''
+  const nama = (item.pegawai?.nama || item.nama_dokter || '').trim().toLowerCase()
+  const hari = (item.hari || '').trim().toUpperCase()
+  const poli = (getPoliTitle(item) || '').trim().toLowerCase()
+
+  const found = statusOverrides.value.find(row => {
+    const rowNip = (row.nip_nik || '').trim()
+    const rowNama = (row.nama_dokter || '').trim().toLowerCase()
+    const rowHari = (row.hari || '').trim().toUpperCase()
+    const rowKey = (row.override_key || '').trim()
+
+    if (nip && rowNip && nip === rowNip && hari === rowHari) return true
+    if (nama && rowNama && (nama.includes(rowNama) || rowNama.includes(nama)) && hari === rowHari) return true
+    if (rowKey && (rowKey.includes(nip) || rowKey.includes(nama))) return true
+
+    return false
+  })
+
+  return found ? found.status : (item.status || 'AKTIF')
+}
+
 async function fetchJadwalPoli() {
   loading.value = true
   try {
+    await fetchBackendOverrides()
     const resp = await api2.get('/api/v1/jadwalpoli/rilis')
     if (resp.data && resp.data.data) {
       schedules.value = resp.data.data
