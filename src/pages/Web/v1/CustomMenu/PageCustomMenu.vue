@@ -113,24 +113,43 @@
               </div>
             </div>
 
-            <!-- Featured Image Banner (Jika Ada) -->
-            <div v-if="store.activeArticle.thumbnail" class="aspect-video w-full rounded-2xl overflow-hidden bg-slate-100 q-mb-lg border border-slate-200/60 shadow-xs">
-              <img
+            <!-- Featured Image (Full Width & Clickable for Lightbox Zoom, Persis Halaman Profil) -->
+            <div
+              v-if="store.activeArticle.thumbnail"
+              class="featured-image-wrap q-mb-lg cursor-pointer group relative overflow-hidden"
+              @click="openImageModal(pathImg + store.activeArticle.thumbnail)"
+            >
+              <q-img
                 :src="pathImg + store.activeArticle.thumbnail"
+                class="featured-image-main rounded-2xl shadow-md"
                 :alt="store.activeArticle.nama"
-                class="w-full h-full object-cover"
               />
+              <div class="absolute-bottom-right q-pa-sm bg-slate-900/80 text-white rounded-tl-xl text-xs font-bold flex items-center gap-1.5 opacity-90 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
+                <q-icon name="zoom_in" size="16px" />
+                <span>Klik untuk Fullscreen</span>
+              </div>
             </div>
 
             <!-- Article Body Content (WYSIWYG HTML) -->
             <div
               class="article-body-content text-slate-800 leading-relaxed q-mb-md"
+              @click="handleContentImageClick"
               v-html="store.activeArticle.content || '<p>Belum ada isi konten artikel untuk menu ini.</p>'"
             />
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Fullscreen Image Lightbox Modal (Persis Halaman Profil) -->
+    <q-dialog v-model="imageModal" maximized transition-show="fade" transition-hide="fade">
+      <q-card class="bg-black/95 text-white flex flex-col justify-between items-center relative overflow-hidden">
+        <q-btn flat round icon="close" color="white" class="absolute-top-right z-50 q-ma-md bg-black/50" v-close-popup />
+        <div class="full-width full-height flex items-center justify-center p-4">
+          <img :src="selectedImageUrl" class="max-w-full max-h-[94vh] object-contain rounded-xl shadow-2xl" alt="Preview Fullscreen" />
+        </div>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -148,6 +167,22 @@ const router = useRouter()
 const store = useCustomMenuWeb()
 const storeBerita = useBeritaWeb()
 const storeApp = useAppStore()
+
+const imageModal = ref(false)
+const selectedImageUrl = ref('')
+
+function openImageModal(url) {
+  if (url) {
+    selectedImageUrl.value = url
+    imageModal.value = true
+  }
+}
+
+function handleContentImageClick(e) {
+  if (e.target && e.target.tagName === 'IMG') {
+    openImageModal(e.target.src)
+  }
+}
 
 const currentUrl = computed(() => window.location.href)
 
@@ -255,6 +290,22 @@ onMounted(() => {
     background: #1DA1F2;
     color: white;
   }
+}
+
+.featured-image-wrap {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+  background: #f8fafc;
+  width: 100%;
+}
+
+.featured-image-main {
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  display: block;
 }
 
 .article-body-content {
