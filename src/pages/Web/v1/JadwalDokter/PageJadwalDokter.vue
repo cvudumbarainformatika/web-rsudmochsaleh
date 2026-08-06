@@ -226,31 +226,14 @@ async function fetchBackendOverrides() {
   }
 }
 
-function getScheduleKeys(item) {
-  const keys = []
-  if (item.id) keys.push(`id_${item.id}`)
-
-  const nip = item.pegawai?.nip || ''
-  const nik = item.pegawai?.nik || ''
-  const namaDoc = (item.pegawai?.nama || item.nama_dokter || '').replace(/\s+/g, '_')
-  const hari = (item.hari || '').toUpperCase()
-  const poli = (getPoliTitle(item) || '').replace(/\s+/g, '_')
-
-  if (nip) keys.push(`nip_${nip}_${hari}_${poli}`)
-  if (nik) keys.push(`nik_${nik}_${hari}_${poli}`)
-  if (namaDoc) keys.push(`doc_${namaDoc}_${hari}_${poli}`)
-  if (namaDoc) keys.push(`doc_name_${namaDoc}`)
-  if (nip) keys.push(`nip_only_${nip}`)
-
-  return keys
+function getScheduleKey(item) {
+  return item.id ? `id_${item.id}` : `${formatDoctorName(item)}_${item.hari}_${getPoliTitle(item)}`.replace(/\s+/g, '_')
 }
 
 function getScheduleStatus(item) {
-  const keys = getScheduleKeys(item)
-  for (const key of keys) {
-    if (statusOverrides.value[key] !== undefined) {
-      return statusOverrides.value[key]
-    }
+  const key = getScheduleKey(item)
+  if (statusOverrides.value[key] !== undefined) {
+    return statusOverrides.value[key]
   }
   return item.status || 'AKTIF'
 }
@@ -281,7 +264,10 @@ async function fetchJadwalPoli() {
     await fetchBackendOverrides()
     const resp = await api2.get('/api/v1/jadwalpoli/rilis')
     if (resp.data && resp.data.data) {
-      schedules.value = resp.data.data
+      schedules.value = resp.data.data.map(item => ({
+        ...item,
+        status: getScheduleStatus(item)
+      }))
     }
   } catch (error) {
     console.error('Failed to fetch jadwal poli:', error)

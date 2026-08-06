@@ -239,31 +239,14 @@ async function fetchBackendOverrides() {
   }
 }
 
-function getScheduleKeys(item) {
-  const keys = []
-  if (item.id) keys.push(`id_${item.id}`)
-
-  const nip = item.pegawai?.nip || ''
-  const nik = item.pegawai?.nik || ''
-  const namaDoc = (item.pegawai?.nama || item.nama_dokter || '').replace(/\s+/g, '_')
-  const hari = (item.hari || '').toUpperCase()
-  const poli = (getPoliTitle(item) || '').replace(/\s+/g, '_')
-
-  if (nip) keys.push(`nip_${nip}_${hari}_${poli}`)
-  if (nik) keys.push(`nik_${nik}_${hari}_${poli}`)
-  if (namaDoc) keys.push(`doc_${namaDoc}_${hari}_${poli}`)
-  if (namaDoc) keys.push(`doc_name_${namaDoc}`)
-  if (nip) keys.push(`nip_only_${nip}`)
-
-  return keys
+function getScheduleKey(item) {
+  return item.id ? `id_${item.id}` : `${formatDoctorName(item)}_${item.hari}_${getPoliTitle(item)}`.replace(/\s+/g, '_')
 }
 
 function getScheduleStatus(item) {
-  const keys = getScheduleKeys(item)
-  for (const key of keys) {
-    if (statusOverrides.value[key] !== undefined) {
-      return statusOverrides.value[key]
-    }
+  const key = getScheduleKey(item)
+  if (statusOverrides.value[key] !== undefined) {
+    return statusOverrides.value[key]
   }
   return item.status || 'AKTIF'
 }
@@ -274,8 +257,7 @@ function toggleStatus(item) {
   const docName = formatDoctorName(item)
   const poliName = getPoliTitle(item)
   const hariName = item.hari || 'Hari ini'
-  const keys = getScheduleKeys(item)
-  const primaryKey = keys[0]
+  const key = getScheduleKey(item)
 
   $q.dialog({
     title: 'Konfirmasi Perubahan Status',
@@ -284,37 +266,31 @@ function toggleStatus(item) {
     persistent: true,
     html: true
   }).onOk(async () => {
-    // Simpan di semua varian key untuk jaminan 100% kecocokan
-    keys.forEach(k => {
-      statusOverrides.value[k] = nextStatus
-    })
+    // 1. Mutasi langsung di objek item agar UI Admin langsung update instan
+    item.status = nextStatus
+    statusOverrides.value[key] = nextStatus
     saveOverrides()
 
+    // 2. Kirim ke API backend
     try {
       await api.post('/v1/jadwal_dokter_overrides/update_status', {
-        override_key: primaryKey,
+        override_key: key,
         nip_nik: item.pegawai?.nip || item.pegawai?.nik || '',
         nama_dokter: docName,
         hari: hariName,
         nama_poli: poliName,
         status: nextStatus
       })
-
-      $q.notify({
-        type: 'positive',
-        message: `Status praktik ${docName} berhasil diubah menjadi ${nextStatus}!`,
-        icon: nextStatus === 'AKTIF' ? 'event_available' : 'event_busy',
-        position: 'top'
-      })
     } catch (e) {
-      console.error('Failed to sync status to backend:', e)
-      $q.notify({
-        type: 'positive',
-        message: `Status praktik ${docName} diubah menjadi ${nextStatus}!`,
-        icon: nextStatus === 'AKTIF' ? 'event_available' : 'event_busy',
-        position: 'top'
-      })
+      console.error('API sync warning:', e)
     }
+
+    $q.notify({
+      type: 'positive',
+      message: `Status praktik ${docName} berhasil diubah menjadi ${nextStatus}!`,
+      icon: nextStatus === 'AKTIF' ? 'event_available' : 'event_busy',
+      position: 'top'
+    })
   })
 }
 
@@ -342,7 +318,10 @@ async function fetchJadwalPoli() {
     await fetchBackendOverrides()
     const resp = await api2.get('/api/v1/jadwalpoli/rilis')
     if (resp.data && resp.data.data) {
-      schedules.value = resp.data.data
+      schedules.value = resp.data.data.map(item => ({
+        ...item,
+        status: getScheduleStatus(item)
+      }))
     }
   } catch (error) {
     console.error('Failed to fetch jadwal poli:', error)
