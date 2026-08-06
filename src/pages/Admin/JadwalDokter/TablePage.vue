@@ -222,38 +222,19 @@ const selectedPoliFilter = ref('Semua Poliklinik')
 const selectedDay = ref('ALL')
 const displayLimit = ref(12)
 
-const OVERRIDE_STORAGE_KEY = 'admin_doctor_status_overrides'
-const statusOverrides = ref(getStoredOverrides())
-
-function getStoredOverrides() {
-  try {
-    const data = localStorage.getItem(OVERRIDE_STORAGE_KEY)
-    return data ? JSON.parse(data) : {}
-  } catch (e) {
-    return {}
-  }
-}
-
-function saveOverrides() {
-  try {
-    localStorage.setItem(OVERRIDE_STORAGE_KEY, JSON.stringify(statusOverrides.value))
-  } catch (e) {
-    console.error('Failed to save status overrides:', e)
-  }
-}
+const statusOverrides = ref({})
 
 async function fetchBackendOverrides() {
   try {
     const resp = await api.get('/v1/jadwal_dokter_overrides')
     if (resp.data && Array.isArray(resp.data)) {
-      const map = { ...statusOverrides.value }
+      const map = {}
       resp.data.forEach(row => {
         if (row.override_key) {
           map[row.override_key] = row.status
         }
       })
       statusOverrides.value = map
-      saveOverrides()
     }
   } catch (e) {
     console.error('Failed to fetch backend overrides:', e)
@@ -264,7 +245,7 @@ function getScheduleKey(item) {
   const docId = item.pegawai?.nip || item.pegawai?.nik || formatDoctorName(item)
   const hari = (item.hari || 'SENIN').toUpperCase()
   const poli = getPoliTitle(item)
-  return `override_${docId}_${hari}_${poli}`.replace(/\s+/g, '_')
+  return `${docId}_${hari}_${poli}`.replace(/\s+/g, '_')
 }
 
 function getScheduleStatus(item) {
@@ -293,7 +274,6 @@ function toggleStatus(item) {
     // 1. Mutasi langsung di objek item agar UI Admin langsung update instan
     item.status = nextStatus
     statusOverrides.value[key] = nextStatus
-    saveOverrides()
 
     // 2. Kirim ke API backend
     try {
