@@ -184,7 +184,6 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { api2 } from 'src/boot/axios'
 import { api, api2 } from 'src/boot/axios'
 import doctorFemaleAvatar from 'src/assets/images/doctor-female.webp'
 import doctorMaleAvatar from 'src/assets/images/doctor-male.webp'
