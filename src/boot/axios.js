@@ -9,8 +9,8 @@ import { setCssVar } from 'quasar'
 const isServer = typeof window === 'undefined'
 
 // TENTUKAN URL API LOKAL ANDA DI SINI
-// const LOCAL_API = 'http://localhost:8123'
-const LOCAL_API = 'https://rsud.probolinggokota.go.id'
+const LOCAL_API = 'http://localhost:8123'
+// const LOCAL_API = 'https://rsud.probolinggokota.go.id'
 
 const DEFAULT_API_URL = process.env.DEV ? `${LOCAL_API}/api` : '/api'
 const INTERNAL_API_URL = process.env.DEV ? `${LOCAL_API}/api` : 'http://api-webrsud-web/api'

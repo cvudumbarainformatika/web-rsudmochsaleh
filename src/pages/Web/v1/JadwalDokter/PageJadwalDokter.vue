@@ -118,8 +118,8 @@
                 <div class="photo-overlay-top" />
 
                 <!-- Status Badge (Top Right) -->
-                <div class="status-badge-ss text-xs font-bold" :class="item.status === 'AKTIF' ? 'status-active' : 'status-inactive'">
-                  {{ item.status || 'AKTIF' }}
+                <div class="status-badge-ss text-xs font-bold" :class="getScheduleStatus(item) === 'AKTIF' ? 'status-active' : 'status-inactive'">
+                  {{ getScheduleStatus(item) }}
                 </div>
               </div>
 
