@@ -116,7 +116,6 @@ function clickList(val) {
 
 .featured-image-main {
   width: 100%;
-  max-height: 450px;
   display: block;
 }
 

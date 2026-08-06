@@ -207,10 +207,10 @@ function getSubIcon(index) {
 }
 
 .featured-image-main {
-  width: 100%;
-  max-height: 450px;
-  object-fit: cover;
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  display: block;
 }
 
 .article-content {
