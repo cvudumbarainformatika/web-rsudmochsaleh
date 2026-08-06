@@ -339,10 +339,6 @@ function formatDoctorName(item) {
   return item.pegawai?.nama || item.nama_dokter || 'Dokter Spesialis'
 }
 
-function getPoliTitle(item) {
-  return item.poli?.rs7 || item.nama_poli || item.poli?.rs2 || 'Poliklinik'
-}
-
 function formatTime(timeStr) {
   if (!timeStr) return '08:00'
   const parts = timeStr.split(':')
