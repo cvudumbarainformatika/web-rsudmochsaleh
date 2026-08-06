@@ -227,7 +227,10 @@ async function fetchBackendOverrides() {
 }
 
 function getScheduleKey(item) {
-  return item.id ? `id_${item.id}` : `${formatDoctorName(item)}_${item.hari}_${getPoliTitle(item)}`.replace(/\s+/g, '_')
+  const docId = item.pegawai?.nip || item.pegawai?.nik || formatDoctorName(item)
+  const hari = (item.hari || 'SENIN').toUpperCase()
+  const poli = getPoliTitle(item)
+  return `override_${docId}_${hari}_${poli}`.replace(/\s+/g, '_')
 }
 
 function getScheduleStatus(item) {

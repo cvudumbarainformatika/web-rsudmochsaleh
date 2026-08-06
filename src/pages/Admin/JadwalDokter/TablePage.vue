@@ -222,17 +222,38 @@ const selectedPoliFilter = ref('Semua Poliklinik')
 const selectedDay = ref('ALL')
 const displayLimit = ref(12)
 
-const statusOverrides = ref({})
+const OVERRIDE_STORAGE_KEY = 'admin_doctor_status_overrides'
+const statusOverrides = ref(getStoredOverrides())
+
+function getStoredOverrides() {
+  try {
+    const data = localStorage.getItem(OVERRIDE_STORAGE_KEY)
+    return data ? JSON.parse(data) : {}
+  } catch (e) {
+    return {}
+  }
+}
+
+function saveOverrides() {
+  try {
+    localStorage.setItem(OVERRIDE_STORAGE_KEY, JSON.stringify(statusOverrides.value))
+  } catch (e) {
+    console.error('Failed to save status overrides:', e)
+  }
+}
 
 async function fetchBackendOverrides() {
   try {
     const resp = await api.get('/v1/jadwal_dokter_overrides')
     if (resp.data && Array.isArray(resp.data)) {
-      const map = {}
+      const map = { ...statusOverrides.value }
       resp.data.forEach(row => {
-        map[row.override_key] = row.status
+        if (row.override_key) {
+          map[row.override_key] = row.status
+        }
       })
       statusOverrides.value = map
+      saveOverrides()
     }
   } catch (e) {
     console.error('Failed to fetch backend overrides:', e)
@@ -240,7 +261,10 @@ async function fetchBackendOverrides() {
 }
 
 function getScheduleKey(item) {
-  return item.id ? `id_${item.id}` : `${formatDoctorName(item)}_${item.hari}_${getPoliTitle(item)}`.replace(/\s+/g, '_')
+  const docId = item.pegawai?.nip || item.pegawai?.nik || formatDoctorName(item)
+  const hari = (item.hari || 'SENIN').toUpperCase()
+  const poli = getPoliTitle(item)
+  return `override_${docId}_${hari}_${poli}`.replace(/\s+/g, '_')
 }
 
 function getScheduleStatus(item) {
