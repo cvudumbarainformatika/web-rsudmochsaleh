@@ -230,11 +230,17 @@ function getScheduleKeys(item) {
   const keys = []
   if (item.id) keys.push(`id_${item.id}`)
 
-  const docId = item.pegawai?.nip || item.pegawai?.nik || item.nama_dokter
-  const hari = item.hari || 'SENIN'
-  const poli = getPoliTitle(item)
-  const comboKey = `${docId}_${hari}_${poli}`.replace(/\s+/g, '_')
-  keys.push(comboKey)
+  const nip = item.pegawai?.nip || ''
+  const nik = item.pegawai?.nik || ''
+  const namaDoc = (item.pegawai?.nama || item.nama_dokter || '').replace(/\s+/g, '_')
+  const hari = (item.hari || '').toUpperCase()
+  const poli = (getPoliTitle(item) || '').replace(/\s+/g, '_')
+
+  if (nip) keys.push(`nip_${nip}_${hari}_${poli}`)
+  if (nik) keys.push(`nik_${nik}_${hari}_${poli}`)
+  if (namaDoc) keys.push(`doc_${namaDoc}_${hari}_${poli}`)
+  if (namaDoc) keys.push(`doc_name_${namaDoc}`)
+  if (nip) keys.push(`nip_only_${nip}`)
 
   return keys
 }
