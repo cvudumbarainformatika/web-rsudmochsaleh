@@ -124,8 +124,25 @@
               />
               <div class="photo-overlay-top" />
 
-              <div class="status-badge-ss text-xs font-bold" :class="item.status === 'AKTIF' ? 'status-active' : 'status-inactive'">
-                {{ item.status || 'AKTIF' }}
+              <!-- Status Badge & Admin Toggle Button (Top Right) -->
+              <div class="status-badge-ss flex items-center gap-2">
+                <div class="px-2.5 py-1 rounded-full text-xs font-bold shadow-sm" :class="getScheduleStatus(item) === 'AKTIF' ? 'status-active' : 'status-inactive'">
+                  {{ getScheduleStatus(item) }}
+                </div>
+                <q-btn
+                  flat
+                  round
+                  dense
+                  size="xs"
+                  :color="getScheduleStatus(item) === 'AKTIF' ? 'amber-4' : 'positive'"
+                  :icon="getScheduleStatus(item) === 'AKTIF' ? 'event_busy' : 'event_available'"
+                  class="bg-slate-900/80 backdrop-blur-sm"
+                  @click.stop="toggleStatus(item)"
+                >
+                  <q-tooltip>
+                    Ubah Status ke {{ getScheduleStatus(item) === 'AKTIF' ? 'LIBUR' : 'AKTIF' }}
+                  </q-tooltip>
+                </q-btn>
               </div>
             </div>
 
@@ -143,11 +160,21 @@
                 {{ formatDoctorName(item) }}
               </h3>
 
-              <div class="card-footer-strip rounded-xl p-2 bg-slate-50 border border-slate-100 flex items-center justify-center text-xs q-mt-sm">
+              <div class="card-footer-strip rounded-xl p-2 bg-slate-50 border border-slate-100 flex items-center justify-between text-xs q-mt-sm">
                 <div class="flex items-center gap-1.5 font-bold text-teal-800">
                   <q-icon name="schedule" size="14px" class="text-teal-600" />
                   <span>{{ formatTime(item.jam_mulai) }} - {{ formatTime(item.jam_selesai) }} WIB</span>
                 </div>
+                <q-btn
+                  unelevated
+                  dense
+                  no-caps
+                  size="xs"
+                  :color="getScheduleStatus(item) === 'AKTIF' ? 'negative' : 'positive'"
+                  class="px-2.5 rounded-lg font-bold"
+                  :label="getScheduleStatus(item) === 'AKTIF' ? 'Set Libur' : 'Set Aktif'"
+                  @click.stop="toggleStatus(item)"
+                />
               </div>
             </div>
           </div>
@@ -182,16 +209,81 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
+import { useQuasar } from 'quasar'
 import { api2 } from 'src/boot/axios'
 import doctorFemaleAvatar from 'src/assets/images/doctor-female.webp'
 import doctorMaleAvatar from 'src/assets/images/doctor-male.webp'
 
+const $q = useQuasar()
 const loading = ref(true)
 const schedules = ref([])
 const searchQuery = ref('')
 const selectedPoliFilter = ref('Semua Poliklinik')
 const selectedDay = ref('ALL')
 const displayLimit = ref(12)
+
+// Override status lokal yang tersimpan di localStorage (Persis & Realtime)
+const OVERRIDE_STORAGE_KEY = 'admin_doctor_status_overrides'
+const statusOverrides = ref(getStoredOverrides())
+
+function getStoredOverrides() {
+  try {
+    const data = localStorage.getItem(OVERRIDE_STORAGE_KEY)
+    return data ? JSON.parse(data) : {}
+  } catch (e) {
+    return {}
+  }
+}
+
+function saveOverrides() {
+  try {
+    localStorage.setItem(OVERRIDE_STORAGE_KEY, JSON.stringify(statusOverrides.value))
+  } catch (e) {
+    console.error('Failed to save status overrides:', e)
+  }
+}
+
+function getScheduleKey(item) {
+  const docId = item.pegawai?.nip || item.pegawai?.nik || item.id || item.nama_dokter
+  const hari = item.hari || 'SENIN'
+  const poli = getPoliTitle(item)
+  return `${docId}_${hari}_${poli}`.replace(/\s+/g, '_')
+}
+
+function getScheduleStatus(item) {
+  const key = getScheduleKey(item)
+  if (statusOverrides.value[key] !== undefined) {
+    return statusOverrides.value[key]
+  }
+  return item.status || 'AKTIF'
+}
+
+function toggleStatus(item) {
+  const current = getScheduleStatus(item)
+  const nextStatus = current === 'AKTIF' ? 'LIBUR' : 'AKTIF'
+  const docName = formatDoctorName(item)
+  const poliName = getPoliTitle(item)
+  const hariName = item.hari || 'Hari ini'
+
+  $q.dialog({
+    title: 'Konfirmasi Perubahan Status',
+    message: `Apakah Anda yakin ingin mengubah status praktik <b>${docName}</b> (${poliName} - ${hariName}) dari <b class="${current === 'AKTIF' ? 'text-positive' : 'text-negative'}">${current}</b> menjadi <b class="${nextStatus === 'AKTIF' ? 'text-positive' : 'text-negative'}">${nextStatus}</b>?`,
+    cancel: true,
+    persistent: true,
+    html: true
+  }).onOk(() => {
+    const key = getScheduleKey(item)
+    statusOverrides.value[key] = nextStatus
+    saveOverrides()
+
+    $q.notify({
+      type: 'positive',
+      message: `Status praktik ${docName} berhasil diubah menjadi ${nextStatus}!`,
+      icon: nextStatus === 'AKTIF' ? 'event_available' : 'event_busy',
+      position: 'top'
+    })
+  })
+}
 
 const mapDays = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU']
 
