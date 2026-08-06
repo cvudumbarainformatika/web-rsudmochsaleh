@@ -215,7 +215,8 @@ async function fetchBackendOverrides() {
 }
 
 function getScheduleKey(item) {
-  const docId = item.pegawai?.nip || item.pegawai?.nik || item.id || item.nama_dokter
+  if (item.id) return `id_${item.id}`
+  const docId = item.pegawai?.nip || item.pegawai?.nik || item.nama_dokter
   const hari = item.hari || 'SENIN'
   const poli = getPoliTitle(item)
   return `${docId}_${hari}_${poli}`.replace(/\s+/g, '_')
@@ -255,11 +256,7 @@ async function fetchJadwalPoli() {
     await fetchBackendOverrides()
     const resp = await api2.get('/api/v1/jadwalpoli/rilis')
     if (resp.data && resp.data.data) {
-      // Terapkan status override dari database backend ke data SIMRS
-      schedules.value = resp.data.data.map(item => ({
-        ...item,
-        status: getScheduleStatus(item)
-      }))
+      schedules.value = resp.data.data
     }
   } catch (error) {
     console.error('Failed to fetch jadwal poli:', error)

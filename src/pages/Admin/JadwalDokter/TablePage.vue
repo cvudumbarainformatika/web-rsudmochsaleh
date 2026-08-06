@@ -240,7 +240,8 @@ async function fetchBackendOverrides() {
 }
 
 function getScheduleKey(item) {
-  const docId = item.pegawai?.nip || item.pegawai?.nik || item.id || item.nama_dokter
+  if (item.id) return `id_${item.id}`
+  const docId = item.pegawai?.nip || item.pegawai?.nik || item.nama_dokter
   const hari = item.hari || 'SENIN'
   const poli = getPoliTitle(item)
   return `${docId}_${hari}_${poli}`.replace(/\s+/g, '_')
