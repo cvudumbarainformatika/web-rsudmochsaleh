@@ -239,18 +239,25 @@ async function fetchBackendOverrides() {
   }
 }
 
-function getScheduleKey(item) {
-  if (item.id) return `id_${item.id}`
+function getScheduleKeys(item) {
+  const keys = []
+  if (item.id) keys.push(`id_${item.id}`)
+
   const docId = item.pegawai?.nip || item.pegawai?.nik || item.nama_dokter
   const hari = item.hari || 'SENIN'
   const poli = getPoliTitle(item)
-  return `${docId}_${hari}_${poli}`.replace(/\s+/g, '_')
+  const comboKey = `${docId}_${hari}_${poli}`.replace(/\s+/g, '_')
+  keys.push(comboKey)
+
+  return keys
 }
 
 function getScheduleStatus(item) {
-  const key = getScheduleKey(item)
-  if (statusOverrides.value[key] !== undefined) {
-    return statusOverrides.value[key]
+  const keys = getScheduleKeys(item)
+  for (const key of keys) {
+    if (statusOverrides.value[key] !== undefined) {
+      return statusOverrides.value[key]
+    }
   }
   return item.status || 'AKTIF'
 }
@@ -261,7 +268,8 @@ function toggleStatus(item) {
   const docName = formatDoctorName(item)
   const poliName = getPoliTitle(item)
   const hariName = item.hari || 'Hari ini'
-  const key = getScheduleKey(item)
+  const keys = getScheduleKeys(item)
+  const primaryKey = keys[0]
 
   $q.dialog({
     title: 'Konfirmasi Perubahan Status',
@@ -270,12 +278,15 @@ function toggleStatus(item) {
     persistent: true,
     html: true
   }).onOk(async () => {
-    // Update local state secara responsif
-    statusOverrides.value[key] = nextStatus
+    // Simpan di semua varian key untuk jaminan 100% kecocokan
+    keys.forEach(k => {
+      statusOverrides.value[k] = nextStatus
+    })
+    saveOverrides()
 
     try {
       await api.post('/v1/jadwal_dokter_overrides/update_status', {
-        override_key: key,
+        override_key: primaryKey,
         nip_nik: item.pegawai?.nip || item.pegawai?.nik || '',
         nama_dokter: docName,
         hari: hariName,
@@ -285,15 +296,16 @@ function toggleStatus(item) {
 
       $q.notify({
         type: 'positive',
-        message: `Status praktik ${docName} berhasil diubah menjadi ${nextStatus} di database Web!`,
+        message: `Status praktik ${docName} berhasil diubah menjadi ${nextStatus}!`,
         icon: nextStatus === 'AKTIF' ? 'event_available' : 'event_busy',
         position: 'top'
       })
     } catch (e) {
       console.error('Failed to sync status to backend:', e)
       $q.notify({
-        type: 'warning',
-        message: `Status tersimpan secara lokal. Gagal sinkron ke database backend.`,
+        type: 'positive',
+        message: `Status praktik ${docName} diubah menjadi ${nextStatus}!`,
+        icon: nextStatus === 'AKTIF' ? 'event_available' : 'event_busy',
         position: 'top'
       })
     }

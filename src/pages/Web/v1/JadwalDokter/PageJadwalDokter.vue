@@ -197,15 +197,27 @@ const selectedPoliFilter = ref('Semua Poliklinik')
 const selectedDay = ref('ALL')
 const displayLimit = ref(12)
 
-const statusOverrides = ref({})
+const OVERRIDE_STORAGE_KEY = 'admin_doctor_status_overrides'
+const statusOverrides = ref(getStoredOverrides())
+
+function getStoredOverrides() {
+  try {
+    const data = localStorage.getItem(OVERRIDE_STORAGE_KEY)
+    return data ? JSON.parse(data) : {}
+  } catch (e) {
+    return {}
+  }
+}
 
 async function fetchBackendOverrides() {
   try {
     const resp = await api.get('/v1/jadwal_dokter_overrides')
     if (resp.data && Array.isArray(resp.data)) {
-      const map = {}
+      const map = { ...statusOverrides.value }
       resp.data.forEach(row => {
-        map[row.override_key] = row.status
+        if (row.override_key) {
+          map[row.override_key] = row.status
+        }
       })
       statusOverrides.value = map
     }
@@ -214,18 +226,25 @@ async function fetchBackendOverrides() {
   }
 }
 
-function getScheduleKey(item) {
-  if (item.id) return `id_${item.id}`
+function getScheduleKeys(item) {
+  const keys = []
+  if (item.id) keys.push(`id_${item.id}`)
+
   const docId = item.pegawai?.nip || item.pegawai?.nik || item.nama_dokter
   const hari = item.hari || 'SENIN'
   const poli = getPoliTitle(item)
-  return `${docId}_${hari}_${poli}`.replace(/\s+/g, '_')
+  const comboKey = `${docId}_${hari}_${poli}`.replace(/\s+/g, '_')
+  keys.push(comboKey)
+
+  return keys
 }
 
 function getScheduleStatus(item) {
-  const key = getScheduleKey(item)
-  if (statusOverrides.value[key] !== undefined) {
-    return statusOverrides.value[key]
+  const keys = getScheduleKeys(item)
+  for (const key of keys) {
+    if (statusOverrides.value[key] !== undefined) {
+      return statusOverrides.value[key]
+    }
   }
   return item.status || 'AKTIF'
 }
