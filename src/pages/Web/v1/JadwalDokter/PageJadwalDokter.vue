@@ -197,38 +197,51 @@ const selectedPoliFilter = ref('Semua Poliklinik')
 const selectedDay = ref('ALL')
 const displayLimit = ref(12)
 
-const statusOverrides = ref({})
+const statusOverrides = ref([])
 
 async function fetchBackendOverrides() {
   try {
     const resp = await api.get('/v1/jadwal_dokter_overrides')
     if (resp.data && Array.isArray(resp.data)) {
-      const map = {}
-      resp.data.forEach(row => {
-        if (row.override_key) {
-          map[row.override_key] = row.status
-        }
-      })
-      statusOverrides.value = map
+      statusOverrides.value = resp.data
     }
   } catch (e) {
     console.error('Failed to fetch backend overrides:', e)
   }
 }
 
-function getScheduleKey(item) {
-  const docId = item.pegawai?.nip || item.pegawai?.nik || formatDoctorName(item)
-  const hari = (item.hari || 'SENIN').toUpperCase()
-  const poli = getPoliTitle(item)
-  return `${docId}_${hari}_${poli}`.replace(/\s+/g, '_')
-}
-
 function getScheduleStatus(item) {
-  const key = getScheduleKey(item)
-  if (statusOverrides.value[key] !== undefined) {
-    return statusOverrides.value[key]
+  if (!statusOverrides.value || statusOverrides.value.length === 0) {
+    return item.status || 'AKTIF'
   }
-  return item.status || 'AKTIF'
+
+  const nip = item.pegawai?.nip || item.pegawai?.nik || ''
+  const nama = (item.pegawai?.nama || item.nama_dokter || '').trim().toLowerCase()
+  const hari = (item.hari || '').trim().toUpperCase()
+  const poli = (getPoliTitle(item) || '').trim().toLowerCase()
+
+  // Cari match dari array overrides
+  const found = statusOverrides.value.find(row => {
+    const rowNip = (row.nip_nik || '').trim()
+    const rowNama = (row.nama_dokter || '').trim().toLowerCase()
+    const rowHari = (row.hari || '').trim().toUpperCase()
+    const rowPoli = (row.nama_poli || '').trim().toLowerCase()
+    const rowKey = (row.override_key || '').trim()
+
+    // Match 1: NIP + Hari
+    if (nip && rowNip && nip === rowNip && hari === rowHari) return true
+
+    // Match 2: Nama + Hari + Poli
+    if (nama && rowNama && (nama.includes(rowNama) || rowNama.includes(nama)) && hari === rowHari) return true
+
+    // Match 3: override_key matching
+    const key = `${nip || nama}_${hari}_${poli}`.replace(/\s+/g, '_')
+    if (rowKey && (rowKey.includes(nip) || rowKey.includes(nama))) return true
+
+    return false
+  })
+
+  return found ? found.status : (item.status || 'AKTIF')
 }
 
 const mapDays = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU']
