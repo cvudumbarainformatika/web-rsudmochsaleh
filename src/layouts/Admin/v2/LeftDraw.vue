@@ -123,6 +123,7 @@ const menus = ref([
   { route: 'admin.ppid', path: '/admin/ppid', label: 'Manage PPID', icon: 'folder_shared' },
   { route: 'admin.pokja', path: '/admin/pokja', label: 'Manage Pokja Akreditasi', icon: 'assignment' },
   { route: 'admin.pengaduan', path: '/admin/pengaduan', label: 'Manage Pengaduan', icon: 'support_agent' },
+  { route: 'admin.jadwal-dokter', path: '/admin/jadwal-dokter', label: 'Jadwal Dokter Spesialis', icon: 'calendar_month' },
   { route: 'admin.buku-tamu', path: '/admin/buku-tamu', label: 'Buku Tamu & Aspirasi', icon: 'rate_review' },
   { route: 'admin.gallery_animasi', path: '/admin/gallery_animasi', label: 'Gallery Animasi', icon: 'animation' },
   { route: 'admin.user', path: '/admin/user', label: 'Manage User', icon: 'manage_accounts' }

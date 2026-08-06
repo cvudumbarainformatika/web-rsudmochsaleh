@@ -170,6 +170,13 @@ export default {
           component: () => import('pages/Admin/BukuTamu/FormPage.vue')
         }
       ]
+    },
+    {
+      path: '/admin/jadwal-dokter',
+      component: () => import('pages/Admin/JadwalDokter/IndexPage.vue'),
+      children: [
+        { path: '', name: 'admin.jadwal-dokter', component: () => import('pages/Admin/JadwalDokter/IndexPage.vue') }
+      ]
     }
   ]
 }
