@@ -493,64 +493,60 @@ function getDropdownClass(item, index) {
   return `${widthStyle} left-1/2 -translate-x-1/2`
 }
 
-// 8 Menu Asli Persis Bawaan Aplikasi (Hanya Menu Resmi)
+// Menu Statis Resmi — JANGAN dihapus oleh logika custom menu
 const menuItems = reactive([
-  { label: 'Beranda', href: '/' },
-  { label: 'Berita', href: '/berita/all' },
+  { label: 'Beranda', href: '/', isStatic: true },
+  { label: 'Berita', href: '/berita/all', isStatic: true },
   {
     label: 'Pelayanan',
     dropdown: true,
     href: '/pelayanan',
-    items: [
-      {
-        label: 'Rawat Inap',
-        submenu: [
-          { label: 'VIP', href: '/pelayanan/rawat-inap/vip' },
-          { label: 'Kelas 1', href: '/pelayanan/rawat-inap/kelas-1' },
-          { label: 'Kelas 2', href: '/pelayanan/rawat-inap/kelas-2' }
-        ]
-      },
-      {
-        label: 'Rawat Jalan',
-        submenu: [
-          { label: 'Poli Umum', href: '/pelayanan/rawat-jalan/poli-umum' },
-          { label: 'Poli Gigi', href: '/pelayanan/rawat-jalan/poli-gigi' }
-        ]
-      },
-      { label: 'IGD', href: '/pelayanan/igd' }
-    ]
+    isStatic: true,
+    items: []
   },
   {
     label: 'Profil',
     dropdown: true,
     href: '/profil',
-    items: [
-      { label: 'Sejarah', href: '/profil/sejarah' },
-      { label: 'Visi Misi', href: '/profil/visi-misi' },
-      { label: 'Struktur Organisasi', href: '/profil/struktur' }
-    ]
+    isStatic: true,
+    items: []
   },
   {
     label: 'PPID',
     dropdown: true,
     href: '/ppid',
-    items: [
-      { label: 'Profil PPID', href: '/ppid/profil' },
-      { label: 'Informasi Publik', href: '/ppid/informasi' },
-      { label: 'Laporan', href: '/ppid/laporan' }
-    ]
+    isStatic: true,
+    items: []
   },
   {
     label: 'Pokja Akreditasi',
     dropdown: true,
     href: '/pokja',
-    items: [
-      { label: 'ARK', href: '/pokja/ark' },
-      { label: 'PMKP', href: '/pokja/pmkp' },
-      { label: 'PPI', href: '/pokja/ppi' }
-    ]
+    isStatic: true,
+    items: []
   },
-  { label: 'Buku Tamu', href: '/buku-tamu' }
+  {
+    label: 'Pengaduan',
+    dropdown: true,
+    href: '/pengaduan',
+    isStatic: true,
+    items: []
+  },
+  {
+    label: 'Interaksi',
+    dropdown: true,
+    href: '/interaksi',
+    isStatic: true,
+    items: []
+  },
+  {
+    label: 'Antrian Online',
+    dropdown: true,
+    href: '/antrian-online',
+    isStatic: true,
+    items: []
+  },
+  { label: 'Buku Tamu', href: '/buku-tamu', isStatic: true }
 ])
 
 const menus = ref([
@@ -719,6 +715,7 @@ const handleCustomMenu = async () => {
     label: m.nama,
     href: m.external_link ? m.external_link : `/menu/${m.slug}`,
     dropdown: m.children && m.children.length > 0,
+    isCustom: true, // flag penanda menu dinamis
     items: m.children?.map(sub => ({
       label: sub.nama,
       href: sub.external_link ? sub.external_link : `/menu/${sub.slug}`,
@@ -729,13 +726,12 @@ const handleCustomMenu = async () => {
     })) || []
   }))
 
-  // Bersihkan menu dinamis lama dari menuItems jika ada
-  customList.forEach(m => {
-    const idx = menuItems.findIndex(x => x.label.toLowerCase() === m.nama.toLowerCase() || (x.href && x.href.includes(m.slug)))
-    if (idx !== -1) {
-      menuItems.splice(idx, 1)
+  // Hanya hapus menu dinamis lama (isCustom = true), JANGAN sentuh menu statis
+  for (let i = menuItems.length - 1; i >= 0; i--) {
+    if (menuItems[i].isCustom) {
+      menuItems.splice(i, 1)
     }
-  })
+  }
 
   // Sisipkan SEMUA menu dinamis persis SEBELUM "Buku Tamu"
   const bukuTamuIndex = menuItems.findIndex(x => x.label === 'Buku Tamu')
