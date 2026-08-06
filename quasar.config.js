@@ -58,16 +58,16 @@ export default configure(function () {
       vueRouterMode: 'history',
 
       // Custom chunking
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            vendor: ['vue', 'quasar'],
-            admin: ['./src/router/modules/admin.routes.js'],
-            web: ['./src/router/modules/web.routes.js'],
-            auth: ['./src/router/modules/auth.routes.js']
-          }
-        }
-      },
+      // rollupOptions: {
+      //   output: {
+      //     manualChunks: {
+      //       vendor: ['vue', 'quasar'],
+      //       admin: ['./src/router/modules/admin.routes.js'],
+      //       web: ['./src/router/modules/web.routes.js'],
+      //       auth: ['./src/router/modules/auth.routes.js']
+      //     }
+      //   }
+      // },
 
       // Vite Plugins
       vitePlugins: [
@@ -177,7 +177,7 @@ export default configure(function () {
     },
 
     // === Animations ===
-    animations: 'all',
+    animations: ['fadeIn', 'fadeOut', 'slideInDown', 'slideOutUp'],
 
     // === SSR Mode ===
     ssr: {

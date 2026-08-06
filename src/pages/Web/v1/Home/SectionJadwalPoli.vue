@@ -215,6 +215,10 @@ async function fetchBackendOverrides() {
   }
 }
 
+function getPoliTitle(item) {
+  return item.poli?.rs7 || item.nama_poli || item.poli?.rs2 || 'Poliklinik'
+}
+
 function getScheduleStatus(item) {
   if (!statusOverrides.value || statusOverrides.value.length === 0) {
     return item.status || 'AKTIF'
