@@ -185,6 +185,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { api2 } from 'src/boot/axios'
+import { api, api2 } from 'src/boot/axios'
 import doctorFemaleAvatar from 'src/assets/images/doctor-female.webp'
 import doctorMaleAvatar from 'src/assets/images/doctor-male.webp'
 
@@ -195,6 +196,38 @@ const searchQuery = ref('')
 const selectedPoliFilter = ref('Semua Poliklinik')
 const selectedDay = ref('ALL')
 const displayLimit = ref(12)
+
+const statusOverrides = ref({})
+
+async function fetchBackendOverrides() {
+  try {
+    const resp = await api.get('/v1/jadwal_dokter_overrides')
+    if (resp.data && Array.isArray(resp.data)) {
+      const map = {}
+      resp.data.forEach(row => {
+        map[row.override_key] = row.status
+      })
+      statusOverrides.value = map
+    }
+  } catch (e) {
+    console.error('Failed to fetch backend overrides:', e)
+  }
+}
+
+function getScheduleKey(item) {
+  const docId = item.pegawai?.nip || item.pegawai?.nik || item.id || item.nama_dokter
+  const hari = item.hari || 'SENIN'
+  const poli = getPoliTitle(item)
+  return `${docId}_${hari}_${poli}`.replace(/\s+/g, '_')
+}
+
+function getScheduleStatus(item) {
+  const key = getScheduleKey(item)
+  if (statusOverrides.value[key] !== undefined) {
+    return statusOverrides.value[key]
+  }
+  return item.status || 'AKTIF'
+}
 
 const mapDays = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU']
 const currentDayName = ref('SENIN')
@@ -219,9 +252,14 @@ const availableDays = [
 async function fetchJadwalPoli() {
   loading.value = true
   try {
+    await fetchBackendOverrides()
     const resp = await api2.get('/api/v1/jadwalpoli/rilis')
     if (resp.data && resp.data.data) {
-      schedules.value = resp.data.data
+      // Terapkan status override dari database backend ke data SIMRS
+      schedules.value = resp.data.data.map(item => ({
+        ...item,
+        status: getScheduleStatus(item)
+      }))
     }
   } catch (error) {
     console.error('Failed to fetch jadwal poli:', error)
