@@ -130,12 +130,13 @@
               </div>
             </div>
 
-            <!-- Article Body Content (WYSIWYG HTML) -->
-            <div
-              class="article-body-content text-slate-800 leading-relaxed q-mb-md"
-              @click="handleContentImageClick"
-              v-html="store.activeArticle.content || '<p>Belum ada isi konten artikel untuk menu ini.</p>'"
-            />
+            <!-- Deskripsi Content Utama (Persis Halaman Profil menggunakan app-editor) -->
+            <div class="content-description-card q-mb-xl" @click="handleContentImageClick">
+              <app-editor
+                v-model="store.activeArticle.content"
+                :edited="false"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -308,34 +309,20 @@ onMounted(() => {
   display: block;
 }
 
-.article-body-content {
-  font-size: 1.025rem;
-  line-height: 1.85;
-  color: #1e293b;
-  overflow-wrap: break-word;
+.content-description-card {
+  color: #334155;
+  line-height: 1.75;
 
-  :deep(p) {
-    margin-bottom: 1.25rem;
-  }
-  :deep(h1), :deep(h2), :deep(h3), :deep(h4) {
-    font-weight: 800;
-    color: #0f172a;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-  }
   :deep(img) {
     max-width: 100% !important;
-    height: auto !important;
-    border-radius: 1rem;
-    margin: 1.25rem 0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  }
-  :deep(ul), :deep(ol) {
-    padding-left: 1.5rem;
-    margin-bottom: 1.25rem;
-  }
-  :deep(li) {
-    margin-bottom: 0.5rem;
+    height: auto;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+    }
   }
 }
 </style>
