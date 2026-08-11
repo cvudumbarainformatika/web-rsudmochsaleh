@@ -206,9 +206,11 @@ const parentCategoryName = computed(() => {
   return (store.activeArticle.nama || 'MENU RSUD').toUpperCase()
 })
 
+const storeCustomMenu = store
+
 // Daftar Layanan Terkait (Sidebar Kiri): Menampilkan menu terdekat (children/siblings) atau seluruh menu dinamis yang ada
 const relatedLinks = computed(() => {
-  if (!store.activeArticle) return storeCustomMenu.menus || []
+  if (!store.activeArticle) return store.menus || []
   
   // Jika menu ini memiliki anak submenu (children)
   if (store.activeArticle.children && store.activeArticle.children.length > 0) {
@@ -221,10 +223,9 @@ const relatedLinks = computed(() => {
   }
 
   // Jika menu ini berdiri sendiri (tanpa parent/children), ambil seluruh daftar menu dinamis dari navbar
-  if (storeCustomMenu.menus && storeCustomMenu.menus.length > 0) {
-    // Ambil menu-menu tingkat 1 atau anak-anak dari induk terdekat
+  if (store.menus && store.menus.length > 0) {
     const allItems = []
-    storeCustomMenu.menus.forEach(m => {
+    store.menus.forEach(m => {
       allItems.push(m)
       if (m.children && m.children.length > 0) {
         allItems.push(...m.children)
@@ -257,10 +258,10 @@ const otherCategoryItems = computed(() => {
 
 async function loadData(slug) {
   if (slug) {
-    await Promise.all([
-      store.getArticleBySlug(slug),
-      storeCustomMenu.getWebMenus()
-    ])
+    await store.getArticleBySlug(slug)
+    if (!store.menus || store.menus.length === 0) {
+      await store.getWebMenus()
+    }
   }
 }
 
