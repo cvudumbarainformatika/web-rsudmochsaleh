@@ -726,6 +726,10 @@ const handleCustomMenu = async () => {
     })) || []
   }))
 
+  // Filter out menu dinamis jika nama/label nya sudah ada di menu statis resmi (mencegah duplikasi ganda)
+  const existingStaticLabels = menuItems.filter(x => x.isStatic).map(x => x.label.trim().toLowerCase())
+  const uniqueFormattedCustoms = formattedCustoms.filter(m => !existingStaticLabels.includes(m.label.trim().toLowerCase()))
+
   // Hanya hapus menu dinamis lama (isCustom = true), JANGAN sentuh menu statis
   for (let i = menuItems.length - 1; i >= 0; i--) {
     if (menuItems[i].isCustom) {
@@ -733,12 +737,12 @@ const handleCustomMenu = async () => {
     }
   }
 
-  // Sisipkan SEMUA menu dinamis persis SEBELUM "Buku Tamu"
+  // Sisipkan menu dinamis unik persis SEBELUM "Buku Tamu"
   const bukuTamuIndex = menuItems.findIndex(x => x.label === 'Buku Tamu')
   if (bukuTamuIndex !== -1) {
-    menuItems.splice(bukuTamuIndex, 0, ...formattedCustoms)
+    menuItems.splice(bukuTamuIndex, 0, ...uniqueFormattedCustoms)
   } else {
-    menuItems.push(...formattedCustoms)
+    menuItems.push(...uniqueFormattedCustoms)
   }
 }
 
