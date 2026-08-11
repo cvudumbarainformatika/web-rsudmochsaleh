@@ -210,33 +210,44 @@ const parentCategoryName = computed(() => {
 
 const storeCustomMenu = store
 
-// Daftar Layanan Terkait (Sidebar Kiri): Menampilkan menu terdekat (children/siblings) atau seluruh menu dinamis yang ada
-const relatedLinks = computed(() => {
-  if (!store.activeArticle) return store.menus || []
-  
-  // Jika menu ini memiliki anak submenu (children)
-  if (store.activeArticle.children && store.activeArticle.children.length > 0) {
-    return store.activeArticle.children
-  }
-  
-  // Jika menu ini adalah anak submenu (memiliki parent), tampilkan seluruh saudara submenunya (siblings)
-  if (store.activeArticle.parent && store.activeArticle.parent.children && store.activeArticle.parent.children.length > 0) {
-    return store.activeArticle.parent.children
-  }
+// Fungsi pembantu untuk menentukan apakah sebuah menu memiliki konten sendiri
+function hasContent(item) {
+  if (!item) return false
+  if (item.external_link) return true
+  if (item.content && item.content.trim() !== '' && item.content !== '<p></p>') return true
+  // Jika menu tidak memiliki anak (children), anggap sebagai menu berkonten
+  if (!item.children || item.children.length === 0) return true
+  return false
+}
 
-  // Jika menu ini berdiri sendiri (tanpa parent/children), ambil seluruh daftar menu dinamis dari navbar
-  if (store.menus && store.menus.length > 0) {
-    const allItems = []
+// Daftar Layanan Terkait (Sidebar Kiri): HANYA MENAMPILKAN MENU ANAK YANG MEMILIKI KONTEN
+const relatedLinks = computed(() => {
+  if (!store.activeArticle) return []
+  
+  let candidates = []
+
+  // 1. Jika menu saat ini memiliki anak (children), ambil anak-anaknya yang berkonten
+  if (store.activeArticle.children && store.activeArticle.children.length > 0) {
+    candidates = store.activeArticle.children
+  }
+  // 2. Jika menu saat ini adalah anak submenu (memiliki parent), ambil saudara-saudara submenunya (siblings)
+  else if (store.activeArticle.parent && store.activeArticle.parent.children && store.activeArticle.parent.children.length > 0) {
+    candidates = store.activeArticle.parent.children
+  }
+  // 3. Jika berdiri sendiri / fallback: kumpulkan SELURUH menu anak (leaf node) dari semua menu dinamis
+  else if (store.menus && store.menus.length > 0) {
     store.menus.forEach(m => {
-      allItems.push(m)
       if (m.children && m.children.length > 0) {
-        allItems.push(...m.children)
+        // Ambil anak-anaknya saja (bukan induknya)
+        candidates.push(...m.children)
+      } else if (hasContent(m)) {
+        candidates.push(m)
       }
     })
-    return allItems.filter(x => x.slug !== store.activeArticle?.slug)
   }
 
-  return []
+  // Filter ketat: HANYA ambil menu anak yang valid & berkonten (buang menu induk header tanpa konten)
+  return candidates.filter(item => hasContent(item))
 })
 
 // Judul Sidebar Kanan (misal: Interaksi Lainnya)
