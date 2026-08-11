@@ -726,18 +726,28 @@ const handleCustomMenu = async () => {
     })) || []
   }))
 
-  // Filter out menu dinamis jika nama/label nya sudah ada di menu statis resmi (mencegah duplikasi ganda)
+  // Jika menu dinamis memiliki nama yang sama dengan menu statis (misal: Interaksi / Antrian Online),
+  // suntikkan submenu (children) dari Menu Dinamis Admin ke dalam menu statis tersebut agar submenunya tetap tampil utuh!
+  formattedCustoms.forEach(customItem => {
+    const matchedStatic = menuItems.find(x => x.isStatic && x.label.trim().toLowerCase() === customItem.label.trim().toLowerCase())
+    if (matchedStatic && customItem.items && customItem.items.length > 0) {
+      matchedStatic.items = customItem.items
+      matchedStatic.dropdown = true
+    }
+  })
+
+  // Filter out menu dinamis baru jika labelnya sudah ada di menu statis resmi (mencegah duplikasi tombol)
   const existingStaticLabels = menuItems.filter(x => x.isStatic).map(x => x.label.trim().toLowerCase())
   const uniqueFormattedCustoms = formattedCustoms.filter(m => !existingStaticLabels.includes(m.label.trim().toLowerCase()))
 
-  // Hanya hapus menu dinamis lama (isCustom = true), JANGAN sentuh menu statis
+  // Hanya hapus menu dinamis kustom lama (isCustom = true), JANGAN sentuh menu statis
   for (let i = menuItems.length - 1; i >= 0; i--) {
     if (menuItems[i].isCustom) {
       menuItems.splice(i, 1)
     }
   }
 
-  // Sisipkan menu dinamis unik persis SEBELUM "Buku Tamu"
+  // Sisipkan menu dinamis kustom murni persis SEBELUM "Buku Tamu"
   const bukuTamuIndex = menuItems.findIndex(x => x.label === 'Buku Tamu')
   if (bukuTamuIndex !== -1) {
     menuItems.splice(bukuTamuIndex, 0, ...uniqueFormattedCustoms)
