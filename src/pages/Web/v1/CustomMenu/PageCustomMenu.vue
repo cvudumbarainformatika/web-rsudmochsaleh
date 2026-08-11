@@ -27,29 +27,31 @@
     <!-- Layout 3-Kolom Identik Halaman Berita -->
     <div v-else class="container-padding">
       <div class="row q-col-gutter-lg">
-        <!-- 1. LEFT SIDEBAR (col-12 col-md-3): Layanan Terkait -->
+        <!-- 1. LEFT SIDEBAR (col-12 col-md-3): Layanan Terkait (Desain Identik Sidebar Berita) -->
         <div class="col-12 col-md-3">
           <div class="left-sidebar bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm sticky top-24">
-            <h3 class="text-xs font-extrabold text-slate-900 tracking-tight uppercase text-slate-400 q-mb-md margin-0 flex items-center gap-1.5">
-              <q-icon name="widgets" size="16px" class="text-teal-7" />
-              <span>Layanan Terkait</span>
-            </h3>
+            <div class="flex items-center justify-between font-bold text-slate-900 text-xs q-mb-sm select-none border-b border-slate-100 pb-2">
+              <span class="flex items-center gap-1.5 text-slate-800 font-extrabold">
+                <q-icon name="widgets" size="16px" class="text-teal-7" />
+                Layanan Terkait
+              </span>
+            </div>
 
-            <!-- Daftar Child / Sibling Submenu -->
-            <div v-if="relatedLinks && relatedLinks.length > 0" class="space-y-1.5">
+            <!-- Daftar Child / Sibling Submenu (Desain Kategori Berita) -->
+            <div v-if="relatedLinks && relatedLinks.length > 0" class="space-y-1 mt-2">
               <router-link
                 v-for="link in relatedLinks"
                 :key="link.id"
                 :to="`/menu/${link.slug}`"
-                class="px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between group border"
-                :class="link.slug === store.activeArticle.slug ? 'bg-teal-50 border-teal-300 text-teal-8 font-black shadow-xs' : 'border-slate-100 text-slate-700 hover:bg-slate-50 hover:text-slate-900'"
+                class="px-3 py-2 rounded-lg text-xs font-medium transition flex items-center justify-between no-underline"
+                :class="link.slug === store.activeArticle?.slug ? 'bg-teal-50 text-teal-700 font-bold border-l-4 border-teal-600' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'"
               >
-                <span class="line-clamp-1">{{ link.nama }}</span>
-                <q-icon name="chevron_right" size="16px" class="text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                <span class="line-clamp-1 leading-snug">{{ link.nama }}</span>
+                <q-icon name="chevron_right" size="14px" :class="link.slug === store.activeArticle?.slug ? 'text-teal-700' : 'text-slate-300'" />
               </router-link>
             </div>
 
-            <div v-else class="text-xs text-slate-400 py-2 leading-relaxed">
+            <div v-else class="text-xs text-slate-400 py-3 leading-relaxed text-center">
               Informasi & Layanan Resmi RSUD dr. Mohamad Saleh Kota Probolinggo.
             </div>
           </div>
