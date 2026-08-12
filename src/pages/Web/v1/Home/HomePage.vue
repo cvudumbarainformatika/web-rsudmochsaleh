@@ -88,7 +88,7 @@
           <!-- Body / IFrame -->
           <q-card-section class="q-pa-none" style="height: 60vh;">
             <iframe
-              src="https://surveidigital.spbe.go.id/embed/survey/eyJzdXJ2ZXlfaWQiOjIsInNlcnZpY2VfaWQiOjQyMCwiaG9zdCI6Imh0dHBzOi8vcnN1ZC5wcm9ib2xpbmdnb2tvdGEuZ28uaWQiLCJrZXkiOiIyV0tlaWVXbiJ9/embed/view/?jenis_layanan=Website Resmi RSUD dr. Moch. Saleh"
+              src="https://surveidigital.spbe.go.id/embed/survey/eyJzdXJ2ZXlfaWQiOjIsInNlcnZpY2VfaWQiOjQyMCwiaG9zdCI6Imh0dHBzOi8vcnN1ZC5wcm9ib2xpbmdnb2tvdGEuZ28uaWQiLCJrZXkiOiJQcHd5Q3VBTyJ9/embed/view/?jenis_layanan=Website Resmi RSUD dr. Mohamad Saleh"
               width="100%"
               height="100%"
               frameborder="0"
