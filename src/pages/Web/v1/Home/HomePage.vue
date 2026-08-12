@@ -92,6 +92,7 @@
               width="100%"
               height="100%"
               frameborder="0"
+              referrerpolicy="no-referrer-when-downgrade"
               style="border: none; background: #fff;"
             ></iframe>
           </q-card-section>
