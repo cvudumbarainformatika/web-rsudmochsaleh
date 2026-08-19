@@ -166,7 +166,7 @@ function deleteData(item) {
 }
 
 function handleSubmenu(item) {
-  router.push({ name: 'admin.ppid.submenu', params: { id: item.id } })
+  router.push('/admin/ppid/submenu/' + item.id)
 }
 </script>
 

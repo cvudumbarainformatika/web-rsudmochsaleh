@@ -8,6 +8,7 @@
       <carousel-web :height="400" />
       <SectionJadwalPoli />
       <coba-tt class="q-pb-md" />
+      <SectionRsudLiveWidget class="q-pb-md" />
       <!-- <section-kelas class="q-pb-md" /> -->
       <SectionDireksi class="q-pb-lg" />
       <section-berita class="q-pb-lg" />
@@ -107,6 +108,7 @@ import { ref, onMounted } from 'vue'
 // import AppClientOnly from 'src/components/~global/AppClientOnly.vue'
 import CarouselWeb from 'src/components/~web/CarouselWeb.vue'
 import SectionJadwalPoli from './SectionJadwalPoli.vue'
+import SectionRsudLiveWidget from './SectionRsudLiveWidget.vue'
 import SectionTt from './SectionTt.vue'
 import CobaTt from './Cobatt.vue'
 import SectionKelas from './SectionKelas.vue'

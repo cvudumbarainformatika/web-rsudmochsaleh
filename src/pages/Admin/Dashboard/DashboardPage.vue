@@ -115,6 +115,28 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Module 0: RSUD ONE GATE & LIVE STATUS (STAGING) -->
+        <div class="module-card bg-gradient-to-br from-slate-900 via-teal-950 to-slate-900 text-white rounded-3xl p-6 border border-teal-500/40 shadow-lg hover:shadow-xl transition-all space-y-3 relative overflow-hidden">
+          <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-teal-500/10 rounded-full blur-xl pointer-events-none"></div>
+          <div class="flex items-center justify-between">
+            <div class="w-12 h-12 rounded-2xl bg-teal-500/20 border border-teal-400/30 text-teal-300 flex items-center justify-center font-bold">
+              <q-icon name="hub" size="24px" />
+            </div>
+            <q-badge color="teal-6" class="font-extrabold text-[0.62rem] px-2 py-0.5">STAGING PREVIEW</q-badge>
+          </div>
+          <div>
+            <h3 class="text-sm font-black text-white margin-0 flex items-center gap-1.5">
+              <span>RSUD ONE GATE &amp; LIVE</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 margin-0">Smart Health Hub (3 Pilar Pasien) &amp; Dashboard RSUD LIVE real-time.</p>
+          </div>
+          <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-teal-400 font-bold">Status Staging</span>
+            <q-btn flat dense no-caps color="teal-3" label="Buka Hub ➔" class="font-black" to="/admin/smart-health-hub" />
+          </div>
+        </div>
+
         <!-- Module 1: Berita -->
         <div class="module-card bg-white rounded-3xl p-6 border border-slate-200/90 shadow-xs hover:shadow-md transition-all space-y-3">
           <div class="flex items-center justify-between">

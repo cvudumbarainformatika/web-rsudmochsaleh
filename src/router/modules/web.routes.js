@@ -38,6 +38,20 @@ export default {
         ]
       }
     },
+    {
+      path: '/rsud-one-gate',
+      name: 'rsud-one-gate',
+      component: () => import('pages/Web/v1/RsudOneGate/IndexPage.vue'),
+      meta: {
+        title: 'RSUD ONE GATE | Smart Health Hub & LIVE Status',
+        metaTags: [
+          {
+            name: 'description',
+            content: 'RSUD ONE GATE - Satu Pintu, Satu Data, Satu Perjalanan Pasien. Smart Health Hub & RSUD LIVE Status RSUD Mohamad Saleh.'
+          }
+        ]
+      }
+    },
     // {
     //   path: '/berita',
     //   component: () => import(/* webpackChunkName: "web.template" */'pages/Web/TemplateIndex.vue'),

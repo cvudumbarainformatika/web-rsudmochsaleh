@@ -65,6 +65,10 @@
               {{ menu.label }}
             </q-item-section>
 
+            <q-item-section v-if="menu.route === 'admin.smart-health-hub'" side>
+              <q-badge color="teal-6" class="font-black text-[0.62rem]">STAGING</q-badge>
+            </q-item-section>
+
             <q-item-section v-if="menu.route === 'admin.buku-tamu'" side>
               <q-badge color="amber-8" class="font-black text-[0.62rem]">Baru</q-badge>
             </q-item-section>
@@ -115,6 +119,7 @@ import { useRoute } from 'vue-router'
 
 const menus = ref([
   { route: 'admin.dashboard', path: '/admin/dashboard', label: 'Dashboard', icon: 'space_dashboard' },
+  { route: 'admin.smart-health-hub', path: '/admin/smart-health-hub', label: 'RSUD ONE GATE & LIVE', icon: 'hub' },
   { route: 'admin.custom-menu', path: '/admin/custom-menu', label: 'Manage Menu Dinamis', icon: 'account_tree' },
   { route: 'admin.settings', path: '/admin/settings', label: 'Seting Website', icon: 'settings_suggest' },
   { route: 'admin.berita', path: '/admin/berita', label: 'Manage Berita', icon: 'newspaper' },

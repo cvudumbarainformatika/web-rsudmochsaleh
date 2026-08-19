@@ -87,9 +87,9 @@ function imgClick() {
 
 function onSave() {
   const formData = new FormData()
-  if (store.form.content === null || store.form.content === '' || store.form.content === '<p></p>') {
-    return notifErrVue('maaf, Content Belum terisi!')
-  }
+  
+  // Jika konten kosong dan tidak ada submenu, berikan default paragraf kosong atau abaikan validasi ketat
+  const contentValue = store.form.content || '<p>-</p>'
 
   if (tempImg.value !== null) {
     formData.append('thumbnail', tempImg.value)
@@ -100,7 +100,7 @@ function onSave() {
 
   formData.append('nama', store.form.nama)
   formData.append('slug', store.form.slug)
-  formData.append('content', store.form.content)
+  formData.append('content', contentValue)
 
   store.saveData(formData).then(() => {
     tempImg.value = null

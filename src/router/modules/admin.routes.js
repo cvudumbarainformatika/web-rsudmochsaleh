@@ -177,6 +177,11 @@ export default {
       children: [
         { path: '', name: 'admin.jadwal-dokter', component: () => import('pages/Admin/JadwalDokter/IndexPage.vue') }
       ]
+    },
+    {
+      path: '/admin/smart-health-hub',
+      name: 'admin.smart-health-hub',
+      component: () => import('pages/Admin/SmartHealthHub/IndexPage.vue')
     }
   ]
 }

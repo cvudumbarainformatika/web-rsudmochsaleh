@@ -113,9 +113,9 @@
 import { onMounted, computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { pathImg } from 'src/boot/axios'
-import { useSubmenuWeb } from 'src/stores/web/submenu'
+import { useSubmenuPpidWeb } from 'src/stores/web/submenuppid'
 
-const store = useSubmenuWeb()
+const store = useSubmenuPpidWeb()
 const route = useRoute()
 const router = useRouter()
 

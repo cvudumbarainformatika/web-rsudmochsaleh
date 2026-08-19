@@ -13,20 +13,14 @@
       >
         <!-- KIRI: Thumbnail + Details (grow) -->
         <div class="flex items-center gap-3.5 grow overflow-hidden">
-          <!-- Thumbnail dengan Fallback Error Safe -->
-          <div class="shrink-0 rounded-xl overflow-hidden border border-slate-200/80 shadow-xs bg-slate-100">
-            <q-img
+          <!-- Thumbnail dengan Fallback Standard Img -->
+          <div class="w-[100px] h-[65px] shrink-0 rounded-xl overflow-hidden border border-slate-200/80 shadow-xs bg-slate-100 relative">
+            <img
               :src="getImage(item.thumbnail)"
-              style="width: 100px; height: 65px"
-              fit="cover"
-              class="rounded-xl"
-            >
-              <template #error>
-                <div class="absolute-full flex flex-center bg-slate-100 text-slate-400">
-                  <q-icon name="image" size="20px" />
-                </div>
-              </template>
-            </q-img>
+              alt="Thumbnail"
+              class="w-full h-full object-cover rounded-xl"
+              @error="handleImgError"
+            />
           </div>
 
           <!-- Lottie Animation Preview (Bila Ada) -->
@@ -78,6 +72,7 @@
 
 <script setup>
 import { pathImg } from 'src/boot/axios'
+import fallbackImg from '../../../../assets/images/no-image.png'
 
 defineProps({
   items: {
@@ -88,6 +83,10 @@ defineProps({
 
 const emits = defineEmits(['onDelete', 'onEdit'])
 
+function handleImgError(e) {
+  e.target.src = fallbackImg
+}
+
 function stripHtml(html) {
   if (!html) return ''
   return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').trim()
@@ -95,7 +94,7 @@ function stripHtml(html) {
 
 function getImage(image) {
   if (!image || image === null || image === '' || image === 'null') {
-    return new URL('../../../../assets/images/no-image.png', import.meta.url).href
+    return fallbackImg
   }
   if (image.startsWith('http') || image.startsWith('/')) {
     return image

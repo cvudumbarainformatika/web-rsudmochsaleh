@@ -7,11 +7,11 @@
       <div class="submenu-hero">
         <div class="hero-backdrop" :style="store.item.thumbnail ? `background-image: url(${pathImg + store.item.thumbnail})` : ''" />
         <div class="hero-overlay" />
-        
+
         <div class="hero-content-wrap">
           <div class="category-tag">
             <q-icon name="medical_services" size="14px" class="q-mr-xs" />
-            Detail Layanan Subspesialis
+            Detail Layanan
           </div>
           <h1 class="hero-title">{{ store.item.nama }}</h1>
           <div class="hero-divider" />
@@ -21,7 +21,7 @@
       <!-- Main Layout Grid -->
       <div class="content-container py-8">
         <div class="row q-col-gutter-xl">
-          
+
           <!-- Column 1: Main Content Body -->
           <div class="col-12 col-md-8 col-lg-8">
             <div class="main-content-card">
@@ -231,7 +231,7 @@ function handleContentImageClick(e) {
   border: 1px solid rgba(15, 23, 42, 0.06);
   box-shadow: 0 4px 30px rgba(15, 23, 42, 0.04);
   padding: 1.5rem;
-  
+
   @media (min-width: 768px) {
     padding: 2.25rem;
   }
