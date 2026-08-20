@@ -48,18 +48,18 @@
           <div class="metric-box bg-slate-50/90 rounded-2xl p-4 border border-slate-100/90 hover:bg-teal-50/40 hover:border-teal-200/80 transition-all duration-300 space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-600">IGD (Gawat Darurat)</span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200">Normal</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200">{{ liveStatus.igd.status || 'Normal' }}</span>
             </div>
             <div class="flex items-baseline gap-2">
-              <span class="text-2xl font-black text-slate-900 font-mono">12</span>
+              <span class="text-2xl font-black text-slate-900 font-mono">{{ liveStatus.igd.pasien || liveStatus.igd.pasien_aktif || 12 }}</span>
               <span class="text-[11px] text-slate-500 font-bold">Pasien Aktif</span>
             </div>
             <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
-              <div class="bg-teal-600 h-full rounded-full w-[40%]"></div>
+              <div class="bg-teal-600 h-full rounded-full" :style="{ width: Math.min(((liveStatus.igd.pasien || liveStatus.igd.pasien_aktif || 12) / 30) * 100, 100) + '%' }"></div>
             </div>
             <div class="text-[10px] text-slate-500 flex justify-between">
               <span>Status Pelayanan</span>
-              <span class="font-bold text-teal-800">Alur Cepat 🟢</span>
+              <span class="font-bold text-teal-800">{{ liveStatus.igd.keterangan || 'Alur Cepat 🟢' }}</span>
             </div>
           </div>
 
@@ -67,18 +67,18 @@
           <div class="metric-box bg-slate-50/90 rounded-2xl p-4 border border-slate-100/90 hover:bg-amber-50/40 hover:border-amber-200/80 transition-all duration-300 space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-600">POLIKLINIK</span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-800 border border-amber-200">Ramai</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-800 border border-amber-200">{{ liveStatus.poli.status || 'Ramai' }}</span>
             </div>
             <div class="flex items-baseline gap-2">
-              <span class="text-2xl font-black text-slate-900 font-mono">127</span>
+              <span class="text-2xl font-black text-slate-900 font-mono">{{ liveStatus.poli.pasien || liveStatus.poli.total_antrean_hari_ini || 127 }}</span>
               <span class="text-[11px] text-slate-500 font-bold">Total Antrean</span>
             </div>
             <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
-              <div class="bg-amber-500 h-full rounded-full w-[65%]"></div>
+              <div class="bg-amber-500 h-full rounded-full" :style="{ width: Math.min(((liveStatus.poli.pasien || liveStatus.poli.total_antrean_hari_ini || 127) / 200) * 100, 100) + '%' }"></div>
             </div>
             <div class="text-[10px] text-slate-500 flex justify-between">
               <span>Poli Buka</span>
-              <span class="font-bold text-amber-800">18 Spesialis 🟡</span>
+              <span class="font-bold text-amber-800">{{ liveStatus.poli.poliAktif || liveStatus.poli.poli_buka || 18 }} Spesialis 🟡</span>
             </div>
           </div>
 
@@ -86,18 +86,18 @@
           <div class="metric-box bg-slate-50/90 rounded-2xl p-4 border border-slate-100/90 hover:bg-teal-50/40 hover:border-teal-200/80 transition-all duration-300 space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-600">RAWAT INAP</span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200">23 Bed Kosong</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200">{{ liveStatus.rawatInap.tersedia || liveStatus.rawatInap.bed_kosong || 23 }} Bed Kosong</span>
             </div>
             <div class="flex items-baseline gap-2">
-              <span class="text-2xl font-black text-slate-900 font-mono">23</span>
+              <span class="text-2xl font-black text-slate-900 font-mono">{{ liveStatus.rawatInap.tersedia || liveStatus.rawatInap.bed_kosong || 23 }}</span>
               <span class="text-[11px] text-slate-500 font-bold">Bed Tersedia</span>
             </div>
             <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
-              <div class="bg-teal-600 h-full rounded-full w-[25%]"></div>
+              <div class="bg-teal-600 h-full rounded-full" :style="{ width: (((liveStatus.rawatInap.tersedia || liveStatus.rawatInap.bed_kosong || 23) / (liveStatus.rawatInap.totalBed || liveStatus.rawatInap.total_kapasitas_bed || 240)) * 100) + '%' }"></div>
             </div>
             <div class="text-[10px] text-slate-500 flex justify-between">
               <span>Total Tempat Tidur</span>
-              <span class="font-bold text-teal-800">240 Bed 🟢</span>
+              <span class="font-bold text-teal-800">{{ liveStatus.rawatInap.totalBed || liveStatus.rawatInap.total_kapasitas_bed || 240 }} Bed 🟢</span>
             </div>
           </div>
 
@@ -105,18 +105,18 @@
           <div class="metric-box bg-slate-50/90 rounded-2xl p-4 border border-slate-100/90 hover:bg-cyan-50/40 hover:border-cyan-200/80 transition-all duration-300 space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-600">OPERASI (OK)</span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-cyan-100 text-cyan-800 border border-cyan-200">Lancar</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-cyan-100 text-cyan-800 border border-cyan-200">{{ liveStatus.operasi.status || 'Lancar' }}</span>
             </div>
             <div class="flex items-baseline gap-2">
-              <span class="text-2xl font-black text-slate-900 font-mono">8</span>
+              <span class="text-2xl font-black text-slate-900 font-mono">{{ liveStatus.operasi.jadwalHariIni || liveStatus.operasi.jadwal_hari_ini || 8 }}</span>
               <span class="text-[11px] text-slate-500 font-bold">Jadwal Operasi</span>
             </div>
             <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
-              <div class="bg-cyan-600 h-full rounded-full w-[60%]"></div>
+              <div class="bg-cyan-600 h-full rounded-full" :style="{ width: (((liveStatus.operasi.selesai || liveStatus.operasi.tindakan_selesai || 5) / (liveStatus.operasi.jadwalHariIni || liveStatus.operasi.jadwal_hari_ini || 8)) * 100) + '%' }"></div>
             </div>
             <div class="text-[10px] text-slate-500 flex justify-between">
               <span>Terlaksana</span>
-              <span class="font-bold text-cyan-800">5 / 8 OK 🟢</span>
+              <span class="font-bold text-cyan-800">{{ liveStatus.operasi.selesai || liveStatus.operasi.tindakan_selesai || 5 }} / {{ liveStatus.operasi.jadwalHariIni || liveStatus.operasi.jadwal_hari_ini || 8 }} OK 🟢</span>
             </div>
           </div>
         </div>
@@ -126,18 +126,25 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useRsudLiveStore } from 'src/stores/web/rsudLive'
 
 const router = useRouter()
+const liveStore = useRsudLiveStore()
+
 const sectionRef = ref(null)
 const cardRef = ref(null)
 const isVisible = ref(false)
-const lastUpdated = ref(new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }))
+
+const lastUpdated = computed(() => liveStore.lastUpdated || new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }))
+const liveStatus = computed(() => liveStore.status)
 
 let observer = null
 
 onMounted(() => {
+  liveStore.getStatus()
+
   if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
     observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
